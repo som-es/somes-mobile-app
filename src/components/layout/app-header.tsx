@@ -1,25 +1,17 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Wordmark from '@/assets/somes-wordmark.svg';
-import { colors } from '@/theme/colors';
+import { SomesMark } from '@/assets/somes-mark';
+import { colors, shadows } from '@/theme/colors';
 import { HEADER_HEIGHT, spacing } from '@/theme/layout';
+import { typography } from '@/theme/typography';
 
 type Props = {
-  /** Show a dot on the bell. Wire to unread state once push lands. */
   hasUnread?: boolean;
 };
 
-/**
- * The Figma draws the logo as a separate mark plus the word "somes" in the UI
- * font, but `somes-wordmark.svg` already contains both as paths and renders the
- * same thing. It is also the only logo asset that uses inline presentation
- * attributes — `somes-mark.svg` and `somes-icon.svg` style themselves with a
- * `<style>` CSS block, which react-native-svg does not apply. Don't swap to
- * those without flattening their CSS into attributes first.
- */
 export function AppHeader({ hasUnread = false }: Props) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -27,22 +19,27 @@ export function AppHeader({ hasUnread = false }: Props) {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.bar}>
-        <Wordmark
-          width={120}
-          height={34}
-          fill={colors.onChrome}
-          stroke={colors.onChrome}
-          accessibilityRole="header"
-          accessibilityLabel="somes"
-        />
+        <Pressable
+          onPress={() => router.navigate('/')}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="somes — zur Startseite"
+          style={({ pressed }) => [styles.logo, pressed && styles.pressed]}>
+          <SomesMark size={34} color={colors.onChrome} />
+          <Text style={[typography.logo, styles.wordmark]}>somes</Text>
+        </Pressable>
 
         <Pressable
           onPress={() => router.push('/notifications')}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Benachrichtigungen"
-          style={({ pressed }) => [styles.bell, pressed && styles.bellPressed]}>
-          <Ionicons name="notifications-outline" size={24} color={colors.onChrome} />
+          style={({ pressed }) => [styles.bell, pressed && styles.pressed]}>
+          <Ionicons
+            name={hasUnread ? 'notifications' : 'notifications-outline'}
+            size={22}
+            color={colors.onChrome}
+          />
           {hasUnread ? <View style={styles.dot} /> : null}
         </Pressable>
       </View>
@@ -53,6 +50,8 @@ export function AppHeader({ hasUnread = false }: Props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.chrome,
+    ...shadows.header,
+    zIndex: 10,
   },
   bar: {
     height: HEADER_HEIGHT,
@@ -61,10 +60,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: spacing.screen,
   },
+  logo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  wordmark: {
+    includeFontPadding: false,
+    transform: [{ translateY: -3 }],
+  },
   bell: {
     padding: spacing.xs,
   },
-  bellPressed: {
+  pressed: {
     opacity: 0.6,
   },
   dot: {

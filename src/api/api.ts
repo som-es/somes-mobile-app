@@ -1,10 +1,3 @@
-/**
- * Public (unauthenticated) somes-api endpoints.
- * Ported from somes-core/somes-frontend/src/lib/api/api.ts.
- *
- * The SvelteKit `fetcher` parameter is dropped throughout — it exists there for
- * SSR, which React Native has no equivalent of.
- */
 import type {
   DelegateQA,
   DelegatesWithMaxPage,

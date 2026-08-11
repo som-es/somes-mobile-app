@@ -1,15 +1,3 @@
-/**
- * The ramps below are the somes palette lineage, transcribed from the web app's
- * Skeleton theme (somes-core/somes-frontend/src/routes/layout.css).
- *
- * The `colors` object at the bottom is the design itself, taken from the Figma
- * (file uduxjzE9617QtjpHanZQF8). Where the two disagree the Figma wins — build
- * against `colors`, not against the ramps.
- *
- * Party colours are NOT here — they come from the API (see party-colors.ts),
- * exactly as on web.
- */
-
 export const primary = {
   50: '#e8ecf1',
   100: '#e1e6ec',
@@ -112,7 +100,7 @@ export const colors = {
   /** Header and bottom tab bar. */
   chrome: '#2D3748',
   onChrome: '#FFFFFF',
-  /** Circular highlight behind the active tab icon — white at 10%, not a solid disc. */
+  onChromeMuted: 'rgba(255, 255, 255, 0.55)',
   tabActive: 'rgba(255, 255, 255, 0.1)',
 
   /** Page background — the near-white lavender behind all content. */
@@ -164,7 +152,7 @@ export const colors = {
 
 export type ColorName = keyof typeof colors;
 
-/** The two elevations in the design. */
+/** The elevations in the design, plus one for the chrome. */
 export const shadows = {
   /** Cards: 0 2 2 rgba(104,129,161,0.25). */
   card: {
@@ -181,5 +169,12 @@ export const shadows = {
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
+  },
+  header: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 6,
   },
 } as const;

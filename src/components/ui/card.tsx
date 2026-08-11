@@ -57,7 +57,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.cardBorder,
   },
+  /** A slight give rather than a blink — the card is a big target. */
   pressed: {
-    opacity: 0.7,
+    opacity: 0.85,
+    transform: [{ scale: 0.99 }],
   },
 });

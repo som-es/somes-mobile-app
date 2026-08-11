@@ -1,8 +1,3 @@
-/**
- * Party colours come from the API, not from this file — same as the web app's
- * `cachedPartyColors()` in somes-frontend/src/lib/caching/party_color.ts.
- * Never hardcode a party colour; the set of parties changes.
- */
 import { useQuery } from '@tanstack/react-query';
 
 import { parties } from '@/api/api';

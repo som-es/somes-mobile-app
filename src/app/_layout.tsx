@@ -1,8 +1,9 @@
+import { Nunito_600SemiBold, useFonts } from '@expo-google-fonts/nunito';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { loadToken } from '@/lib/auth-store';
@@ -12,10 +13,25 @@ import { colors } from '@/theme/colors';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  /**
+   * The only bundled font, and it is used for exactly one string: the "somes"
+   */
+  const [fontsLoaded] = useFonts({ Nunito_600SemiBold });
+  const [tokenLoaded, setTokenLoaded] = useState(false);
+
   useEffect(() => {
     // Hydrate the JWT before anything can make an authenticated request.
-    loadToken().finally(() => SplashScreen.hideAsync());
+    loadToken().finally(() => setTokenLoaded(true));
   }, []);
+
+  const ready = fontsLoaded && tokenLoaded;
+
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync();
+  }, [ready]);
+
+  // Keep the splash up rather than rendering chrome with a missing font.
+  if (!ready) return null;
 
   return (
     <SafeAreaProvider>

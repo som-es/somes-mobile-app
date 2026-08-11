@@ -1,46 +1,76 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
-import type { ComponentProps } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { type ComponentProps, useEffect, useState } from 'react';
+import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { SvgProps } from 'react-native-svg';
 
-import DelegatesIcon from '@/assets/icons/delegates.svg';
-import HomeIcon from '@/assets/icons/home.svg';
-import UserIcon from '@/assets/icons/user.svg';
 import { colors } from '@/theme/colors';
-import { spacing, TAB_BAR_HEIGHT } from '@/theme/layout';
+import { ICON_SIZE, spacing, TAB_BAR_HEIGHT, TAB_BUTTON, TAB_GAP } from '@/theme/layout';
 
-/**
- * Custom tab bar rather than expo-router's NativeTabs: the design needs the
- * navy bar with a circular highlight behind the active icon, which the platform
- * tab bar cannot produce. A JS bar also guarantees iOS and Android look alike.
- */
-
-/**
- * expo-router vendors its own copy of the bottom-tabs types, which are not
- * assignable to @react-navigation/bottom-tabs'. Derive the prop type from the
- * component that consumes it instead of importing either.
- */
 type BottomTabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
 
-type IconProps = { color: string; size: number };
+type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
-const ICONS: Record<string, (props: IconProps) => React.ReactElement> = {
-  // The somes ∞ mark doubles as the Home icon, as in the design.
-  index: ({ color, size }) => svgIcon(HomeIcon, { color, size, aspect: 81.416 / 28.318 }),
-  abstimmungen: ({ color, size }) => (
-    <Ionicons name="business-outline" size={size} color={color} />
-  ),
-  abgeordnete: ({ color, size }) => svgIcon(DelegatesIcon, { color, size }),
-  profil: ({ color, size }) => svgIcon(UserIcon, { color, size }),
+const ICONS: Record<string, { inactive: IoniconName; active: IoniconName }> = {
+  index: { inactive: 'home-outline', active: 'home' },
+  abstimmungen: { inactive: 'podium-outline', active: 'podium' },
+  abgeordnete: { inactive: 'people-outline', active: 'people' },
+  profil: { inactive: 'person-circle-outline', active: 'person-circle' },
 };
 
-function svgIcon(
-  Icon: React.FC<SvgProps>,
-  { color, size, aspect = 1 }: IconProps & { aspect?: number }
-) {
-  return <Icon width={size * aspect} height={size} fill={color} stroke={color} />;
+type TabButtonProps = {
+  icons: (typeof ICONS)[string] | undefined;
+  isFocused: boolean;
+  label?: string;
+  onPress: () => void;
+  onLongPress: () => void;
+};
+
+function TabButton({ icons, isFocused, label, onPress, onLongPress }: TabButtonProps) {
+  const [progress] = useState(() => new Animated.Value(isFocused ? 1 : 0));
+
+  useEffect(() => {
+    Animated.spring(progress, {
+      toValue: isFocused ? 1 : 0,
+      useNativeDriver: true,
+      speed: 18,
+      bounciness: 6,
+    }).start();
+  }, [isFocused, progress]);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onLongPress={onLongPress}
+      accessibilityRole="button"
+      accessibilityState={isFocused ? { selected: true } : {}}
+      accessibilityLabel={label}
+      style={({ pressed }) => [styles.tab, pressed && styles.pressed]}>
+      <Animated.View
+        style={[
+          styles.highlight,
+          {
+            opacity: progress,
+            transform: [
+              {
+                scale: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.7, 1],
+                }),
+              },
+            ],
+          },
+        ]}
+      />
+      {icons ? (
+        <Ionicons
+          name={isFocused ? icons.active : icons.inactive}
+          size={ICON_SIZE}
+          color={isFocused ? colors.onChrome : colors.onChromeMuted}
+        />
+      ) : null}
+    </Pressable>
+  );
 }
 
 export function AppTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -52,7 +82,6 @@ export function AppTabBar({ state, descriptors, navigation }: BottomTabBarProps)
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
           const { options } = descriptors[route.key];
-          const renderIcon = ICONS[route.name];
 
           const onPress = () => {
             const event = navigation.emit({
@@ -66,20 +95,16 @@ export function AppTabBar({ state, descriptors, navigation }: BottomTabBarProps)
           };
 
           return (
-            <Pressable
+            <TabButton
               key={route.key}
+              icons={ICONS[route.name]}
+              isFocused={isFocused}
+              label={options.tabBarAccessibilityLabel ?? options.title}
               onPress={onPress}
               onLongPress={() =>
                 navigation.emit({ type: 'tabLongPress', target: route.key })
               }
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel ?? options.title}
-              style={styles.tab}>
-              <View style={[styles.iconWrap, isFocused && styles.iconWrapActive]}>
-                {renderIcon?.({ color: colors.onChrome, size: 26 })}
-              </View>
-            </Pressable>
+            />
           );
         })}
       </View>
@@ -91,26 +116,29 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.chrome,
   },
+  /** 4 x 48pt buttons with 30pt gaps, centred — Figma node 286:4. */
   bar: {
     height: TAB_BAR_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
+    gap: TAB_GAP,
     paddingHorizontal: spacing.sm,
   },
   tab: {
+    width: TAB_BUTTON,
+    height: TAB_BUTTON,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconWrap: {
-    width: 48,
-    height: 48,
+  pressed: {
+    opacity: 0.6,
+  },
+  highlight: {
+    position: 'absolute',
+    width: TAB_BUTTON,
+    height: TAB_BUTTON,
     borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  /** White at 10%, per the Figma — not a solid accent disc. */
-  iconWrapActive: {
     backgroundColor: colors.tabActive,
   },
 });

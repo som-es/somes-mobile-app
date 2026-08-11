@@ -1,7 +1,3 @@
-/**
- * Ported from somes-core/somes-frontend/src/lib/types.ts.
- * Keep in sync — the shapes are dictated by somes-api responses.
- */
 import type { DbAiSummary } from './ai-summary';
 import type { Decree } from './decree';
 
