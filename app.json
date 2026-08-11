@@ -6,9 +6,14 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "somesmobileapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "supportsTablet": false,
+      "bundleIdentifier": "com.leonbinder.somesmobileapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,11 +33,20 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#24283e",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "color": "#d8806f"
+        }
+      ],
+      "expo-status-bar",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -44,6 +58,7 @@
         "projectId": "8837b175-e31a-4d2c-beba-5b6634d67d7a"
       }
     },
-    "owner": "leonbinder"
+    "owner": "leonbinder",
+    "backgroundColor": "#f5f6fa"
   }
 }

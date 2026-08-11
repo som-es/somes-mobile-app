@@ -33,6 +33,14 @@ yarn-error.*
 # local env files
 .env*.local
 
+# editor / tooling config
+.vscode/
+.claude/
+.mcp.json
+.env
+CLAUDE.md
+AGENTS.md
+
 # typescript
 *.tsbuildinfo
 

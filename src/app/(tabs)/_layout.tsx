@@ -1,0 +1,21 @@
+import { Tabs } from 'expo-router';
+
+import { AppHeader } from '@/components/layout/app-header';
+import { AppTabBar } from '@/components/layout/tab-bar';
+import { colors } from '@/theme/colors';
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      tabBar={(props) => <AppTabBar {...props} />}
+      screenOptions={{
+        header: () => <AppHeader />,
+        sceneStyle: { backgroundColor: colors.screen },
+      }}>
+      <Tabs.Screen name="index" options={{ title: 'Home' }} />
+      <Tabs.Screen name="abstimmungen" options={{ title: 'Abstimmungen' }} />
+      <Tabs.Screen name="abgeordnete" options={{ title: 'Abgeordnete' }} />
+      <Tabs.Screen name="profil" options={{ title: 'Profil' }} />
+    </Tabs>
+  );
+}
