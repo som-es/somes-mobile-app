@@ -2,33 +2,9 @@ import Svg, { Line, Path, Polygon } from 'react-native-svg';
 
 import { colors } from '@/theme/colors';
 
-/**
- * The somes mark: a parliament architrave over three columns, whose outer two
- * cross into an infinity loop.
- *
- * Hand-written rather than imported from `somes-mark.svg` beside it, because
- * that file carries its geometry in a `<defs><style>` block (`.cls-1/2/3`), and
- * react-native-svg does not apply CSS. Importing it silently drops every
- * `stroke-width` and every `fill: none`, so the open curves flood solid.
- *
- * The path data below is copied verbatim from that file; only the class
- * references are resolved into presentation props:
- *
- *   .cls-1  the architrave    filled, stroke 4, linejoin round
- *   .cls-2  columns + centre  fill none, stroke 6
- *   .cls-3  the infinity loop fill none, stroke 5
- *
- * Do not use `somes-wordmark.svg` for the header. It is the web app's lockup,
- * and its "somes" is a live `<text>` in Tahoma — a Microsoft font that exists
- * on neither iOS nor Android. Pair this mark with a real `<Text>` instead,
- * which is also what the Figma draws (node 286:153).
- */
-
-/** 107.18 / 119.44, from the viewBox. */
 const ASPECT = 0.8974;
 
 type Props = {
-  /** Height in points; width follows the mark's aspect ratio. */
   size?: number;
   color?: string;
 };
