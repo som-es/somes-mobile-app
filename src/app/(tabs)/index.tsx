@@ -1,50 +1,124 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
-import { Card } from '@/components/ui/card';
+import { latest_ministrial_proposals, latest_vote_results, next_plenar_date } from '@/api/api';
+import { unwrap } from '@/api/client';
+import { NextSessionCard } from '@/components/home/next-session-card';
+import { ProposalCard } from '@/components/home/proposal-card';
+import { VoteResultCard } from '@/components/home/vote-result-card';
+import { Notice } from '@/components/ui/notice';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
-import { colors } from '@/theme/colors';
+import { SectionLink } from '@/components/ui/section-link';
+import { CardSkeleton } from '@/components/ui/skeleton';
+import { isoToDotDate } from '@/lib/date';
 import { spacing } from '@/theme/layout';
-import { typography } from '@/theme/typography';
+
+const LATEST_COUNT = 3;
+const PROPOSAL_DAYS = 30;
 
 /**
- * Home. Sections per the design: next Nationalrat session, latest vote results
- * (`latest_vote_results()`), latest ministerial proposals
- * (`latest_ministrial_proposals(30)`). Data wiring is the next pass.
+ * Cards are inert for now: there are no vote or proposal detail routes yet.
  */
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const session = useQuery({
+    queryKey: ['next-plenar-date'],
+    queryFn: async () => unwrap(await next_plenar_date()),
+  });
+
+  const votes = useQuery({
+    queryKey: ['latest-vote-results'],
+    queryFn: async () => unwrap(await latest_vote_results()),
+  });
+
+  const proposals = useQuery({
+    queryKey: ['latest-proposals', PROPOSAL_DAYS],
+    queryFn: async () => unwrap(await latest_ministrial_proposals(PROPOSAL_DAYS)),
+  });
+
+  const refreshing = session.isRefetching || votes.isRefetching || proposals.isRefetching;
+  const onRefresh = () => {
+    session.refetch();
+    votes.refetch();
+    proposals.refetch();
+  };
+
+  // The web takes the section's date from the first result, not from today.
+  const voteDate = votes.data?.at(0)?.legislative_initiative.nr_plenary_activity_date;
+
   return (
-    <Screen>
-      <Card style={styles.sessionCard}>
-        <Text style={typography.cardTitle}>Nächste Nationalratssitzung</Text>
-        <Text style={typography.caption}>Termin wird geladen</Text>
-      </Card>
+    <Screen refreshing={refreshing} onRefresh={onRefresh}>
+      <NextSessionCard date={session.data?.date_and_time ?? null} />
 
       <View style={styles.section}>
-        <ScreenTitle title="Letzte Abstimmungen" subtitle="Noch keine Daten geladen" section />
-        <Placeholder label="Abstimmungskarten" />
+        <ScreenTitle
+          title="Letzte Abstimmungen"
+          subtitle={voteDate ? `Abgestimmt am ${isoToDotDate(voteDate)}` : undefined}
+          section
+        />
+
+        {votes.isPending ? (
+          <Skeletons />
+        ) : votes.isError ? (
+          <Notice message="Abstimmungen konnten nicht geladen werden." />
+        ) : votes.data.length === 0 ? (
+          <Notice message="Keine." />
+        ) : (
+          votes.data
+            .slice(0, LATEST_COUNT)
+            .map((voteResult) => (
+              <VoteResultCard key={voteResult.id} voteResult={voteResult} />
+            ))
+        )}
+
+        <SectionLink
+          label="Weitere Abstimmungen"
+          onPress={() => router.navigate('/abstimmungen')}
+        />
       </View>
 
       <View style={styles.section}>
         <ScreenTitle title="Ministerialentwürfe" subtitle="Der letzten 30 Tage" section />
-        <Placeholder label="Ministerialentwurfskarten" />
+
+        {proposals.isPending ? (
+          <Skeletons />
+        ) : proposals.isError ? (
+          <Notice message="Ministerialentwürfe konnten nicht geladen werden." />
+        ) : proposals.data.length === 0 ? (
+          <Notice message="Keine." />
+        ) : (
+          proposals.data
+            .slice(0, LATEST_COUNT)
+            .map((proposal) => (
+              <ProposalCard
+                key={proposal.gov_proposal.ministrial_proposal.id}
+                proposal={proposal}
+              />
+            ))
+        )}
+
+        <SectionLink
+          label="Weitere Ministerialentwürfe"
+          onPress={() => router.navigate('/abstimmungen')}
+        />
       </View>
     </Screen>
   );
 }
 
-export function Placeholder({ label }: { label: string }) {
+function Skeletons() {
   return (
-    <Card>
-      <Text style={typography.bodyMuted}>{label}</Text>
-    </Card>
+    <>
+      <CardSkeleton />
+      <CardSkeleton />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   section: {
     gap: spacing.md,
-  },
-  sessionCard: {
-    backgroundColor: colors.sessionCard,
   },
 });

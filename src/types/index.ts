@@ -496,6 +496,15 @@ export interface LegisPeriod {
 	start_date: Date;
 }
 
+/**
+ * A Nationalrat plenary sitting. `date_and_time` is a `NaiveDateTime` in
+ * somes-api (routes/dates.rs), so it arrives as "2026-04-23T09:00:00" — no
+ * timezone, which `new Date()` reads as local time.
+ */
+export interface PlenarDate {
+	date_and_time: string;
+}
+
 export interface PartyVote {
 	party: string;
 	infavor: boolean;

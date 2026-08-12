@@ -13,6 +13,7 @@ import type {
   LegisPeriod,
   Party,
   PartyStates,
+  PlenarDate,
   SpeechesWithMaxPage,
   UniqueTopic,
   VoteResult,
@@ -66,6 +67,12 @@ export async function get_eurovoc_topics() {
 
 export async function walo_questions() {
   return getWithRoute<WaloQuestion[]>('walo_questions', '');
+}
+
+// --- Plenary sessions ------------------------------------------------------
+
+export async function next_plenar_date() {
+  return getWithRoute<PlenarDate>('next_plenar_date');
 }
 
 // --- Delegates -------------------------------------------------------------

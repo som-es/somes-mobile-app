@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/theme/colors';
@@ -8,17 +8,13 @@ import { typography } from '@/theme/typography';
 
 type ScreenProps = {
   children: ReactNode;
-  /** Set false for screens that manage their own scrolling (e.g. a FlatList). */
   scroll?: boolean;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 };
 
-export function Screen({ children, scroll = true }: ScreenProps) {
+export function Screen({ children, scroll = true, refreshing, onRefresh }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  /**
-   * The tab bar paints TAB_BAR_HEIGHT *plus* the bottom inset, so content has
-   * to clear both. Missing the inset hid the last ~34pt of every screen behind
-   * the bar on any device with a home indicator.
-   */
   const paddingBottom = TAB_BAR_HEIGHT + insets.bottom + spacing.xl;
 
   if (!scroll) {
@@ -29,11 +25,18 @@ export function Screen({ children, scroll = true }: ScreenProps) {
       style={styles.screen}
       contentContainerStyle={[styles.content, { paddingBottom }]}
       showsVerticalScrollIndicator={false}
-      // The custom header already owns the top inset.
       contentInsetAdjustmentBehavior="never"
-      // Both search screens would otherwise swallow the first tap on a result
-      // while the keyboard is up.
-      keyboardShouldPersistTaps="handled">
+      keyboardShouldPersistTaps="handled"
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl
+            refreshing={refreshing ?? false}
+            onRefresh={onRefresh}
+            tintColor={colors.chrome}
+            colors={[colors.chrome]}
+          />
+        ) : undefined
+      }>
       {children}
     </ScrollView>
   );
@@ -42,12 +45,10 @@ export function Screen({ children, scroll = true }: ScreenProps) {
 type TitleProps = {
   title: string;
   subtitle?: string;
-  /** The design centres screen titles but left-aligns section titles. */
   centered?: boolean;
   section?: boolean;
 };
 
-/** Title plus the muted line beneath it — the pattern on every screen. */
 export function ScreenTitle({ title, subtitle, centered = false, section = false }: TitleProps) {
   return (
     <View style={[styles.titleBlock, centered && styles.centered]}>

@@ -1,0 +1,54 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { Card } from '@/components/ui/card';
+import { isoToDotDate, relativeDayLabel } from '@/lib/date';
+import { colors, primary } from '@/theme/colors';
+import { spacing } from '@/theme/layout';
+import { typography } from '@/theme/typography';
+
+type Props = {
+  /** The naive datetime from `next_plenar_date()`, or null while loading / on error. */
+  date: string | null;
+};
+
+/**
+ * Figma node 286:428. The web's NextSessionInfo also offers a "Sitzungskalender"
+ * popover; there is no calendar screen here yet, and PlenarCalendar.svelte
+ * carries a TODO saying it is not responsive on mobile, so the button is left out.
+ */
+export function NextSessionCard({ date }: Props) {
+  const relative = date ? relativeDayLabel(date) : null;
+
+  return (
+    <Card style={styles.card}>
+      <View style={styles.row}>
+        <View style={styles.text}>
+          <Text style={typography.cardTitle}>Nächste Nationalratssitzung</Text>
+          <Text style={typography.caption}>
+            {date
+              ? `am ${isoToDotDate(date)}${relative ? ` (${relative})` : ''}`
+              : 'Termin noch nicht bekannt'}
+          </Text>
+        </View>
+        <Ionicons name="calendar-outline" size={32} color={primary[500]} />
+      </View>
+    </Card>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.sessionCard,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  text: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+});
