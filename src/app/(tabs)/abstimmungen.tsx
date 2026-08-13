@@ -11,16 +11,6 @@ const TABS = [
 
 type Tab = (typeof TABS)[number]['value'];
 
-/**
- * Figma node 286:276. Two lists behind one segmented control:
- *  - Nationalrat → vote results, somes.at `/history/votes`
- *  - Regierung   → ministerial proposals, somes.at `/history/proposals`
- *
- * The control is handed to whichever list is showing rather than sitting above
- * them, because the design has it scroll away with the rest of the header.
- * Each list keeps its own search text and filters, so switching back and forth
- * does not clear either.
- */
 export default function AbstimmungenScreen() {
   const [tab, setTab] = useState<Tab>('nationalrat');
 
