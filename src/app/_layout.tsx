@@ -42,6 +42,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="notifications" />
           <Stack.Screen name="abgeordnete/[id]" />
+          <Stack.Screen name="abstimmung/[gp]/[ityp]/[inr]" />
+          <Stack.Screen name="ministerialentwurf/[gp]/[inr]" />
         </Stack>
       </QueryClientProvider>
     </SafeAreaProvider>

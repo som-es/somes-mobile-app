@@ -60,6 +60,17 @@ export const typography = StyleSheet.create({
     color: colors.textTitle,
     lineHeight: 25,
   },
+  /**
+   * The headline of a detail screen's first card. Larger than `cardTitle`,
+   * because on the detail screen it is the page's subject rather than one row
+   * in a list — the web steps up from `text-base` to `text-xl` in the same spot.
+   */
+  detailTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.textTitle,
+    lineHeight: 23,
+  },
   /** Card headline, e.g. a law's name. */
   cardTitle: {
     fontSize: 14,
@@ -101,9 +112,14 @@ export const typography = StyleSheet.create({
     color: colors.onAccent,
     lineHeight: 14,
   },
-  /** Filter pill label ("Themen", "Parteien", "Filter"). */
+  /**
+   * Filter pill label ("Themen", "Parteien", "Filter").
+   *
+   * The Figma draws 16, but that was without the active-filter count the pills
+   * now carry — at 16 "Ministerien (12)" cannot fit a third of the row.
+   */
   pillLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     color: colors.onAccent,
   },

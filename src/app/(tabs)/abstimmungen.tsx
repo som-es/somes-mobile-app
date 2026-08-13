@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 
-import { Card } from '@/components/ui/card';
-import { FilterPill } from '@/components/ui/filter-pill';
-import { Screen, ScreenTitle } from '@/components/ui/screen';
-import { SearchField } from '@/components/ui/search-field';
+import { ProposalsList } from '@/components/lists/proposals-list';
+import { VotesList } from '@/components/lists/votes-list';
 import { SegmentedControl } from '@/components/ui/segmented-control';
-import { spacing } from '@/theme/layout';
-import { typography } from '@/theme/typography';
 
 const TABS = [
   { value: 'nationalrat', label: 'Nationalrat' },
@@ -17,47 +12,23 @@ const TABS = [
 type Tab = (typeof TABS)[number]['value'];
 
 /**
- * Two views behind one segmented control, matching the design:
- *  - Nationalrat → vote results (`vote_results_per_page` / `..._by_search`)
- *  - Regierung   → ministerial proposals (`gov_proposals_per_page`)
+ * Figma node 286:276. Two lists behind one segmented control:
+ *  - Nationalrat → vote results, somes.at `/history/votes`
+ *  - Regierung   → ministerial proposals, somes.at `/history/proposals`
+ *
+ * The control is handed to whichever list is showing rather than sitting above
+ * them, because the design has it scroll away with the rest of the header.
+ * Each list keeps its own search text and filters, so switching back and forth
+ * does not clear either.
  */
 export default function AbstimmungenScreen() {
   const [tab, setTab] = useState<Tab>('nationalrat');
-  const [search, setSearch] = useState('');
 
-  const isNationalrat = tab === 'nationalrat';
+  const control = <SegmentedControl options={TABS} value={tab} onChange={setTab} />;
 
-  return (
-    <Screen>
-      <SegmentedControl options={TABS} value={tab} onChange={setTab} />
-
-      <ScreenTitle
-        title={isNationalrat ? 'Vergangene Abstimmungsergebnisse' : 'Ministerialentwürfe'}
-        subtitle={isNationalrat ? 'Noch keine Daten geladen' : 'Noch keine Daten geladen'}
-        centered
-      />
-
-      <SearchField value={search} onChangeText={setSearch} />
-
-      <View style={styles.filters}>
-        <FilterPill label="Themen" />
-        <FilterPill label={isNationalrat ? 'Parteien' : 'Ministerien'} />
-        <FilterPill label="Filter" />
-      </View>
-
-      <Card>
-        <Text style={typography.bodyMuted}>
-          {isNationalrat ? 'Abstimmungskarten' : 'Ministerialentwurfskarten'}
-        </Text>
-      </Card>
-    </Screen>
+  return tab === 'nationalrat' ? (
+    <VotesList control={control} />
+  ) : (
+    <ProposalsList control={control} />
   );
 }
-
-const styles = StyleSheet.create({
-  filters: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-});

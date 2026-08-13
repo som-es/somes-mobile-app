@@ -214,3 +214,7 @@ export async function gov_proposals_per_page(page: number, filter: GovPropFilter
 export async function gov_proposals_by_search(query: string) {
   return getWithRoute<GovProposalsWithMaxPage>(`v1/gov_proposals/search?${query}`);
 }
+
+export async function gov_proposal_by_path(gp: string, inr: string) {
+  return getWithRoute<GovProposalDelegate>(`v1/gov_proposals/${gp}/${inr}`);
+}

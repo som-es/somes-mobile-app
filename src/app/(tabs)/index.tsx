@@ -4,9 +4,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { latest_ministrial_proposals, latest_vote_results, next_plenar_date } from '@/api/api';
 import { unwrap } from '@/api/client';
+import { ProposalCard } from '@/components/cards/proposal-card';
+import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { NextSessionCard } from '@/components/home/next-session-card';
-import { ProposalCard } from '@/components/home/proposal-card';
-import { VoteResultCard } from '@/components/home/vote-result-card';
 import { Notice } from '@/components/ui/notice';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { SectionLink } from '@/components/ui/section-link';
@@ -17,9 +17,6 @@ import { spacing } from '@/theme/layout';
 const LATEST_COUNT = 3;
 const PROPOSAL_DAYS = 30;
 
-/**
- * Cards are inert for now: there are no vote or proposal detail routes yet.
- */
 export default function HomeScreen() {
   const router = useRouter();
 

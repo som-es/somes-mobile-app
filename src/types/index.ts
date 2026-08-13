@@ -206,12 +206,6 @@ export interface VoteResult {
 	ai_summary: DbAiSummary | null;
 }
 
-/** expo-router equivalent of the web app's `createVoteResultPath`. */
-export function createVoteResultPath(voteResult: VoteResult): string {
-	const { gp, ityp, inr } = voteResult.legislative_initiative;
-	return `/abstimmung/${gp}/${ityp}/${inr}`;
-}
-
 export interface VoteResultsWithMaxPage {
 	vote_results: VoteResult[];
 	entry_count: number;

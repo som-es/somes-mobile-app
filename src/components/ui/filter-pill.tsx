@@ -23,10 +23,17 @@ export function FilterPill({ label, onPress }: Props) {
       onPress={onPress}
       accessibilityRole="button"
       style={({ pressed }) => [styles.pill, pressed && styles.pressed]}>
-      <Text style={typography.pillLabel} numberOfLines={1}>
+      {/* Three pills share a 353pt row, so the longest label — "Ministerien (12)"
+          — has about 74pt to live in. `adjustsFontSizeToFit` shrinks it to fit
+          instead of clipping it, which is why the label must stay one line. */}
+      <Text
+        style={[typography.pillLabel, styles.label]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}>
         {label}
       </Text>
-      <Ionicons name="chevron-down" size={16} color={colors.onAccent} />
+      <Ionicons name="chevron-down" size={14} color={colors.onAccent} />
     </Pressable>
   );
 }
@@ -36,11 +43,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: spacing.sm,
+    gap: spacing.xs,
     height: 41,
     backgroundColor: colors.accent,
     borderRadius: radius.control,
-    paddingHorizontal: 14,
+    paddingHorizontal: spacing.sm,
+  },
+  label: {
+    flexShrink: 1,
   },
   pressed: {
     opacity: 0.7,

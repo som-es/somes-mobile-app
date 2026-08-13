@@ -52,8 +52,18 @@ type TitleProps = {
 export function ScreenTitle({ title, subtitle, centered = false, section = false }: TitleProps) {
   return (
     <View style={[styles.titleBlock, centered && styles.centered]}>
-      <Text style={section ? typography.sectionTitle : typography.screenTitle}>{title}</Text>
-      {subtitle ? <Text style={typography.subtitle}>{subtitle}</Text> : null}
+      {/* `alignItems` alone only centres a single line — a title that wraps still
+          sets its own lines flush left, so the text needs centring too. */}
+      <Text
+        style={[
+          section ? typography.sectionTitle : typography.screenTitle,
+          centered && styles.centeredText,
+        ]}>
+        {title}
+      </Text>
+      {subtitle ? (
+        <Text style={[typography.subtitle, centered && styles.centeredText]}>{subtitle}</Text>
+      ) : null}
     </View>
   );
 }
@@ -73,5 +83,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     alignItems: 'center',
+  },
+  centeredText: {
+    textAlign: 'center',
   },
 });
