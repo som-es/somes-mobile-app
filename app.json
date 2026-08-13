@@ -4,11 +4,10 @@
     "slug": "somes-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/brand/icon.png",
     "scheme": "somesmobileapp",
     "userInterfaceStyle": "light",
     "ios": {
-      "icon": "./assets/expo.icon",
       "supportsTablet": false,
       "bundleIdentifier": "com.leonbinder.somesmobileapp",
       "infoPlist": {
@@ -17,25 +16,33 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#2D3748",
+        "foregroundImage": "./assets/brand/adaptive-icon-foreground.png",
+        "monochromeImage": "./assets/brand/adaptive-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/brand/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#24283e",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#2D3748",
+          "resizeMode": "contain",
+          "image": "./assets/brand/splash-lockup.png",
+          "imageWidth": 330,
+          "ios": {
+            "image": "./assets/brand/splash-lockup.png",
+            "imageWidth": 330
+          },
+          "android": {
+            "image": "./assets/brand/splash-mark.png",
+            "imageWidth": 128
+          }
         }
       ],
       "expo-secure-store",
@@ -59,6 +66,6 @@
       }
     },
     "owner": "leonbinder",
-    "backgroundColor": "#f5f6fa"
+    "backgroundColor": "#FAF8FF"
   }
 }

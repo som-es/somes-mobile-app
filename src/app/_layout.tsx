@@ -10,7 +10,10 @@ import { loadToken } from '@/lib/auth-store';
 import { queryClient } from '@/lib/query-client';
 import { colors } from '@/theme/colors';
 
-SplashScreen.preventAutoHideAsync();
+// Rejects if the splash is already gone — e.g. on a Fast Refresh remount.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+// The splash background is colors.chrome, so fading out reads as the header staying put.
+SplashScreen.setOptions({ duration: 250, fade: true });
 
 export default function RootLayout() {
   /**
