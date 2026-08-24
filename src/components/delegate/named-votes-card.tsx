@@ -82,7 +82,7 @@ export function NamedVotesCard({ namedVotes }: Props) {
               ) : result.isError || !result.data ? (
                 <Text style={typography.bodyMuted}>Abstimmung konnte nicht geladen werden.</Text>
               ) : (
-                <NamedVoteBody voteResult={result.data} infavor={namedVote.infavor} />
+                <NamedVoteBody voteResult={result.data} namedVote={namedVote} />
               )}
             </OpinionCard>
           );
@@ -103,12 +103,13 @@ export function NamedVotesCard({ namedVotes }: Props) {
 
 function NamedVoteBody({
   voteResult,
-  infavor,
+  namedVote,
 }: {
   voteResult: VoteResult;
-  infavor: boolean | null;
+  namedVote: NamedVote;
 }) {
   const { legislative_initiative: initiative, ai_summary } = voteResult;
+  const { infavor } = namedVote;
 
   return (
     <View style={styles.body}>
@@ -116,7 +117,13 @@ function NamedVoteBody({
         <Text style={[typography.rowTitle, styles.title]} numberOfLines={2}>
           {ai_summary?.short_title ?? initiative.description}
         </Text>
-        {infavor !== null ? <VoteMark infavor={infavor} size={18} /> : null}
+        {infavor !== null ? (
+          <VoteMark infavor={infavor} size={18} />
+        ) : (
+          <Text style={typography.caption}>
+            {namedVote.was_absent ? 'Abwesend' : 'Keine Stimme'}
+          </Text>
+        )}
       </View>
 
       <Text style={typography.caption}>
@@ -124,7 +131,7 @@ function NamedVoteBody({
       </Text>
 
       {ai_summary?.short_summary ? (
-        <Text style={typography.caption} numberOfLines={2}>
+        <Text style={typography.body} numberOfLines={2}>
           {ai_summary.short_summary}
         </Text>
       ) : null}
@@ -163,6 +170,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-    marginTop: spacing.xs,
+    marginTop: spacing.md,
   },
 });

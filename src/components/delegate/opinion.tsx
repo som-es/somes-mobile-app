@@ -8,9 +8,8 @@ import { typography } from '@/theme/typography';
 /** The stripe the Figma draws by peeking a coloured rect out from behind. */
 const STRIPE = 4;
 
-/** Green for a Pro vote, red for Contra, amber when no vote was cast. */
 export function opinionColor(infavor: boolean | null): string {
-  if (infavor === null) return colors.voteAbstain;
+  if (infavor === null) return colors.voteNone;
   return infavor ? colors.voteYes : colors.voteNo;
 }
 

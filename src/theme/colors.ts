@@ -112,15 +112,9 @@ export const colors = {
   cardBorder: '#DCDDDF',
   /** The "Nächste Nationalratssitzung" card and the segmented-control track. */
   sessionCard: primary[300],
-
-  /**
-   * Inset panels *inside* a card, where `cardRaised` would read as a second
-   * card: the Themen tiles, the Abwesenheits-Zeilen, the Reden and
-   * Abstimmungs-Karten on a member's page.
-   */
-  inset: '#EEEEEE',
-  /** The rail a stance dot slides along. */
-  rail: '#E8ECF1',
+  inset: primary[50],
+  /** The rail a stance dot slides along. Same tone as `inset`, different job. */
+  rail: primary[50],
 
   /** Metadata chips: "einfache Mehrheit", "XXVIII", dates. */
   badge: '#FAE9DA',
@@ -149,8 +143,9 @@ export const colors = {
 
   /** Vote outcomes and pro/contra speech markers. */
   voteYes: '#1FA14B',
-  voteNo: error[500],
+  voteNo: '#DC2626',
   voteAbstain: warning[500],
+  voteNone: primary[500],
 
   danger: '#FF4C4C',
   dangerSurface: 'rgba(255, 141, 141, 0.42)',

@@ -65,7 +65,12 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
 
             <View style={styles.metaRow}>
               <Text style={typography.caption}>
-                {speech.duration_in_seconds ? minutes(speech.duration_in_seconds) : ''}
+                {[
+                  speech.infavor === null ? speech.opinion : null,
+                  speech.duration_in_seconds ? minutes(speech.duration_in_seconds) : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
               </Text>
               {speech.document_url ? (
                 <Ionicons name="book-outline" size={14} color={colors.textPlaceholder} />
