@@ -15,6 +15,24 @@ export function isoToDotDate(date: string): string {
   return dashDateToDotDate(date.split('T')[0]);
 }
 
+/**
+ * "2024-07-04T22:00:00Z" → "05.07.2024".
+ *
+ * `isoToDotDate` just slices the date part off, which is right for the naive
+ * datetimes most endpoints return. `absences` hands back UTC instants with a
+ * trailing `Z`, where slicing lands a day early for anything after 22:00 — so
+ * these go through `Date` and are read back in local time, as somes-frontend's
+ * `Intl.DateTimeFormat('de-AT')` does.
+ */
+export function instantToDotDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${day}.${month}.${date.getFullYear()}`;
+}
+
 export function relativeDayLabel(date: string): string | null {
   const days = (new Date(date).getTime() - Date.now()) / MS_PER_DAY;
   if (Number.isNaN(days) || days <= 0) return null;
@@ -26,4 +44,30 @@ export function relativeDayLabel(date: string): string | null {
 
   const rounded = Math.round(days);
   return rounded === 1 ? 'in 1 Tag' : `in ${rounded} Tagen`;
+}
+
+/**
+ * Calendar age from an ISO `birthdate`, or null when the value is unusable.
+ *
+ * somes-frontend does `Math.floor(dateDiffInDays(birth, now) / 365)`, which
+ * drifts a year across leap-heavy spans. This compares calendar fields instead.
+ */
+export function age(birthdate: string | null): number | null {
+  if (!birthdate) return null;
+
+  const born = new Date(birthdate);
+  if (Number.isNaN(born.getTime())) return null;
+
+  const now = new Date();
+  let years = now.getFullYear() - born.getFullYear();
+
+  const monthDiff = now.getMonth() - born.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < born.getDate())) years -= 1;
+
+  return years >= 0 ? years : null;
+}
+
+/** A speech length. Under a minute still reads as "1 Min." rather than "0 Min.". */
+export function minutes(seconds: number): string {
+  return `${Math.max(1, Math.round(seconds / 60))} Min.`;
 }

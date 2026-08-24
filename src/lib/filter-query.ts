@@ -166,3 +166,48 @@ export function proposalFilterCounts(filters: ProposalFilters) {
     generic: filters.hasVoteResult ? 1 : 0,
   };
 }
+
+/**
+ * Delegate filters.
+ *
+ * There is deliberately no `delegatesQuery()` beside the two builders above:
+ * `v1/delegates/search` is reached through `delegates_search_persons()`, which
+ * takes positional arguments and assembles its own bracket parameters — the web
+ * does the same, and keeping the two diffable matters more than symmetry here.
+ * This type only carries the screen's filter state and its badge count.
+ */
+export type DelegateFilters = {
+  /** null means "Alle Perioden" — no `active_gps` parameter is sent. */
+  gp: string | null;
+  parties: string[];
+  /** "Mandatsart": true Regierung, false Nationalrat, null egal. */
+  onlyGov: boolean | null;
+  hasActiveMandate: boolean | null;
+  /**
+   * "Ehemalige Parteizugehörigkeit beachten". On, the party filter matches any
+   * mandate's party; off, only the member's current one.
+   */
+  mindPreviousPartyMembership: boolean;
+};
+
+export const emptyDelegateFilters: DelegateFilters = {
+  gp: DEFAULT_GP,
+  parties: [],
+  onlyGov: null,
+  hasActiveMandate: null,
+  mindPreviousPartyMembership: true,
+};
+
+/**
+ * The single "Filter" pill holds everything except the party chips, which sit
+ * in their own row. The period is excluded for the same reason as on the other
+ * two screens: it always has a value.
+ */
+export function delegateFilterCounts(filters: DelegateFilters) {
+  return {
+    parties: filters.parties.length,
+    generic:
+      [filters.onlyGov, filters.hasActiveMandate].filter((value) => value !== null).length +
+      (filters.mindPreviousPartyMembership ? 0 : 1),
+  };
+}

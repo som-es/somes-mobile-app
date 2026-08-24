@@ -18,7 +18,7 @@ import { emptyVoteFilters, voteFilterCounts, voteResultsQuery } from '@/lib/filt
 import { useDebounced } from '@/lib/use-debounced';
 import { spacing } from '@/theme/layout';
 
-import { useFilterSources, withCount, type Sheet } from './filter-sources';
+import { partiesFor, useFilterSources, withCount, type Sheet } from './filter-sources';
 
 type Props = {
   /** The Nationalrat / Regierung switch, owned by the screen. */
@@ -134,35 +134,6 @@ export function VotesList({ control }: Props) {
       />
     </>
   );
-}
-
-/**
- * The parties of the selected period, largest first — the web's `uniqueParties`.
- * With "Alle" selected it walks the periods newest-first and keeps the first
- * sighting of each party code, so a renamed party appears once.
- */
-function partiesFor(
-  partiesPerGp: Record<string, { name: string; code: string | null; color: string | null; fraction: number }[]> | undefined,
-  gp: string | null
-) {
-  if (!partiesPerGp) return [];
-
-  const collected = gp
-    ? (partiesPerGp[gp] ?? [])
-    : Object.keys(partiesPerGp)
-        .sort()
-        .reverse()
-        .reduce<typeof partiesPerGp[string]>((parties, key) => {
-          partiesPerGp[key].forEach((party) => {
-            if (!parties.some((seen) => seen.code === party.code)) parties.push(party);
-          });
-          return parties;
-        }, []);
-
-  return collected
-    .slice()
-    .sort((a, b) => b.fraction - a.fraction)
-    .map((party) => ({ name: party.name, color: party.color }));
 }
 
 const styles = StyleSheet.create({

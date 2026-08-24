@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 import { OptionGroup } from '@/components/filters/option-group';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
-import type { ProposalFilters, VoteFilters } from '@/lib/filter-query';
+import type { DelegateFilters, ProposalFilters, VoteFilters } from '@/lib/filter-query';
 import { spacing } from '@/theme/layout';
 
 /**
@@ -33,6 +33,23 @@ const MAJORITY = [
 const HAS_VOTE_RESULT = [
   { label: 'egal', value: null },
   { label: 'mit Abstimmung', value: true },
+] as const;
+
+const MANDATE_KIND = [
+  { label: 'egal', value: null },
+  { label: 'Regierung', value: true },
+  { label: 'Nationalrat', value: false },
+] as const;
+
+const ACTIVE_MANDATE = [
+  { label: 'egal', value: null },
+  { label: 'Ja', value: true },
+  { label: 'Nein', value: false },
+] as const;
+
+const MIND_PREVIOUS_PARTY = [
+  { label: 'Ja', value: true },
+  { label: 'Nein', value: false },
 ] as const;
 
 type PeriodProps = {
@@ -124,6 +141,75 @@ export function ProposalGenericSheet({
           options={HAS_VOTE_RESULT}
           value={filters.hasVoteResult}
           onChange={(hasVoteResult) => onChange({ ...filters, hasVoteResult })}
+        />
+      </ScrollView>
+    </BottomSheet>
+  );
+}
+
+type DelegateProps = PeriodProps & {
+  visible: boolean;
+  filters: DelegateFilters;
+  onChange: (filters: DelegateFilters) => void;
+  onClose: () => void;
+};
+
+/**
+ * The Abgeordnete filter sheet — the web's four `genericFilters` groups plus
+ * the period picker, which lives in the same popover there.
+ *
+ * Caveat worth knowing while reading the results: `delegates_search_persons()`
+ * sends the period as `active_gov_gps` whenever Mandatsart is "Regierung" and
+ * as `active_gps` otherwise. somes-frontend has an unreachable `active_nr_gps`
+ * branch there; our port reproduces the same behaviour byte for byte so the two
+ * stay diffable. Fix it in somes-frontend first, not here.
+ */
+export function DelegateGenericSheet({
+  visible,
+  periods,
+  filters,
+  onChange,
+  onClose,
+}: DelegateProps) {
+  return (
+    <BottomSheet
+      visible={visible}
+      title="Filter"
+      onClose={onClose}
+      onReset={() =>
+        onChange({
+          ...filters,
+          onlyGov: null,
+          hasActiveMandate: null,
+          mindPreviousPartyMembership: true,
+        })
+      }>
+      <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
+        <OptionGroup
+          title="Legislaturperiode"
+          options={periodOptions(periods)}
+          value={filters.gp}
+          onChange={(gp) => onChange({ ...filters, gp })}
+        />
+        <OptionGroup
+          title="Mandatsart"
+          options={MANDATE_KIND}
+          value={filters.onlyGov}
+          onChange={(onlyGov) => onChange({ ...filters, onlyGov })}
+        />
+        <OptionGroup
+          title="Aktives Mandat"
+          options={ACTIVE_MANDATE}
+          value={filters.hasActiveMandate}
+          onChange={(hasActiveMandate) => onChange({ ...filters, hasActiveMandate })}
+        />
+        <OptionGroup
+          title="Ehemalige Parteizugehörigkeit beachten"
+          options={MIND_PREVIOUS_PARTY}
+          value={filters.mindPreviousPartyMembership}
+          onChange={(mindPreviousPartyMembership) =>
+            onChange({ ...filters, mindPreviousPartyMembership })
+          }
         />
       </ScrollView>
     </BottomSheet>

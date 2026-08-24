@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { all_gps, get_eurovoc_topics } from '@/api/api';
 import { unwrap } from '@/api/client';
+import type { Party } from '@/types';
 
 /** Which sheet is open. `second` is Parteien on votes, Ministerien on proposals. */
 export type Sheet = 'topics' | 'second' | 'generic' | null;
@@ -35,4 +36,35 @@ export function useFilterSources() {
 /** "Themen" with nothing selected, "Themen (3)" with three — as `FilterDropdown` does. */
 export function withCount(label: string, count: number): string {
   return count > 0 ? `${label} (${count})` : label;
+}
+
+/**
+ * The parties of the selected period, largest first — the web's `uniqueParties`.
+ * With "Alle" selected it walks the periods newest-first and keeps the first
+ * sighting of each party code, so a renamed party appears once.
+ *
+ * Shared by the Abstimmungen party sheet and the Abgeordnete chip row.
+ */
+export function partiesFor(
+  partiesPerGp: Record<string, Party[]> | undefined,
+  gp: string | null
+): { name: string; color: string | null }[] {
+  if (!partiesPerGp) return [];
+
+  const collected = gp
+    ? (partiesPerGp[gp] ?? [])
+    : Object.keys(partiesPerGp)
+        .sort()
+        .reverse()
+        .reduce<Party[]>((parties, key) => {
+          partiesPerGp[key].forEach((party) => {
+            if (!parties.some((seen) => seen.code === party.code)) parties.push(party);
+          });
+          return parties;
+        }, []);
+
+  return collected
+    .slice()
+    .sort((a, b) => b.fraction - a.fraction)
+    .map((party) => ({ name: party.name, color: party.color }));
 }

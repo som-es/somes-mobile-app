@@ -8,14 +8,19 @@ import { typography } from '@/theme/typography';
 
 type Props = {
   title: string;
+  /** Sits opposite the title — the Pro/Contra legend on a member's page. */
+  action?: ReactNode;
   children: ReactNode;
 };
 
 /** A titled card — "Themen", "Abstimmung", "Reden", "Dokumente". */
-export function SectionCard({ title, children }: Props) {
+export function SectionCard({ title, action, children }: Props) {
   return (
     <Card>
-      <Text style={typography.cardHeading}>{title}</Text>
+      <View style={styles.head}>
+        <Text style={[typography.cardHeading, styles.title]}>{title}</Text>
+        {action}
+      </View>
       <View style={styles.body}>{children}</View>
     </Card>
   );
@@ -27,6 +32,15 @@ export function Divider() {
 }
 
 const styles = StyleSheet.create({
+  head: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
+  title: {
+    flexShrink: 1,
+  },
   body: {
     marginTop: spacing.md,
   },

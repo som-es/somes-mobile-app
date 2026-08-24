@@ -114,6 +114,22 @@ export async function speeches_by_delegate_per_page(delegate_id: number, page: n
 }
 
 /** Mirrors the web app's query-string construction exactly — the API is picky. */
+/**
+ * Percent-encode a parameter whole, brackets included — the same thing
+ * `src/lib/filter-query.ts` does for the two search-query builders.
+ *
+ * This is not cosmetic. Writing `[` and `]` raw, the way somes-frontend does,
+ * leaves the URL with characters that are illegal in a query string, so the
+ * native fetch layer canonicalises it — and in the same pass it re-encodes the
+ * `%` of any escape already in the string. A party name reached the API as
+ * `%25C3%2596VP` instead of `%C3%96VP` and matched nothing, which is why every
+ * party except NEOS — the only one spelled in pure ASCII — returned an empty
+ * list. Browsers tolerate the raw brackets, so the web app never saw this.
+ */
+function param(key: string, value: string): string {
+  return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
 export async function delegates_search_persons(
   page: number,
   entries_per_page: number,
@@ -124,28 +140,32 @@ export async function delegates_search_persons(
   mindPreviousPartyMembership: boolean = true,
   hasActiveMandate: boolean | null = null
 ) {
-  let query = `v1/delegates/search?page=${page}&entries_per_page=${entries_per_page}`;
-  if (name) query += `&search=${encodeURIComponent(name)}`;
+  const parts = [`page=${page}`, `entries_per_page=${entries_per_page}`];
+  if (name) parts.push(param('search', name));
 
   searchPeriods.forEach((searchPeriod, i) => {
+    // somes-frontend has an unreachable `active_nr_gps` branch here; the two
+    // live arms are reproduced exactly so the query stays diffable.
     const gps = onlyGov ? 'active_gov_gps' : 'active_gps';
-    query += `&${gps}[in][${i}]=${encodeURIComponent(searchPeriod)}`;
+    parts.push(param(`${gps}[in][${i}]`, searchPeriod));
   });
 
   searchParties.forEach((party, i) => {
-    if (mindPreviousPartyMembership) {
-      query += `&mandates[0][party][in][${i}]=${encodeURIComponent(party)}`;
-    } else {
-      query += `&party[in][${i}]=${encodeURIComponent(party)}`;
-    }
+    parts.push(
+      mindPreviousPartyMembership
+        ? param(`mandates[0][party][in][${i}]`, party)
+        : param(`party[in][${i}]`, party)
+    );
   });
 
   if (onlyGov !== null) {
-    query += `&mandates[0][is_gov_official][eq]=${onlyGov}`;
+    parts.push(param('mandates[0][is_gov_official][eq]', String(onlyGov)));
   }
   if (hasActiveMandate !== null) {
-    query += `&is_active[eq]=${hasActiveMandate}`;
+    parts.push(param('is_active[eq]', String(hasActiveMandate)));
   }
+
+  const query = `v1/delegates/search?${parts.join('&')}`;
 
   return getWithRoute<DelegatesWithMaxPage>(query);
 }

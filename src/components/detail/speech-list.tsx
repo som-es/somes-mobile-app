@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { url } from '@/api/client';
+import { minutes } from '@/lib/date';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -96,11 +97,6 @@ export function SpeechList({ speeches, delegates }: Props) {
       ) : null}
     </SectionCard>
   );
-}
-
-/** Under a minute still reads as "1 Min." rather than "0 Min.". */
-function minutes(seconds: number): string {
-  return `${Math.max(1, Math.round(seconds / 60))} Min.`;
 }
 
 const styles = StyleSheet.create({

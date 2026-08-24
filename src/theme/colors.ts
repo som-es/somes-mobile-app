@@ -113,6 +113,15 @@ export const colors = {
   /** The "Nächste Nationalratssitzung" card and the segmented-control track. */
   sessionCard: primary[300],
 
+  /**
+   * Inset panels *inside* a card, where `cardRaised` would read as a second
+   * card: the Themen tiles, the Abwesenheits-Zeilen, the Reden and
+   * Abstimmungs-Karten on a member's page.
+   */
+  inset: '#EEEEEE',
+  /** The rail a stance dot slides along. */
+  rail: '#E8ECF1',
+
   /** Metadata chips: "einfache Mehrheit", "XXVIII", dates. */
   badge: '#FAE9DA',
   onBadge: '#000000',
