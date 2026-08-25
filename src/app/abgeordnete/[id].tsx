@@ -90,7 +90,9 @@ function DelegateDetail({
             name={delegate.name}
             party={delegate.party}
             position={info.political_position}
-            stances={info.left_right_stances}
+            // `left_right_stances` was removed; the same {topic, score} list
+            // now hangs off the position it was always derived from.
+            stances={info.political_position?.scores_by_topic ?? []}
             interests={info.interests}
           />
           <AbsencesCard absences={info.absences} />

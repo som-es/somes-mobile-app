@@ -11,7 +11,7 @@ import type { UniqueTopic } from '@/types';
 type Props = {
   title: string;
   topics: UniqueTopic[];
-  selectedIds: Set<number>;
+  selectedIds: Set<string>;
   onToggle: (topic: UniqueTopic) => void;
   onToggleAll: (topics: UniqueTopic[], select: boolean) => void;
 };

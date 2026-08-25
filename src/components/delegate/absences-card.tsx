@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { SectionCard } from '@/components/detail/section-card';
-import { instantToDotDate } from '@/lib/date';
+import { isoToDotDate } from '@/lib/date';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -28,10 +28,11 @@ type Props = {
 export function AbsencesCard({ absences }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  // `Absence.date` is typed `Date` but arrives as a UTC instant string.
+  // `Absence.date` is a plain "2024-07-05" calendar date, so it sorts and
+  // formats as a string — no timezone conversion to get wrong.
   const sorted = absences
     .slice()
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   const shown = expanded ? sorted : sorted.slice(0, PREVIEW);
   const { year, count } = headlineYear(sorted);
@@ -58,7 +59,7 @@ export function AbsencesCard({ absences }: Props) {
                   </Text>
                 </View>
                 <Text style={typography.caption}>
-                  {instantToDotDate(String(absence.date))} ({absence.gp})
+                  {isoToDotDate(absence.date)} ({absence.gp})
                 </Text>
               </View>
             ))}
@@ -87,7 +88,7 @@ export function AbsencesCard({ absences }: Props) {
  */
 function headlineYear(sorted: Absence[]): { year: number; count: number } {
   const current = new Date().getFullYear();
-  const years = sorted.map((absence) => new Date(String(absence.date)).getFullYear());
+  const years = sorted.map((absence) => Number(absence.date.slice(0, 4)));
 
   const year = years.includes(current) ? current : (years[0] ?? current);
   return { year, count: years.filter((value) => value === year).length };

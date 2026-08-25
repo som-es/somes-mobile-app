@@ -119,22 +119,51 @@ export interface LegislativeInitiative {
 	is_urgent: boolean;
 }
 
+/**
+ * A party's vote on one initiative, as per-member counts.
+ *
+ * This replaced the older `{ fraction, infavor }` pair, which said only how many
+ * seats a party held and whether it voted yes. Nothing is lost: the seat count
+ * is the four counts summed and the party's position is `infavor_count` against
+ * `against_count` — see `partySeats()` and `partyInfavor()` in `@/lib/votes`,
+ * which are the only places allowed to know that.
+ */
 export interface Vote {
 	party: string;
 	code: string | null;
-	fraction: number;
-	infavor: boolean;
-	legislative_initiatives_id: number;
+	infavor_count: number;
+	against_count: number;
+	abstention_count: number;
+	absence_count: number;
 }
 
-export interface Speech {
+/** The speech itself. What used to be the whole of `Speech`. */
+export interface SpeechDetail {
 	delegate_id: number;
 	infavor: boolean | null;
 	opinion: string | null;
-	document_url: string | null;
+	/** Was `document_url`; a speech can have more than one protocol link. */
+	document_urls: string[] | null;
 	about: string | null;
 	duration_in_seconds: number | null;
-	legis_init_id: number | null;
+	vote_result_ids: number[] | null;
+	/** Wall-clock start, e.g. "18:18:00". */
+	start: string | null;
+}
+
+/**
+ * A speech and everything the backend has inferred about it.
+ *
+ * `ai_summary` and `relations` carry generated prose, key points and a glossary.
+ * They are deliberately left untyped: the app renders neither, and typing a
+ * payload nothing reads would invite someone to use it without checking whether
+ * it is ever null. Type them when a screen actually needs them.
+ */
+export interface Speech {
+	id: number;
+	debate_id: number;
+	delegate_id: number;
+	speech: SpeechDetail;
 }
 
 export interface SpeechesWithMaxPage {
@@ -154,7 +183,8 @@ export interface Topic {
 }
 
 export interface UniqueTopic {
-	id: number;
+	/** A hash, serialised as a string — it does not fit in a JS number. */
+	id: string;
 	topic: string;
 }
 
@@ -262,13 +292,17 @@ export interface CallToOrdersPerPartyDelegate {
 	ratio: number;
 }
 
+/**
+ * Where a member sits, plus the per-topic stances behind it.
+ *
+ * The axes were renamed from `is_left` / `is_not_left` / `is_liberal` /
+ * `is_not_liberal` to socialist / capitalist / liberal / authoritarian. Same two
+ * axes, clearer poles. `scores_by_topic` replaces the removed top-level
+ * `left_right_stances` and carries the identical `{ topic, score }`.
+ */
 export interface PoliticalPosition {
-	delegate_id: number | null;
-	is_left: number;
-	is_not_left: number;
-	is_liberal: number;
-	is_not_liberal: number;
-	neutral_count: number;
+	total_score: PoliticalScore;
+	scores_by_topic: StanceTopicScore[];
 }
 
 export interface Party {
@@ -421,7 +455,8 @@ export interface Mandate {
 }
 
 export interface Absence {
-	date: Date;
+	/** A plain calendar date ("2024-07-05"), not an instant. */
+	date: string;
 	inr: number;
 	gp: string;
 	plenary_session_id: number;
@@ -476,7 +511,6 @@ export interface GeneralDelegateInfo {
 	named_votes: NamedVote[];
 	stance_topic_influences: StanceTopicInfluences[];
 	stance_topic_scores: StanceTopicScore[];
-	left_right_stances: StanceTopicScore[];
 	received_call_to_orders: CallToOrder[];
 	issued_proposals: IssuedProposal[];
 }
@@ -535,9 +569,19 @@ export interface DelegateFilter {
 	day_offset: number | null;
 }
 
+/** The four axes a stance is scored on. Pairwise opposites. */
+export interface PoliticalScore {
+	socialist: number;
+	capitalist: number;
+	liberal: number;
+	authoritarian: number;
+	count: number;
+}
+
 export interface StanceTopicScore {
 	topic: string;
 	score: number;
+	broken_down_score: PoliticalScore;
 }
 
 export interface GovPropFilter {

@@ -24,11 +24,14 @@ type Props = {
 /**
  * "Reden".
  *
- * The Figma shows a paragraph summarising each speech. No such field exists:
- * `Speech` carries only `about` (the agenda item), `opinion` — literally the
- * string "Pro" or "Contra" — a duration and a link to the stenographic
- * protocol. So each row shows the agenda item and the length, and tapping it
- * opens the protocol. Nothing here is invented.
+ * Each row shows the agenda item and the length, and tapping it opens the
+ * stenographic protocol.
+ *
+ * The paragraph the Figma draws here is now backable: every speech carries an
+ * `ai_summary` with a short title, several summary lengths, key points and a
+ * glossary. It is deliberately not rendered yet — that is a design change, not
+ * an API migration, and this pass only keeps the screen working against the new
+ * payload. See `Speech` in `@/types`.
  */
 export function SpeechList({ speeches, delegates }: Props) {
   const [expanded, setExpanded] = useState(false);
@@ -39,17 +42,17 @@ export function SpeechList({ speeches, delegates }: Props) {
   return (
     <SectionCard title="Reden">
       <View style={styles.list}>
-        {shown.map((speech, index) => {
+        {shown.map(({ id, speech }) => {
           const delegate = delegates.get(speech.delegate_id);
           const party = delegate?.party;
+          // One speech can have several protocol links; the first is the one the
+          // old single `document_url` pointed at.
+          const documentUrl = speech.document_urls?.[0] ?? null;
 
           return (
             <Pressable
-              // `speeches` has no id, and one member can speak more than once.
-              key={`${speech.delegate_id}-${index}`}
-              onPress={
-                speech.document_url ? () => Linking.openURL(speech.document_url!) : undefined
-              }
+              key={id}
+              onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
               <Image
                 source={{ uri: `${url}assets/${speech.delegate_id}.jpg` }}

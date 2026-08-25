@@ -46,38 +46,41 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
       </Text>
 
       <View style={styles.list}>
-        {shown.map((speech, index) => (
-          <OpinionCard
-            // Speeches carry no id of their own — `Speech.legis_init_id` is
-            // declared by somes-frontend but absent from this endpoint's
-            // response, which returns `vote_result_ids`. Position it is.
-            key={index}
-            infavor={speech.infavor}
-            onPress={
-              speech.document_url ? () => Linking.openURL(speech.document_url!) : undefined
-            }>
-            <View style={styles.titleRow}>
-              <Text style={[typography.rowTitle, styles.title]} numberOfLines={3}>
-                {speech.about ?? 'Ohne Tagesordnungspunkt'}
-              </Text>
-              {speech.infavor !== null ? <VoteMark infavor={speech.infavor} size={18} /> : null}
-            </View>
+        {shown.map(({ id, speech }) => {
+          // One speech can have several protocol links; the first is the one the
+          // old single `document_url` pointed at.
+          const documentUrl = speech.document_urls?.[0] ?? null;
 
-            <View style={styles.metaRow}>
-              <Text style={typography.caption}>
-                {[
-                  speech.infavor === null ? speech.opinion : null,
-                  speech.duration_in_seconds ? minutes(speech.duration_in_seconds) : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </Text>
-              {speech.document_url ? (
-                <Ionicons name="book-outline" size={14} color={colors.textPlaceholder} />
-              ) : null}
-            </View>
-          </OpinionCard>
-        ))}
+          return (
+            <OpinionCard
+              key={id}
+              infavor={speech.infavor}
+              onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}>
+              <View style={styles.titleRow}>
+                <Text style={[typography.rowTitle, styles.title]} numberOfLines={3}>
+                  {speech.about ?? 'Ohne Tagesordnungspunkt'}
+                </Text>
+                {speech.infavor !== null ? (
+                  <VoteMark infavor={speech.infavor} size={18} />
+                ) : null}
+              </View>
+
+              <View style={styles.metaRow}>
+                <Text style={typography.caption}>
+                  {[
+                    speech.infavor === null ? speech.opinion : null,
+                    speech.duration_in_seconds ? minutes(speech.duration_in_seconds) : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </Text>
+                {documentUrl ? (
+                  <Ionicons name="book-outline" size={14} color={colors.textPlaceholder} />
+                ) : null}
+              </View>
+            </OpinionCard>
+          );
+        })}
       </View>
 
       {speeches.length > PREVIEW ? (

@@ -187,6 +187,16 @@ const TOPIC_MAP: Record<string, string> = {
 
 export const OTHER_GROUP = 'Sonstige';
 
+/**
+ * Case-folded, because the two ends disagree on it: the map was transcribed from
+ * somes-frontend with `Internationale Beziehungen`, while the endpoint returns
+ * `internationale Beziehungen`. Matching exactly drops such topics into
+ * "Sonstige" over a single letter.
+ */
+const BY_LOWER_NAME: Record<string, string> = Object.fromEntries(
+  Object.entries(TOPIC_MAP).map(([topic, group]) => [topic.toLowerCase(), group])
+);
+
 export function topicGroup(topic: string): string {
-  return TOPIC_MAP[topic] ?? OTHER_GROUP;
+  return BY_LOWER_NAME[topic.toLowerCase()] ?? OTHER_GROUP;
 }

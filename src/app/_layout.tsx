@@ -99,6 +99,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="notifications" />
           <Stack.Screen name="anmelden" />
+          <Stack.Screen name="resolve_token" />
           <Stack.Screen name="favoriten/personen" />
           <Stack.Screen name="favoriten/abstimmungen" />
           <Stack.Screen name="abgeordnete/[id]" />

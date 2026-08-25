@@ -1,7 +1,15 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { login } from '@/api/authed';
 import { isHasError, signUpFlags } from '@/api/client';
@@ -10,9 +18,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { TextField } from '@/components/ui/text-field';
+import { signInWithProvider } from '@/lib/oauth';
 import { useSession } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
-import { spacing } from '@/theme/layout';
+import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { HasError } from '@/types';
 
@@ -27,6 +36,35 @@ export default function AnmeldenScreen() {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
+
+  async function finish(accessToken: string) {
+    await signIn(accessToken);
+
+    // Back rather than forward-to-Profil: this screen is reached both from the
+    // Profil tab's "Anmelden" and from a favourite heart on a detail screen, and
+    // in both cases the place the user came from is the place they wanted. Both
+    // re-render signed in, so the state change is visible either way.
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/profil');
+    }
+  }
+
+  async function withGoogle() {
+    setGooglePending(true);
+    setError(null);
+    const result = await signInWithProvider('google');
+    setGooglePending(false);
+
+    if (result.status === 'success') {
+      await finish(result.accessToken);
+    } else if (result.status === 'error') {
+      setError('Anmeldung mit Google fehlgeschlagen.');
+    }
+    // 'cancelled' is the user backing out — not an error worth reporting.
+  }
 
   async function submit() {
     setPending(true);
@@ -47,17 +85,7 @@ export default function AnmeldenScreen() {
       return;
     }
 
-    await signIn(result.access_token);
-
-    // Back rather than forward-to-Profil: this screen is reached both from the
-    // Profil tab's "Anmelden" and from a favourite heart on a detail screen, and
-    // in both cases the place the user came from is the place they wanted. Both
-    // re-render signed in, so the state change is visible either way.
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/profil');
-    }
+    await finish(result.access_token);
   }
 
   const onEmailStep = step === 'email';
@@ -145,7 +173,36 @@ export default function AnmeldenScreen() {
               disabled={onEmailStep ? email.trim().length === 0 : otp.trim().length === 0}
             />
 
-            {onEmailStep ? null : (
+            {onEmailStep ? (
+              <>
+                <View style={styles.divider}>
+                  <View style={styles.rule} />
+                  <Text style={typography.caption}>ODER</Text>
+                  <View style={styles.rule} />
+                </View>
+
+                <Pressable
+                  onPress={withGoogle}
+                  disabled={googlePending || pending}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [
+                    styles.google,
+                    (googlePending || pending) && styles.inert,
+                    pressed && styles.pressedButton,
+                  ]}>
+                  {googlePending ? (
+                    <ActivityIndicator size="small" color={colors.textTitle} />
+                  ) : (
+                    <>
+                      <Ionicons name="logo-google" size={18} color={colors.textTitle} />
+                      <Text style={[typography.button, styles.googleLabel]}>
+                        Mit Google anmelden
+                      </Text>
+                    </>
+                  )}
+                </Pressable>
+              </>
+            ) : (
               <Pressable
                 onPress={() => {
                   setStep('email');
@@ -209,5 +266,37 @@ const styles = StyleSheet.create({
   link: {
     color: colors.accent,
     textAlign: 'center',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  rule: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.inputBorder,
+  },
+  /** White with a hairline, as on somes.at — Google's mark needs a light field. */
+  google: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    height: 44,
+    borderRadius: radius.control,
+    borderWidth: 1,
+    borderColor: colors.inputBorder,
+    backgroundColor: colors.cardRaised,
+  },
+  googleLabel: {
+    color: colors.textTitle,
+    fontWeight: '600',
+  },
+  inert: {
+    opacity: 0.5,
+  },
+  pressedButton: {
+    opacity: 0.7,
   },
 });

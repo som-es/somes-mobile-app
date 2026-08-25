@@ -15,24 +15,6 @@ export function isoToDotDate(date: string): string {
   return dashDateToDotDate(date.split('T')[0]);
 }
 
-/**
- * "2024-07-04T22:00:00Z" → "05.07.2024".
- *
- * `isoToDotDate` just slices the date part off, which is right for the naive
- * datetimes most endpoints return. `absences` hands back UTC instants with a
- * trailing `Z`, where slicing lands a day early for anything after 22:00 — so
- * these go through `Date` and are read back in local time, as somes-frontend's
- * `Intl.DateTimeFormat('de-AT')` does.
- */
-export function instantToDotDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  return `${day}.${month}.${date.getFullYear()}`;
-}
-
 export function relativeDayLabel(date: string): string | null {
   const days = (new Date(date).getTime() - Date.now()) / MS_PER_DAY;
   if (Number.isNaN(days) || days <= 0) return null;

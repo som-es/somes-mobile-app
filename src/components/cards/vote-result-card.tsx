@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { voteBadges } from '@/lib/vote-labels';
+import { byPartySize, partyInfavor } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import { type VoteResult } from '@/types';
@@ -20,7 +21,7 @@ export function VoteResultCard({ voteResult }: Props) {
   const title = ai_summary?.short_title ?? initiative.description;
   const accepted = initiative.accepted;
   // `.slice()` first — `votes` belongs to the react-query cache.
-  const votes = voteResult.votes.slice().sort((a, b) => b.fraction - a.fraction);
+  const votes = voteResult.votes.slice().sort(byPartySize);
 
   return (
     <Card
@@ -47,7 +48,7 @@ export function VoteResultCard({ voteResult }: Props) {
             votes.map((vote) => (
               <View key={vote.party} style={styles.vote}>
                 <Text style={typography.partyLabel}>{vote.party}</Text>
-                <VoteMark infavor={vote.infavor} size={16} />
+                <VoteMark infavor={partyInfavor(vote)} size={16} />
               </View>
             ))
           ) : named_votes ? (

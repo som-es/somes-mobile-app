@@ -9,11 +9,16 @@ import { typography } from '@/theme/typography';
 import type { InterestShare, PoliticalPosition, StanceTopicScore } from '@/types';
 
 /**
- * somes-frontend draws the compass on a 240pt canvas and offsets the dot by
- * 20pt per unit of score (`PoliticalSpectrum.svelte`'s `SCALAR`) inside a 200pt
- * plot. Ours is fluid, so the same offset is a share of the plot instead.
+ * somes-frontend offsets the dot by `SCALAR` points per unit of score
+ * (`PoliticalSpectrum.svelte`) inside a 200pt plot. Ours is fluid, so the same
+ * offset is a share of the plot instead.
+ *
+ * `SCALAR` went from 20 to 800 when the scores became normalised averages
+ * (~0.3 each) rather than sums. This is not cosmetic: at the old factor every
+ * member computes to within a fraction of a percent of dead centre, so the
+ * compass would look broken rather than wrong.
  */
-const PERCENT_PER_UNIT = (20 / 200) * 100;
+const PERCENT_PER_UNIT = (800 / 200) * 100;
 /** Keep an off-the-chart score inside the frame rather than clipping it. */
 const EDGE = 6;
 
@@ -60,10 +65,13 @@ function Compass({
   color: string;
   position: PoliticalPosition;
 }) {
-  // Positive x leans capitalist, positive y authoritarian — the web's
-  // `leftScore` / `liberalScore`. Screen y grows downwards, hence the negation.
-  const x = clamp(50 + (position.is_not_left - position.is_left) * PERCENT_PER_UNIT);
-  const y = clamp(50 - (position.is_not_liberal - position.is_liberal) * PERCENT_PER_UNIT);
+  // Positive x leans capitalist, positive y authoritarian. Screen y grows
+  // downwards, hence the negation. The four axes replaced the older
+  // `is_not_left`/`is_left` and `is_not_liberal`/`is_liberal` pairs — same two
+  // axes under clearer names, so the arithmetic is unchanged.
+  const { socialist, capitalist, liberal, authoritarian } = position.total_score;
+  const x = clamp(50 + (capitalist - socialist) * PERCENT_PER_UNIT);
+  const y = clamp(50 - (authoritarian - liberal) * PERCENT_PER_UNIT);
 
   return (
     <View style={styles.compass}>

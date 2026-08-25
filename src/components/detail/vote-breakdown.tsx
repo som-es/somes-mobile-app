@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { VoteMark } from '@/components/ui/vote-mark';
+import { byPartySize, partyInfavor, partySeats } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { usePartyColors } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
@@ -14,7 +15,7 @@ export function VoteBreakdown({ votes }: Props) {
   const { data: partyColors } = usePartyColors();
 
   // `.slice()` first — `votes` belongs to the react-query cache.
-  const sorted = votes.slice().sort((a, b) => b.fraction - a.fraction);
+  const sorted = votes.slice().sort(byPartySize);
 
   return (
     <View style={styles.list}>
@@ -24,9 +25,9 @@ export function VoteBreakdown({ votes }: Props) {
             style={[styles.dot, { backgroundColor: partyColors?.get(vote.party) ?? '#ccc' }]}
           />
           <Text style={[typography.subtitle, styles.label]} numberOfLines={1}>
-            {vote.party} ({vote.fraction} Abgeordnete)
+            {vote.party} ({partySeats(vote)} Abgeordnete)
           </Text>
-          <VoteMark infavor={vote.infavor} size={18} />
+          <VoteMark infavor={partyInfavor(vote)} size={18} />
         </View>
       ))}
     </View>
