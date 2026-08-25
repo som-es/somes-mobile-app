@@ -365,6 +365,13 @@ export interface InfoCounts {
 	answer_count: number[];
 }
 
+/**
+ * The flag struct somes-api puts in `HasError.meta` when a login is rejected.
+ * Field-for-field `somes-common-lib::errors::SignUpError`; somes-frontend's copy
+ * misses `invalid_otp` and misspells the last field as `is_errorneous`.
+ *
+ * `login` only ever sets `missing_email` and `invalid_email`.
+ */
 export interface SignUpError {
 	missing_username: boolean;
 	missing_password: boolean;
@@ -372,8 +379,9 @@ export interface SignUpError {
 	username_taken: boolean;
 	email_taken: boolean;
 	invalid_email: boolean;
+	invalid_otp: boolean;
 	insufficient_password: boolean;
-	is_errorneous: boolean;
+	is_erroneous: boolean;
 }
 
 export interface Question {
@@ -573,16 +581,25 @@ export interface NamedVoteInfo {
 	invalid_count: number;
 }
 
+/**
+ * Widened from somes-frontend, which declares every field as a *literal*
+ * (`invalid_email: true`, `missing_email: false`). No real response can be
+ * assigned to that, so the web's own type is unusable — this mirrors
+ * `somes-common-lib::errors::SignUpError`, which is what the server serialises.
+ *
+ * Note it arrives in `meta` of a `HasError`, not as a bare body: read it with
+ * `signUpFlags()` from `@/api/client`.
+ */
 export interface LoginResponseError {
-	missing_username: false;
-	missing_password: false;
-	missing_email: false;
-	username_taken: false;
-	email_taken: false;
-	invalid_email: true;
-	insufficient_password: false;
-	invalid_otp: false;
-	is_erroneous: true;
+	missing_username: boolean;
+	missing_password: boolean;
+	missing_email: boolean;
+	username_taken: boolean;
+	email_taken: boolean;
+	invalid_email: boolean;
+	insufficient_password: boolean;
+	invalid_otp: boolean;
+	is_erroneous: boolean;
 }
 
 export function areDeeplyEqual(param1: unknown, param2: unknown) {

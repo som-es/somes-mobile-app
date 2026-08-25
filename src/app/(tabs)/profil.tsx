@@ -1,106 +1,75 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { AccountCard } from '@/components/profile/account-card';
+import { DangerZoneCard } from '@/components/profile/danger-zone-card';
+import { FavoritesLinkCards } from '@/components/profile/favorites-link-card';
+import { InterestsCard } from '@/components/profile/interests-card';
+import { MailSettingsCard } from '@/components/profile/mail-settings-card';
 import { Card } from '@/components/ui/card';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
+import { useAuth } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
-import { radius, spacing } from '@/theme/layout';
+import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/**
- * User profile. Backed by `getUser()`, `getMailSendInfo()` /
- * `updateMailSendInfo()`, `getUserTopics()` and the bookmark endpoints.
- *
- * Note the design says "E-Mail Benachrichtigungen" — those toggles map to
- * MailSendInfo. Push preferences will need separate backend fields.
- */
 export default function ProfilScreen() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <Screen>
       <ScreenTitle title="Benutzerprofil" subtitle="Verwalte deine Einstellungen und Präferenzen" />
 
-      <Card variant="outlined">
-        <View style={styles.row}>
-          <View style={styles.grow}>
-            <Text style={typography.cardHeading}>Benutzerinfos</Text>
-            <Text style={typography.caption}>Nicht angemeldet</Text>
+      <AccountCard />
+
+      {isAuthenticated ? (
+        <>
+          <MailSettingsCard />
+          <InterestsCard />
+          <FavoritesLinkCards />
+          <DangerZoneCard />
+        </>
+      ) : (
+        <Card style={styles.blurbCard}>
+          <Text style={typography.cardHeading}>Mit einem Konto</Text>
+          <View style={styles.benefits}>
+            {BENEFITS.map((benefit) => (
+              <View key={benefit} style={styles.benefit}>
+                <Ionicons name="checkmark" size={16} color={colors.accent} />
+                <Text style={[typography.bodyMuted, styles.benefitLabel]}>{benefit}</Text>
+              </View>
+            ))}
           </View>
-          <Pressable style={styles.accentButton}>
-            <Text style={[typography.button, styles.accentButtonLabel]}>Anmelden</Text>
-          </Pressable>
-        </View>
-      </Card>
 
-      <Card>
-        <Text style={typography.cardHeading}>E-Mail Benachrichtigungen</Text>
-        <Text style={typography.caption}>Einstellungen werden geladen</Text>
-      </Card>
-
-      <Card>
-        <Text style={typography.cardHeading}>Wähle deine Interessen</Text>
-        <Text style={typography.caption}>Themen werden geladen</Text>
-      </Card>
-
-      <Card variant="outlined">
-        <Text style={typography.cardHeading}>Favorisierte Personen</Text>
-        <Text style={typography.caption}>Keine favorisierten Personen vorhanden</Text>
-      </Card>
-
-      <Card variant="outlined">
-        <Text style={typography.cardHeading}>Favorisierte Abstimmungen</Text>
-        <Text style={typography.caption}>Keine favorisierten Abstimmungen vorhanden</Text>
-      </Card>
-
-      <Card style={styles.danger}>
-        <Text style={[typography.cardHeading, styles.dangerTitle]}>Gefahrenbereich</Text>
-        <Text style={[typography.caption, styles.dangerSubtitle]}>
-          Diese Aktion kann nicht rückgängig gemacht werden
-        </Text>
-        <Pressable style={styles.dangerButton}>
-          <Text style={[typography.button, styles.accentButtonLabel]}>Account löschen</Text>
-        </Pressable>
-      </Card>
+          <Text style={typography.caption}>
+            Alle Abstimmungen, Ministerialentwürfe und Abgeordneten kannst du auch ohne Konto
+            ansehen.
+          </Text>
+        </Card>
+      )}
     </Screen>
   );
 }
 
+const BENEFITS = [
+  'Themen wählen, die dich interessieren',
+  'Abgeordnete und Abstimmungen merken',
+  'Per E-Mail erfahren, wenn es dazu Neues gibt',
+];
+
 const styles = StyleSheet.create({
-  row: {
+  blurbCard: {
+    gap: spacing.md,
+  },
+  benefits: {
+    gap: spacing.sm,
+  },
+  benefit: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
+    alignItems: 'flex-start',
+    gap: spacing.sm,
   },
-  grow: {
+  benefitLabel: {
     flex: 1,
-  },
-  accentButton: {
-    height: 31,
-    justifyContent: 'center',
-    backgroundColor: colors.accent,
-    borderRadius: radius.button,
-    paddingHorizontal: spacing.md,
-  },
-  accentButtonLabel: {
-    color: colors.onAccent,
-  },
-  danger: {
-    backgroundColor: colors.dangerSurface,
-    borderWidth: 1,
-    borderColor: colors.danger,
-    gap: spacing.md,
-  },
-  dangerTitle: {
-    color: colors.danger,
-  },
-  dangerSubtitle: {
-    color: colors.dangerSubtle,
-  },
-  dangerButton: {
-    height: 31,
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: colors.danger,
-    borderRadius: radius.button,
-    paddingHorizontal: spacing.md,
   },
 });

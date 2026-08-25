@@ -6,6 +6,7 @@ import { delegates_at, vote_result_by_path } from '@/api/api';
 import { unwrap } from '@/api/client';
 import { DelegateRow } from '@/components/detail/delegate-row';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
+import { FavoriteButton } from '@/components/ui/favorite-button';
 import { DocumentList, pdfDocuments } from '@/components/detail/document-list';
 import { Divider, SectionCard } from '@/components/detail/section-card';
 import { SpeechList } from '@/components/detail/speech-list';
@@ -43,7 +44,11 @@ export default function VoteDetailScreen() {
   });
 
   return (
-    <DetailScreen sourceUrl={parliamentUrl(gp, ityp, inr)}>
+    <DetailScreen
+      sourceUrl={parliamentUrl(gp, ityp, inr)}
+      // The bookmark is keyed on the vote result's own id, which only arrives
+      // with the record — the route carries gp/ityp/inr instead.
+      action={<FavoriteButton kind="vote" id={vote.data?.id ?? null} />}>
       {vote.isPending ? (
         <>
           <CardSkeleton />

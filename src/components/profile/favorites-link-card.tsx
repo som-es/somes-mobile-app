@@ -1,0 +1,100 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
+import type { Href } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { Card } from '@/components/ui/card';
+import { useFavoriteDelegates, useFavoriteVotes } from '@/lib/favorites';
+import { colors } from '@/theme/colors';
+import { spacing } from '@/theme/layout';
+import { typography } from '@/theme/typography';
+
+/**
+ * The two favourite rows on the profile — Figma nodes 286:701 and 286:706.
+ *
+ * The Figma draws each as a 71pt card with a chevron, i.e. a link, and that is
+ * the right call: a member card and a vote card are both full-width objects, so
+ * listing them inside a card on a screen that already has five other cards
+ * squeezes everything. They get their own screens instead.
+ */
+export function FavoritesLinkCards() {
+  const delegates = useFavoriteDelegates();
+  const votes = useFavoriteVotes();
+
+  return (
+    <>
+      <LinkCard
+        title="Favorisierte Personen"
+        href="/favoriten/personen"
+        count={delegates.data?.length}
+        isPending={delegates.isPending}
+        isError={delegates.isError}
+        empty="Keine favorisierten Personen vorhanden"
+      />
+      <LinkCard
+        title="Favorisierte Abstimmungen"
+        href="/favoriten/abstimmungen"
+        count={votes.data?.length}
+        isPending={votes.isPending}
+        isError={votes.isError}
+        empty="Keine favorisierten Abstimmungen vorhanden"
+      />
+    </>
+  );
+}
+
+function LinkCard({
+  title,
+  href,
+  count,
+  isPending,
+  isError,
+  empty,
+}: {
+  title: string;
+  href: Href;
+  count: number | undefined;
+  isPending: boolean;
+  isError: boolean;
+  empty: string;
+}) {
+  const router = useRouter();
+  const hasAny = (count ?? 0) > 0;
+
+  const subtitle = isPending
+    ? 'Wird geladen'
+    : isError
+      ? 'Konnten nicht geladen werden'
+      : hasAny
+        ? `${count} gespeichert`
+        : empty;
+
+  return (
+    <Card
+      variant="outlined"
+      // Nothing to show behind an empty list, so it stays inert until there is.
+      onPress={hasAny ? () => router.push(href) : undefined}>
+      <View style={styles.row}>
+        <View style={styles.grow}>
+          <Text style={typography.cardHeading}>{title}</Text>
+          <Text style={typography.caption}>{subtitle}</Text>
+        </View>
+        {hasAny ? (
+          <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+        ) : null}
+      </View>
+    </Card>
+  );
+}
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  grow: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+});

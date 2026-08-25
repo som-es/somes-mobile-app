@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: radius.chip,
     paddingHorizontal: spacing.sm,
+    /** Some eurovoc topics are long; keep one from overflowing a wrapped row. */
+    maxWidth: '100%',
   },
   unselected: {
     backgroundColor: colors.cardRaised,

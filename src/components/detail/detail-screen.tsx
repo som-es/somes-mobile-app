@@ -12,6 +12,8 @@ import { typography } from '@/theme/typography';
 type Props = {
   /** The parlament.gv.at page this record was scraped from. */
   sourceUrl: string;
+  /** Sits left of the out-link in the top row — the favourite heart. */
+  action?: ReactNode;
   children: ReactNode;
 };
 
@@ -19,7 +21,7 @@ type Props = {
  * The chrome both detail screens share: header, a "Zurück" row, and the
  * out-link to parliament, matching the top of Figma node 231:2844.
  */
-export function DetailScreen({ sourceUrl, children }: Props) {
+export function DetailScreen({ sourceUrl, action, children }: Props) {
   const router = useRouter();
 
   return (
@@ -32,13 +34,16 @@ export function DetailScreen({ sourceUrl, children }: Props) {
             <Text style={typography.subtitle}>Zurück</Text>
           </Pressable>
 
-          <Pressable
-            onPress={() => Linking.openURL(sourceUrl)}
-            hitSlop={8}
-            accessibilityRole="link"
-            accessibilityLabel="Auf parlament.gv.at öffnen">
-            <Ionicons name="open-outline" size={20} color={colors.textMuted} />
-          </Pressable>
+          <View style={styles.actions}>
+            {action}
+            <Pressable
+              onPress={() => Linking.openURL(sourceUrl)}
+              hitSlop={8}
+              accessibilityRole="link"
+              accessibilityLabel="Auf parlament.gv.at öffnen">
+              <Ionicons name="open-outline" size={20} color={colors.textMuted} />
+            </Pressable>
+          </View>
         </View>
 
         {children}
@@ -71,5 +76,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
 });
