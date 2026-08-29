@@ -85,14 +85,44 @@ export async function delegate_by_id(delegate_id: number) {
   return getWithRoute<Delegate>(`v1/delegates/id/${delegate_id}`);
 }
 
+/**
+ * DEAD ROUTE on the eu backend. The handler still exists in somes-api
+ * (`routes/delegates.rs:74`) but `create_delegates_router()` never registers it,
+ * so the path answers 404 — the interests moved into `general_delegate_info`
+ * below, which returns `interests` and `detailed_interests` directly.
+ *
+ * Kept because somes-frontend still carries it verbatim
+ * (`somes-frontend/src/lib/api/api.ts:199`) and this file is a diffable port.
+ * Nothing in the app calls it.
+ */
 export async function delegate_interests(delegate_id: number) {
   return getWithRoute<InterestShare[]>(`delegate_interests?delegate_id=${delegate_id}`);
 }
 
-export async function general_delegate_info(delegate_id: number) {
-  return getWithRoute<GeneralDelegateInfo>(`v1/delegates/extend/${delegate_id}`);
+/**
+ * The whole delegate detail screen: interests, political position, absences,
+ * named votes, stance scores, `delegate_qa`.
+ *
+ * `language` is **required** on eu — without it the endpoint answers
+ * `400 Failed to deserialize query string: missing field 'language'`
+ * (`somes-api/src/routes/delegates/routes/extend.rs:30` takes `Query<Language>`).
+ * The default mirrors somes-frontend, which types it as `Locale = 'de'`
+ * (`somes-frontend/src/lib/api/api.ts:205`). `/at` is German-only, so no caller
+ * passes anything else yet.
+ */
+export async function general_delegate_info(delegate_id: number, language = 'de') {
+  return getWithRoute<GeneralDelegateInfo>(
+    `v1/delegates/extend/${delegate_id}?language=${language}`
+  );
 }
 
+/**
+ * DEAD ROUTE on the eu backend — the registration is commented out in
+ * `create_delegates_router()` (`somes-api/src/routes/delegates.rs:41`), so this
+ * answers 404. The data is served as `delegate_qa` inside
+ * `general_delegate_info` instead. Kept for the same reason as
+ * `delegate_interests`; nothing in the app calls it.
+ */
 export async function delegate_qa(delegate_id: number) {
   return getWithRoute<DelegateQA[]>(`v1/delegates/delegate_qa/${delegate_id}`);
 }
@@ -198,6 +228,11 @@ export async function vote_result_by_path(gp: string, ityp: string, inr: string)
   return getWithRoute<VoteResult>(`v1/vote_results/${gp}/${ityp}/${inr}`);
 }
 
+/**
+ * DEAD ROUTE on the eu backend: `v1/vote_results/live/` answers 404. The
+ * Abstimmungen tab uses `vote_results_by_query_search` instead. Kept to stay
+ * diffable with somes-frontend (`.../api.ts:387`); nothing in the app calls it.
+ */
 export async function vote_results_per_page(page: number, filter: VoteResultFilter | null) {
   return justPost<VoteResultsWithMaxPage>(`v1/vote_results/live/?page=${page}`, filter);
 }
@@ -227,6 +262,10 @@ export async function latest_decrees(days: number) {
   return getWithRoute<Decree[]>(`v1/decrees/latest?days=${days}`);
 }
 
+/**
+ * DEAD ROUTE on the eu backend: `v1/gov_proposals/live/` answers 404. See
+ * `vote_results_per_page` above; nothing in the app calls it.
+ */
 export async function gov_proposals_per_page(page: number, filter: GovPropFilter | null) {
   return justPost<GovProposalsWithMaxPage>(`v1/gov_proposals/live/?page=${page}`, filter);
 }

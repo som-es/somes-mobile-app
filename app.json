@@ -15,6 +15,7 @@
       }
     },
     "android": {
+      "package": "com.leonbinder.somesmobileapp",
       "adaptiveIcon": {
         "backgroundColor": "#2D3748",
         "foregroundImage": "./assets/brand/adaptive-icon-foreground.png",
