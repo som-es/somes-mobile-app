@@ -70,13 +70,11 @@ export async function walo_questions() {
 }
 
 // --- Plenary sessions ------------------------------------------------------
-
 export async function next_plenar_date() {
   return getWithRoute<PlenarDate>('next_plenar_date');
 }
 
 // --- Delegates -------------------------------------------------------------
-
 export async function delegates() {
   return getWithRoute<Delegate[]>('v1/delegates/all_active');
 }
@@ -85,44 +83,16 @@ export async function delegate_by_id(delegate_id: number) {
   return getWithRoute<Delegate>(`v1/delegates/id/${delegate_id}`);
 }
 
-/**
- * DEAD ROUTE on the eu backend. The handler still exists in somes-api
- * (`routes/delegates.rs:74`) but `create_delegates_router()` never registers it,
- * so the path answers 404 — the interests moved into `general_delegate_info`
- * below, which returns `interests` and `detailed_interests` directly.
- *
- * Kept because somes-frontend still carries it verbatim
- * (`somes-frontend/src/lib/api/api.ts:199`) and this file is a diffable port.
- * Nothing in the app calls it.
- */
 export async function delegate_interests(delegate_id: number) {
   return getWithRoute<InterestShare[]>(`delegate_interests?delegate_id=${delegate_id}`);
 }
 
-/**
- * The whole delegate detail screen: interests, political position, absences,
- * named votes, stance scores, `delegate_qa`.
- *
- * `language` is **required** on eu — without it the endpoint answers
- * `400 Failed to deserialize query string: missing field 'language'`
- * (`somes-api/src/routes/delegates/routes/extend.rs:30` takes `Query<Language>`).
- * The default mirrors somes-frontend, which types it as `Locale = 'de'`
- * (`somes-frontend/src/lib/api/api.ts:205`). `/at` is German-only, so no caller
- * passes anything else yet.
- */
 export async function general_delegate_info(delegate_id: number, language = 'de') {
   return getWithRoute<GeneralDelegateInfo>(
     `v1/delegates/extend/${delegate_id}?language=${language}`
   );
 }
 
-/**
- * DEAD ROUTE on the eu backend — the registration is commented out in
- * `create_delegates_router()` (`somes-api/src/routes/delegates.rs:41`), so this
- * answers 404. The data is served as `delegate_qa` inside
- * `general_delegate_info` instead. Kept for the same reason as
- * `delegate_interests`; nothing in the app calls it.
- */
 export async function delegate_qa(delegate_id: number) {
   return getWithRoute<DelegateQA[]>(`v1/delegates/delegate_qa/${delegate_id}`);
 }
@@ -143,19 +113,6 @@ export async function speeches_by_delegate_per_page(delegate_id: number, page: n
   );
 }
 
-/** Mirrors the web app's query-string construction exactly — the API is picky. */
-/**
- * Percent-encode a parameter whole, brackets included — the same thing
- * `src/lib/filter-query.ts` does for the two search-query builders.
- *
- * This is not cosmetic. Writing `[` and `]` raw, the way somes-frontend does,
- * leaves the URL with characters that are illegal in a query string, so the
- * native fetch layer canonicalises it — and in the same pass it re-encodes the
- * `%` of any escape already in the string. A party name reached the API as
- * `%25C3%2596VP` instead of `%C3%96VP` and matched nothing, which is why every
- * party except NEOS — the only one spelled in pure ASCII — returned an empty
- * list. Browsers tolerate the raw brackets, so the web app never saw this.
- */
 function param(key: string, value: string): string {
   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
 }
@@ -174,8 +131,6 @@ export async function delegates_search_persons(
   if (name) parts.push(param('search', name));
 
   searchPeriods.forEach((searchPeriod, i) => {
-    // somes-frontend has an unreachable `active_nr_gps` branch here; the two
-    // live arms are reproduced exactly so the query stays diffable.
     const gps = onlyGov ? 'active_gov_gps' : 'active_gps';
     parts.push(param(`${gps}[in][${i}]`, searchPeriod));
   });
@@ -201,7 +156,6 @@ export async function delegates_search_persons(
 }
 
 // --- Government officials --------------------------------------------------
-
 export async function gov_officials_at(date_at: string) {
   return getWithRoute<Delegate[]>(`v1/delegates/gov_officials/all_at_date?at=${date_at}`);
 }
@@ -215,7 +169,6 @@ export async function general_gov_official_info(delegate_id: number) {
 }
 
 // --- Vote results ----------------------------------------------------------
-
 export async function latest_vote_results() {
   return getWithRoute<VoteResult[]>('v1/vote_results/latest');
 }
@@ -228,11 +181,6 @@ export async function vote_result_by_path(gp: string, ityp: string, inr: string)
   return getWithRoute<VoteResult>(`v1/vote_results/${gp}/${ityp}/${inr}`);
 }
 
-/**
- * DEAD ROUTE on the eu backend: `v1/vote_results/live/` answers 404. The
- * Abstimmungen tab uses `vote_results_by_query_search` instead. Kept to stay
- * diffable with somes-frontend (`.../api.ts:387`); nothing in the app calls it.
- */
 export async function vote_results_per_page(page: number, filter: VoteResultFilter | null) {
   return justPost<VoteResultsWithMaxPage>(`v1/vote_results/live/?page=${page}`, filter);
 }
@@ -253,7 +201,6 @@ export async function vote_results_by_query_search(query: string) {
 }
 
 // --- Ministerial proposals & decrees ---------------------------------------
-
 export async function latest_ministrial_proposals(days: number) {
   return getWithRoute<GovProposalDelegate[]>(`v1/gov_proposals/latest?days=${days}`);
 }
@@ -262,10 +209,6 @@ export async function latest_decrees(days: number) {
   return getWithRoute<Decree[]>(`v1/decrees/latest?days=${days}`);
 }
 
-/**
- * DEAD ROUTE on the eu backend: `v1/gov_proposals/live/` answers 404. See
- * `vote_results_per_page` above; nothing in the app calls it.
- */
 export async function gov_proposals_per_page(page: number, filter: GovPropFilter | null) {
   return justPost<GovProposalsWithMaxPage>(`v1/gov_proposals/live/?page=${page}`, filter);
 }

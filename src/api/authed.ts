@@ -1,10 +1,4 @@
-/**
- * Authenticated somes-api endpoints.
- * Ported from somes-core/somes-frontend/src/lib/api/authed.ts.
- *
- * The only structural change: the JWT comes from `@/lib/auth-store`
- * (expo-secure-store) instead of the web app's localStorage-backed `jwtStore`.
- */
+/* Ported from somes-core/somes-frontend/src/lib/api/authed.ts. */
 import type {
   DelegateFavo,
   ExtendedUserInfo,
@@ -65,22 +59,10 @@ export function deleteWithAuth<T>(route: string, body?: unknown, country = 'at/'
 }
 
 // --- User ------------------------------------------------------------------
-
 export function getUser() {
   return getWithAuth<ExtendedUserInfo>('v1/user');
 }
 
-/**
- * somes-frontend calls `v1/user/delete_account`, which 404s: somes-api registers
- * the handler at `/delete` (somes-api/src/routes/user.rs:41) and leaves
- * `DELETE_ACCOUNT_ROUTE = "/delete_account"` as an unused constant. Because the
- * web ignores the result and clears the JWT anyway, "Account löschen" on
- * somes.at looks like it worked while the row survives.
- *
- * This is the second place the app knowingly diverges from the web's request
- * format, after `TOPIC_OP` in `@/lib/filter-query`. Drop the constant once
- * somes-api registers the documented path.
- */
 const DELETE_ACCOUNT_ROUTE = 'v1/user/delete';
 
 export function delete_account() {
@@ -91,19 +73,6 @@ export function renew_token() {
   return postWithAuth<JWTInfo>('v1/user/renew_token', {});
 }
 
-/**
- * Login *and* registration — somes-api has no signup route; the user row is
- * inserted on the first correct OTP.
- *
- * Two calls to this one endpoint:
- *  1. `login(email, '', false)` mails a 9-character OTP and answers
- *     `{ access_token: '' }`. An empty token is "code sent", not an error.
- *  2. `login(email, otp, false)` answers with the real token.
- *
- * Pass `''` and not `null` for step 1. The handler checks Redis before it looks
- * at the password, so once a code is outstanding a `null` password comes back as
- * `WrongOtp` while `''` correctly re-reports "waiting for the code".
- */
 export function login(
   email: string,
   password: string | null,
@@ -116,8 +85,7 @@ export function login(
   });
 }
 
-// --- Notification preferences (email only — see CLAUDE.md on push) ----------
-
+// --- Notification preferences ----------
 export function getMailSendInfo() {
   return getWithAuth<MailSendInfo>('v1/user/send_mail_info');
 }
@@ -127,7 +95,6 @@ export function updateMailSendInfo(mailSendInfo: MailSendInfo) {
 }
 
 // --- Topic selection -------------------------------------------------------
-
 export function getUserTopics() {
   return getWithAuth<UniqueTopic[]>('v1/user/topic_selection');
 }
@@ -141,7 +108,6 @@ export function removeUserTopic(uniqueTopic: UniqueTopic) {
 }
 
 // --- Bookmarks -------------------------------------------------------------
-
 export function getFavoDelegates() {
   return getWithAuth<DelegateFavo[]>('v1/user/bookmark/delegate');
 }
