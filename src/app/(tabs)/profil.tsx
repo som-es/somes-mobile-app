@@ -5,8 +5,8 @@ import { AccountCard } from '@/components/profile/account-card';
 import { DangerZoneCard } from '@/components/profile/danger-zone-card';
 import { FavoritesLinkCards } from '@/components/profile/favorites-link-card';
 import { InterestsCard } from '@/components/profile/interests-card';
-import { MailSettingsCard } from '@/components/profile/mail-settings-card';
 import { Card } from '@/components/ui/card';
+import { ComingSoon } from '@/components/ui/coming-soon';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { useAuth } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
@@ -24,9 +24,17 @@ export default function ProfilScreen() {
 
       {isAuthenticated ? (
         <>
-          <MailSettingsCard />
           <InterestsCard />
           <FavoritesLinkCards />
+
+          <Card>
+            <ComingSoon
+              icon="notifications-outline"
+              title="Benachrichtigungen"
+              description="Coming Soon."
+            />
+          </Card>
+
           <DangerZoneCard />
         </>
       ) : (
@@ -54,7 +62,7 @@ export default function ProfilScreen() {
 const BENEFITS = [
   'Themen wählen, die dich interessieren',
   'Abgeordnete und Abstimmungen merken',
-  'Per E-Mail erfahren, wenn es dazu Neues gibt',
+  'Deine Auswahl auf allen Geräten behalten',
 ];
 
 const styles = StyleSheet.create({
