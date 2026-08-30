@@ -1,5 +1,5 @@
-/* JWT in expo-secure-store. The module-level cache exists so the API layer can read
-   the token synchronously — keep this file free of React imports. */
+/* jwt in expo-secure-store, the module level cache exists so the api layer can read
+   the token synchronously, keep this file free of react imports */
 import * as SecureStore from 'expo-secure-store';
 
 const JWT_KEY = 'somes.jwt';
@@ -13,7 +13,6 @@ function emit() {
   listeners.forEach((listener) => listener(cachedToken));
 }
 
-/** Hydrate the cache from secure storage. Safe to call more than once. */
 export async function loadToken(): Promise<string | null> {
   if (!loaded) {
     try {
@@ -28,7 +27,7 @@ export async function loadToken(): Promise<string | null> {
   return cachedToken;
 }
 
-/** Synchronous read for the API layer. Returns null until `loadToken` resolves. */
+/** synchronous read for the api layer, null until loadtoken resolves */
 export function getToken(): string | null {
   return cachedToken;
 }

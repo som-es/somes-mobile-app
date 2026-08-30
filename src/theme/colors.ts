@@ -11,7 +11,6 @@ export const primary = {
   900: '#333f4f',
 } as const;
 
-/** The coral used for filter pills, primary buttons and toggles. */
 export const secondary = {
   50: '#f9ece9',
   100: '#f7e6e2',
@@ -25,7 +24,6 @@ export const secondary = {
   900: '#6a3f36',
 } as const;
 
-/** The peach used for metadata badges ("einfache Mehrheit", "XXVIII", dates). */
 export const tertiary = {
   50: '#fefaf7',
   100: '#fef9f4',
@@ -78,7 +76,6 @@ export const error = {
   900: '#680c3a',
 } as const;
 
-/** surface-500 is the navy of the header and tab bar. */
 export const surface = {
   50: '#dedfe2',
   100: '#d3d4d8',
@@ -92,51 +89,39 @@ export const surface = {
   900: '#12141e',
 } as const;
 
-/** Semantic aliases from the Figma. Prefer these over raw ramp values. */
+/** prefer these over the raw ramp values above, so a change lands in one place */
 export const colors = {
-  /** Header and bottom tab bar. */
   chrome: '#2D3748',
   onChrome: '#FFFFFF',
   onChromeMuted: 'rgba(255, 255, 255, 0.55)',
   tabActive: 'rgba(255, 255, 255, 0.1)',
 
-  /** Page background — the near-white lavender behind all content. */
   screen: '#FAF8FF',
-  /** Card fill — the light blue-grey containers holding list items. */
   card: '#DAE2ED',
-  /** White cards (Benutzerinfos, Favoriten) and unselected chips. */
   cardRaised: '#FFFFFF',
   cardBorder: '#DCDDDF',
-  /** The "Nächste Nationalratssitzung" card and the segmented-control track. */
   sessionCard: primary[300],
   inset: primary[50],
-  /** The rail a stance dot slides along. Same tone as `inset`, different job. */
+  /** the rail a stance dot slides along, same tone as inset but a different job */
   rail: primary[50],
 
   badge: '#FAE9DA',
   onBadge: '#000000',
 
-  /** Filter pills, primary buttons, active switches. */
   accent: '#D77F71',
   onAccent: '#FFFFFF',
   accentMuted: secondary[300],
 
   chipSelected: '#24283E',
 
-  /** Section and screen headings. */
   text: '#2D3748',
-  /** Card headlines and list-row names. */
   textTitle: '#28292B',
-  /** Subtitles and body copy. */
   textMuted: '#47494C',
-  /** Hints under a card heading. */
   textCaption: '#8C8F95',
-  /** Input placeholders and table headers. */
   textPlaceholder: '#696B6F',
   textInverse: '#FFFFFF',
   inputBorder: '#B3B5B9',
 
-  /** Vote outcomes and pro/contra speech markers. */
   voteYes: '#1FA14B',
   voteNo: '#DC2626',
   voteAbstain: warning[500],
@@ -151,7 +136,6 @@ export const colors = {
 
 export type ColorName = keyof typeof colors;
 
-/** The elevations in the design, plus one for the chrome. */
 export const shadows = {
   card: {
     shadowColor: '#6881A1',

@@ -10,7 +10,6 @@ import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/** "Gefahrenbereich" — Figma node 286:711. */
 export function DangerZoneCard() {
   const { signOut } = useSession();
   const [pending, setPending] = useState(false);
@@ -20,7 +19,7 @@ export function DangerZoneCard() {
     const result = await delete_account();
     setPending(false);
 
-    // somes-frontend clears the JWT regardless, so a failed delete looks like it worked.
+    // somes-frontend clears the jwt regardless, so a failed delete looks like it worked
     if (isHasError(result)) {
       Alert.alert(
         'Account konnte nicht gelöscht werden',

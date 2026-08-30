@@ -22,7 +22,7 @@ type Props = {
   namedVotes: NamedVote[];
 };
 
-/** Each row needs its own `vote_result_by_id` — a NamedVote carries no title. */
+/** every row needs its own vote_result_by_id, a named vote carries no title */
 export function NamedVotesCard({ namedVotes }: Props) {
   const router = useRouter();
   const [visible, setVisible] = useState(PREVIEW);

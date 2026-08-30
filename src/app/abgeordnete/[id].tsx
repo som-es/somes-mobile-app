@@ -32,7 +32,7 @@ export default function AbgeordneteDetailScreen() {
     queryFn: async () => unwrap(await general_delegate_info(Number(id))),
   });
 
-  // `speeches_per_page` is 0-based, unlike every other paginated endpoint.
+  // speeches_per_page is 0 based, unlike every other paginated endpoint
   const speeches = useQuery({
     queryKey: ['delegate-speeches', id],
     queryFn: async () => unwrap(await speeches_by_delegate_per_page(Number(id), 0)),
@@ -81,7 +81,7 @@ function DelegateDetail({
             name={delegate.name}
             party={delegate.party}
             position={info.political_position}
-            // `left_right_stances` was removed; the same {topic, score} list hangs off the position.
+            // left_right_stances was removed, the same topic and score list hangs off the position now
             stances={info.political_position?.scores_by_topic ?? []}
             interests={info.interests}
           />

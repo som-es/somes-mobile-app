@@ -64,7 +64,7 @@ function LinkCard({
   return (
     <Card
       variant="outlined"
-      // Nothing to show behind an empty list, so it stays inert until there is.
+      // nothing to show behind an empty list, so it stays inert until there is
       onPress={hasAny ? () => router.push(href) : undefined}>
       <View style={styles.row}>
         <View style={styles.grow}>

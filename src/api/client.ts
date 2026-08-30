@@ -1,4 +1,4 @@
-/* ported from somes-core/somes-frontend/src/lib/api/api.ts. */
+/* ported from somes-core/somes-frontend/src/lib/api/api.ts */
 import type { HasError, SignUpError } from '@/types';
 
 export const address = process.env.EXPO_PUBLIC_API_URL ?? 'https://somes.at';

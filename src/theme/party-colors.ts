@@ -12,12 +12,11 @@ export function usePartyColors() {
       const result = unwrap(await parties());
       return new Map(result.map((party) => [party.name, party.color]));
     },
-    // Parties change once per legislative period at most.
+    // parties change once per legislative period at most
     staleTime: 1000 * 60 * 60 * 24,
   });
 }
 
-/** Resolves a party name to its colour, falling back to the muted text colour. */
 export function usePartyColor(partyName: string | null | undefined): string {
   const { data } = usePartyColors();
   if (!partyName) return colors.textMuted;

@@ -1,4 +1,4 @@
-/* React binding over `@/lib/auth-store`. */
+/* react binding over the auth store */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
@@ -8,7 +8,6 @@ import { clearToken, getToken, setToken, subscribeToToken } from '@/lib/auth-sto
 import type { BasicUserInfo } from '@/types';
 import { getUserFromJwt } from '@/types';
 
-/** Every query key whose contents belong to one account. */
 export const USER_QUERY_KEYS = [
   ['user'],
   ['mail-send-info'],
@@ -21,7 +20,7 @@ function decode(token: string | null): BasicUserInfo | null {
   if (token === null) return null;
   try {
     const user = getUserFromJwt(token);
-    // `exp` is seconds. A past token is refused by the server anyway, so treat it as signed out.
+    // exp is in seconds, a past token is refused by the server anyway so treat it as signed out
     if (typeof user?.exp !== 'number' || user.exp * 1000 <= Date.now()) return null;
     return user;
   } catch (error) {
@@ -37,8 +36,8 @@ export function useAuth() {
   return { token, user, isAuthenticated: user !== null };
 }
 
-/** Sign-in/out touch the query cache, so they live here — the token store must stay
-    free of React imports for the API layer's synchronous `getToken()`. */
+/** sign in and out both touch the query cache, so they live here, the token store
+    has to stay free of react imports for the synchronous read in the api layer */
 export function useSession() {
   const queryClient = useQueryClient();
 
@@ -54,14 +53,14 @@ export function useSession() {
 
   const signOut = useCallback(async () => {
     await clearToken();
-    // Clear everything, so the next account never sees this one's favourites flash in.
+    // clear everything, so the next account never sees this one favourites flash in
     queryClient.clear();
   }, [queryClient]);
 
   return { signIn, signOut };
 }
 
-/** Only `is_email_hashed` is worth fetching; the id and e-mail are already in the token. */
+/** only is_email_hashed is worth fetching, the id and e-mail are already in the token */
 export function useExtendedUser() {
   const { isAuthenticated } = useAuth();
   return useQuery({

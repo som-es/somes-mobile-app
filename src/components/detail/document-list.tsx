@@ -12,7 +12,6 @@ type Props = {
   documents: Document[];
 };
 
-/** "Dokumente" — the web's `Documents.svelte`, PDFs only. */
 export function DocumentList({ documents }: Props) {
   return (
     <SectionCard title="Dokumente">
@@ -34,7 +33,7 @@ export function DocumentList({ documents }: Props) {
   );
 }
 
-/** PDFs only — every document is listed twice — sorted by title length descending. */
+/** pdfs only, every document is listed twice, sorted by title length descending */
 export function pdfDocuments(documents: Document[]): Document[] {
   return documents
     .filter((document) => document.document_type.includes('PDF'))

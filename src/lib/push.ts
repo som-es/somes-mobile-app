@@ -1,4 +1,4 @@
-/* Client side only. somes-api has NO push support: no device-token table, no endpoint. */
+/* client side only, somes-api has no push support at all, no token table, no endpoint */
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -16,7 +16,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-/** Null if the user declined, the device is a simulator, or the project id is missing. */
 export async function getExpoPushToken(): Promise<string | null> {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
@@ -26,7 +25,7 @@ export async function getExpoPushToken(): Promise<string | null> {
     });
   }
 
-  // Push only works on physical devices.
+  // push only works on physical devices
   if (!Device.isDevice) {
     console.warn('Push notifications require a physical device.');
     return null;
@@ -57,7 +56,7 @@ export async function getExpoPushToken(): Promise<string | null> {
   }
 }
 
-/** TODO(somes-core): add `POST /api/at/v1/user/push_token`, then drop this guard. */
+/** todo, add the push token endpoint in somes-api, then drop this guard */
 const PUSH_TOKEN_ENDPOINT_EXISTS = false;
 
 export async function registerPushToken(token: string): Promise<void> {

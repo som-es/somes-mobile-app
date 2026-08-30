@@ -14,7 +14,7 @@ type Props = {
 export function VoteBreakdown({ votes }: Props) {
   const { data: partyColors } = usePartyColors();
 
-  // `.slice()` first — `votes` belongs to the react-query cache.
+  // slice first, votes belongs to the react-query cache
   const sorted = votes.slice().sort(byPartySize);
 
   return (

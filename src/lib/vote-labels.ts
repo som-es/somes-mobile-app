@@ -1,7 +1,7 @@
 import { isoToDotDate } from '@/lib/date';
 import type { LegislativeInitiative } from '@/types';
 
-/** VoteTypeBadge.svelte, verbatim. */
+/** same labels as the web */
 const VOTE_TYPE: Record<string, string> = {
   Law: 'Gesetz',
   Amendment: 'Abänderung',
@@ -9,13 +9,12 @@ const VOTE_TYPE: Record<string, string> = {
   Report: 'Bericht',
 };
 
-/** An unknown `voting` yields '' rather than 'Andere', as on the web. */
+/** an unknown voting yields '' rather than andere, like on the web */
 export function voteTypeLabel(voting: string | null): string {
   if (!voting) return 'Andere';
   return VOTE_TYPE[voting] ?? '';
 }
 
-/** The four peach badges under a vote, in the Figma's order. */
 export function voteBadges(initiative: LegislativeInitiative): string[] {
   const type = voteTypeLabel(initiative.voting);
   return [

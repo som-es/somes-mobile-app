@@ -19,7 +19,7 @@ import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/** The web asks for 50 at a time; a phone shows a fraction of that per screen. */
+/** the web asks for 50 at a time, a phone shows far fewer per screen */
 const ENTRIES_PER_PAGE = 25;
 
 export default function AbgeordneteScreen() {
@@ -30,7 +30,7 @@ export default function AbgeordneteScreen() {
   const debouncedSearch = useDebounced(search);
 
   const results = useInfiniteQuery({
-    // The filter object is part of the key; react-query hashes it stably.
+    // the filter object is part of the key, react-query hashes it stably
     queryKey: ['delegates', filters, debouncedSearch],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) =>

@@ -10,9 +10,7 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 type Props = {
-  /** The parlament.gv.at page this record was scraped from. */
   sourceUrl: string;
-  /** Sits left of the out-link in the top row — the favourite heart. */
   action?: ReactNode;
   children: ReactNode;
 };
@@ -48,12 +46,12 @@ export function DetailScreen({ sourceUrl, action, children }: Props) {
   );
 }
 
-/** `utm_source` matches what somes.at appends to the same link. */
+/** utm_source matches what somes.at appends to the same link */
 export function parliamentUrl(gp: string, ityp: string, inr: string | number): string {
   return `https://parlament.gv.at/gegenstand/${gp}/${ityp}/${inr}?utm_source=somes.at`;
 }
 
-/** A person has their own shape of parliament URL — no gp/ityp/inr. */
+/** a person has their own shape of parliament url, no gp/ityp/inr */
 export function personUrl(id: string | number): string {
   return `https://parlament.gv.at/person/${id}?utm_source=somes.at`;
 }

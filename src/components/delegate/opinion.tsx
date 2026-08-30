@@ -5,7 +5,6 @@ import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/** The stripe the Figma draws by peeking a coloured rect out from behind. */
 const STRIPE = 4;
 
 export function opinionColor(infavor: boolean | null): string {
@@ -14,7 +13,7 @@ export function opinionColor(infavor: boolean | null): string {
 }
 
 type CardProps = {
-  /** How the member voted or spoke — drives the stripe colour. */
+  /** how the member voted or spoke, drives the stripe colour */
   infavor: boolean | null;
   onPress?: () => void;
   children: ReactNode;
@@ -36,7 +35,6 @@ export function OpinionCard({ infavor, onPress, children }: CardProps) {
   );
 }
 
-/** The "● Pro  ● Contra" key the design puts beside both section titles. */
 export function OpinionLegend() {
   return (
     <View style={styles.legend}>

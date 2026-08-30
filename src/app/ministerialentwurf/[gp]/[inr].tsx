@@ -82,7 +82,6 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
         </SectionCard>
       ) : null}
 
-      {/* The vote this draft eventually became, where one exists  */}
       {vote_result ? (
         <SectionCard title="Regierungsvorlage">
           <VoteResultCard voteResult={vote_result} />

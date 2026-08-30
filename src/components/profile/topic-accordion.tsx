@@ -16,7 +16,7 @@ type Props = {
   onToggleAll: (topics: UniqueTopic[], select: boolean) => void;
 };
 
-/** The tri-state select-all box must not also expand the row. */
+/** the select all box is tri state and must not also expand the row */
 export function TopicAccordion({ title, topics, selectedIds, onToggle, onToggleAll }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
     borderColor: colors.accent,
   },
-  /** "some selected", the state a checkmark cannot express. */
   dash: {
     width: 10,
     height: 2,

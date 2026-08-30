@@ -10,9 +10,7 @@ type Size = 'sm' | 'lg';
 type Props = {
   label: string;
   onPress: () => void;
-  /** `accent` is the coral (Anmelden), `danger` the red (Account löschen). */
   variant?: Variant;
-  /** `sm` is the 31pt button the Figma draws inside cards; `lg` is a 44pt CTA. */
   size?: Size;
   loading?: boolean;
   disabled?: boolean;

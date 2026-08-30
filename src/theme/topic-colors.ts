@@ -1,7 +1,7 @@
 import { colors } from './colors';
 
-/* Ported from somes-frontend's `interestColors.ts`. Unlike party colours these are not an
-   API field. `TOPIC_MAP` lives in ./topic-groups.ts. */
+/* ported from somes-frontend, unlike party colours these are not an api field,
+   the topic map itself lives in ./topic-groups.ts */
 const TOPIC_COLORS: Record<string, string> = {
   Sport: '#006400',
   'Budget und Finanzen': '#FFD700',

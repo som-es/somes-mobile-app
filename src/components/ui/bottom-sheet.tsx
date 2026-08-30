@@ -11,12 +11,11 @@ type Props = {
   visible: boolean;
   title: string;
   onClose: () => void;
-  /** Shown beside "Anwenden" only when something is selected. */
   onReset?: () => void;
   children: ReactNode;
 };
 
-/** Stands in for the panel's height until the first layout measures it. */
+/** stands in for the panel height until the first layout measures it */
 const ASSUMED_HEIGHT = 420;
 
 export function BottomSheet({ visible, title, onClose, onReset, children }: Props) {
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.35)',
   },
   panel: {
-    /** Never taller than most of the screen — the topic list has 184 entries. */
+    /** never taller than most of the screen, the topic list has 184 entries */
     maxHeight: '85%',
     backgroundColor: colors.screen,
     borderTopLeftRadius: radius.card,

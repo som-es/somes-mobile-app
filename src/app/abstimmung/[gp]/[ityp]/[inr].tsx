@@ -31,7 +31,7 @@ export default function VoteDetailScreen() {
 
   const activityDate = vote.data?.legislative_initiative.nr_plenary_activity_date;
 
-  // Everyone sitting that day, shared by "Eingebracht von" and "Reden" — both hold ids only.
+  // everyone sitting that day, used by both sections, they only hold ids
   const delegates = useQuery({
     queryKey: ['delegates-at', activityDate],
     queryFn: async () => {
@@ -45,7 +45,7 @@ export default function VoteDetailScreen() {
   return (
     <DetailScreen
       sourceUrl={parliamentUrl(gp, ityp, inr)}
-      // The bookmark is keyed on the vote result's own id; the route carries gp/ityp/inr.
+      // the bookmark is keyed on the vote result id, the route only carries gp/ityp/inr
       action={<FavoriteButton kind="vote" id={vote.data?.id ?? null} />}>
       {vote.isPending ? (
         <>
@@ -72,7 +72,7 @@ function VoteDetail({ voteResult, delegates }: DetailProps) {
   const topics = topicNames(voteResult.eurovoc_topics, ai_summary);
   const documents = pdfDocuments(voteResult.documents);
 
-  // The web prefixes the date line for roll-call votes, falling back to the plenary date.
+  // the web prefixes the date line for roll call votes and falls back to the plenary date
   const dateSource = initiative.vote_date ?? initiative.nr_plenary_activity_date;
   const subtitle = `${initiative.voted_by_name ? 'Namentlich abgestimmt' : 'Abstimmung'} am: ${isoToDotDate(dateSource)}`;
 

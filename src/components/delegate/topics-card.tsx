@@ -6,7 +6,6 @@ import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { InterestShare } from '@/types';
 
-/** The design: the leading topic across the full width, then a 2×2 grid. */
 const MAX_TILES = 5;
 
 type Props = {
@@ -64,7 +63,6 @@ const styles = StyleSheet.create({
   tileWide: {
     width: '100%',
   },
-  /** Two per row, leaving room for the gap between them. */
   tileHalf: {
     flexBasis: '48%',
     flexGrow: 1,

@@ -21,7 +21,6 @@ import { spacing } from '@/theme/layout';
 import { partiesFor, useFilterSources, withCount, type Sheet } from './filter-sources';
 
 type Props = {
-  /** The Nationalrat / Regierung switch, owned by the screen. */
   control: ReactNode;
 };
 

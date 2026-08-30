@@ -15,7 +15,6 @@ type Props = {
   onRefresh?: () => void;
 };
 
-/** A pushed screen with no source link — `DetailScreen` is the same shape but requires one. */
 export function SubScreen({ children, refreshing, onRefresh }: Props) {
   const router = useRouter();
 

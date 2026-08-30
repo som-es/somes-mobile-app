@@ -8,11 +8,9 @@ type Props = {
   label: string;
   selected: boolean;
   onPress: () => void;
-  /** Adds an × to a selected chip, for the "your interests" summary row. */
   removable?: boolean;
 };
 
-/** Taller than the shared 22pt `Chip`: here the chip is the control, not a label. */
 export function TopicChip({ label, selected, onPress, removable = false }: Props) {
   return (
     <Pressable

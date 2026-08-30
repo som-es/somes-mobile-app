@@ -7,8 +7,8 @@ import { useAuth, useExtendedUser, useSession } from '@/lib/use-auth';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/** The address comes from the JWT `sub`, not `GET v1/user` — an anonymised account
-    stores an argon2 hash there. */
+/** the address comes from the jwt, not from the user endpoint, an anonymised
+    account only stores a hash there */
 export function AccountCard() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
@@ -35,7 +35,7 @@ export function AccountCard() {
         <View style={styles.grow}>
           <Text style={typography.cardHeading}>Benutzerinfos</Text>
           {account?.is_email_hashed ? (
-            // The web slices [36,60) out of the hash so two anonymised accounts can be told apart.
+            // the web slices part of the hash so two anonymised accounts can be told apart
             <Text style={typography.caption} numberOfLines={1}>
               anonymisiert ...{user?.sub.slice(36, 60)}...
             </Text>

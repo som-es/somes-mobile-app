@@ -135,7 +135,7 @@ export function ProposalsList({ control }: Props) {
   );
 }
 
-/** Ministries of the selected period; "Alle" dedupes newest-first across renames. */
+/** ministries of the selected period, alle dedupes newest first across renames */
 function ministriesFor(
   departmentsPerGp: Record<string, string[]> | undefined,
   gp: string | null

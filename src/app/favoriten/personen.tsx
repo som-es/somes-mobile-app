@@ -20,7 +20,7 @@ import type { Delegate, DelegateFavo } from '@/types';
 
 const AVATAR = 48;
 
-/** somes-frontend's "Infoabstand" select, same values and captions. */
+/** the infoabstand select from somes-frontend, same values and captions */
 const INTERVALS = [
   { label: 'Jede Woche', value: 7 },
   { label: 'Jede 2. Woche', value: 14 },
@@ -32,7 +32,7 @@ export default function FavoriteDelegatesScreen() {
   const favorites = useFavoriteDelegates();
   const entries = favorites.data ?? [];
 
-  // One request per favourite, as on the web — somes-api has no batch lookup.
+  // one request per favourite like on the web, somes-api has no batch lookup
   const delegates = useQueries({
     queries: entries.map((favo) => ({
       queryKey: ['delegate', String(favo.delegate_id)],

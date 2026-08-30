@@ -11,14 +11,13 @@ import { usePartyColor } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
 import type { Delegate } from '@/types';
 
-/** Wide enough for the portrait plus the gap, so the table head can line up. */
 export const AVATAR = 40;
 
 type Props = {
   delegate: Delegate;
 };
 
-/** Column flex weights must match the Name/Partei/Alter header above the list. */
+/** the column flex weights have to match the header above the list */
 export function DelegateCard({ delegate }: Props) {
   const router = useRouter();
   const party = partyLabel(delegate.party);
@@ -57,7 +56,7 @@ export function DelegateCard({ delegate }: Props) {
   );
 }
 
-/** The web substitutes this for a blank or "ohne Klub" party before rendering. */
+/** the web puts this in place of a blank or ohne klub party */
 function partyLabel(party: string | null): string {
   if (!party || party.toUpperCase() === 'OK') return 'Ohne Klub';
   return party;

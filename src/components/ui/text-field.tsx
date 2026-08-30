@@ -6,9 +6,7 @@ import { typography } from '@/theme/typography';
 
 type Props = TextInputProps & {
   label: string;
-  /** Shown in red under the field, and turns the border red. */
   error?: string | null;
-  /** Muted line under the field when there is no error. */
   hint?: string | null;
 };
 

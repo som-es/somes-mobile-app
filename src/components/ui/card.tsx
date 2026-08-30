@@ -9,9 +9,7 @@ type Variant = 'filled' | 'outlined';
 type Props = {
   children: ReactNode;
   onPress?: () => void;
-  /** `filled` is the blue-grey list card, `outlined` the white profile one. */
   variant?: Variant;
-  /** Person rows use a heavier shadow than content cards. */
   elevation?: keyof typeof shadows;
   style?: ViewStyle;
 };
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.cardBorder,
   },
-  /** A slight give rather than a blink — the card is a big target. */
+  /** a slight give rather than a blink, the card is a big target */
   pressed: {
     opacity: 0.85,
     transform: [{ scale: 0.99 }],

@@ -8,7 +8,6 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 type Props = {
-  /** The naive datetime from `next_plenar_date()`, or null while loading / on error. */
   date: string | null;
 };
 

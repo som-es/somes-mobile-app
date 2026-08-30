@@ -17,10 +17,10 @@ import { OTHER_GROUP, topicGroup } from '@/theme/topic-groups';
 import { typography } from '@/theme/typography';
 import type { UniqueTopic } from '@/types';
 
-/** A day: the eurovoc list changes at most once per legislative period. */
+/** a day, the eurovoc list changes once per legislative period at most */
 const STALE = 1000 * 60 * 60 * 24;
 
-/** Search hits render inline, so the list has to stay short. */
+/** search hits render inline, so the list has to stay short */
 const MAX_RESULTS = 10;
 
 export function InterestsCard() {
@@ -49,7 +49,7 @@ export function InterestsCard() {
 
   const toggle = useMutation({
     mutationFn: async ({ topic, select }: { topic: UniqueTopic; select: boolean }) => {
-      // Only `id` is read server-side, but serde requires the field to be there.
+      // only id is read server side, but serde needs the field to be there
       const body: UniqueTopic = { id: topic.id, topic: '' };
       const result = select ? await addUserTopic(body) : await removeUserTopic(body);
       if (isHasError(result)) throw new Error(`${result.error_type}: ${result.error}`);
@@ -109,7 +109,7 @@ export function InterestsCard() {
     const matching = (topics.data ?? []).filter((topic) =>
       topic.topic.toLowerCase().includes(needle)
     );
-    // Selected first, as on somes.at.
+    // selected first, like on somes.at
     return [
       ...matching.filter((topic) => selectedIds.has(topic.id)),
       ...matching.filter((topic) => !selectedIds.has(topic.id)),

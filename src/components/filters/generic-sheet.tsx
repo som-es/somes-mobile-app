@@ -5,7 +5,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import type { DelegateFilters, ProposalFilters, VoteFilters } from '@/lib/filter-query';
 import { spacing } from '@/theme/layout';
 
-/** Copied from the web's `genericFilters`; the labels are UI strings. */
+/** copied from the web, the labels are ui strings */
 const ACCEPTED = [
   { label: 'egal', value: null },
   { label: 'angenommen', value: 'a' },
@@ -50,7 +50,6 @@ const MIND_PREVIOUS_PARTY = [
 ] as const;
 
 type PeriodProps = {
-  /** `gp` codes from `all_gps()`, newest first. */
   periods: string[];
 };
 
@@ -203,7 +202,7 @@ export function DelegateGenericSheet({
   );
 }
 
-/** `null` is "Alle", which omits the `gp` parameter entirely. */
+/** null is alle, which leaves out the gp parameter */
 function periodOptions(periods: string[]) {
   return [{ label: 'Alle', value: null as string | null }, ...periods.map((gp) => ({ label: gp, value: gp }))];
 }

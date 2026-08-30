@@ -4,13 +4,12 @@ import { all_gps, get_eurovoc_topics } from '@/api/api';
 import { unwrap } from '@/api/client';
 import type { Party } from '@/types';
 
-/** Which sheet is open. `second` is Parteien on votes, Ministerien on proposals. */
 export type Sheet = 'topics' | 'second' | 'generic' | null;
 
-/** A day: topics and legislative periods change once per period at most. */
+/** a day, topics and legislative periods change once per period at most */
 const STALE = 1000 * 60 * 60 * 24;
 
-/** Both tabs share one hook so switching tabs reuses the cached lists. */
+/** both tabs share one hook so switching tabs reuses the cached lists */
 export function useFilterSources() {
   const topics = useQuery({
     queryKey: ['eurovoc-topics'],
@@ -30,13 +29,12 @@ export function useFilterSources() {
   };
 }
 
-/** "Themen" with nothing selected, "Themen (3)" with three — as `FilterDropdown` does. */
 export function withCount(label: string, count: number): string {
   return count > 0 ? `${label} (${count})` : label;
 }
 
-/** Parties of the selected period, largest first. "Alle" walks periods newest-first,
-    keeping the first sighting of each code so a renamed party appears once. */
+/** parties of the selected period, largest first, alle walks the periods newest
+    first and keeps the first sighting of each code so a renamed party shows once */
 export function partiesFor(
   partiesPerGp: Record<string, Party[]> | undefined,
   gp: string | null

@@ -8,7 +8,6 @@ import { typography } from '@/theme/typography';
 
 type Props = {
   title: string;
-  /** Sits opposite the title — the Pro/Contra legend on a member's page. */
   action?: ReactNode;
   children: ReactNode;
 };

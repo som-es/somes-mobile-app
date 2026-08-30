@@ -119,8 +119,8 @@ export interface LegislativeInitiative {
 	is_urgent: boolean;
 }
 
-/** A party's vote as per-member counts. Replaced `{ fraction, infavor }` — see
-    `partySeats()` / `partyInfavor()` in `@/lib/votes`. */
+/** a party vote as per member counts, replaced the old fraction and infavor pair,
+    see partyseats and partyinfavor in lib/votes */
 export interface Vote {
 	party: string;
 	code: string | null;
@@ -130,22 +130,21 @@ export interface Vote {
 	absence_count: number;
 }
 
-/** The speech itself. What used to be the whole of `Speech`. */
+/** the speech itself, what used to be the whole speech type */
 export interface SpeechDetail {
 	delegate_id: number;
 	infavor: boolean | null;
 	opinion: string | null;
-	/** Was `document_url`; a speech can have more than one protocol link. */
+	/** was document_url, a speech can have more than one protocol link */
 	document_urls: string[] | null;
 	about: string | null;
 	duration_in_seconds: number | null;
 	vote_result_ids: number[] | null;
-	/** Wall-clock start, e.g. "18:18:00". */
 	start: string | null;
 }
 
-/** `ai_summary` and `relations` are left untyped on purpose: the app renders neither,
-    and typing them would invite use without checking nullability. */
+/** ai_summary and relations are left untyped on purpose, the app renders neither and
+    typing them would invite use without checking nullability */
 export interface Speech {
 	id: number;
 	debate_id: number;
@@ -170,7 +169,7 @@ export interface Topic {
 }
 
 export interface UniqueTopic {
-	/** A hash, serialised as a string — it does not fit in a JS number. */
+	/** a hash serialised as a string, it does not fit in a js number */
 	id: string;
 	topic: string;
 }
@@ -279,8 +278,8 @@ export interface CallToOrdersPerPartyDelegate {
 	ratio: number;
 }
 
-/** Axes renamed from is_left/is_liberal to socialist/capitalist/liberal/authoritarian.
-    `scores_by_topic` replaces the removed top-level `left_right_stances`. */
+/** axes renamed to socialist, capitalist, liberal and authoritarian,
+    scores_by_topic replaces the old top level stances list */
 export interface PoliticalPosition {
 	total_score: PoliticalScore;
 	scores_by_topic: StanceTopicScore[];
@@ -309,7 +308,7 @@ export interface JWTInfo {
 	access_token: string;
 }
 
-/** Uses the global `atob` (no `window` here) and translates base64url first. */
+/** uses the global atob since there is no window here, and translates base64url first */
 function decodeSegment(segment: string): any {
 	const base64 = segment.replace(/-/g, '+').replace(/_/g, '/');
 	const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
@@ -375,8 +374,7 @@ export interface InfoCounts {
 	answer_count: number[];
 }
 
-/** The flag struct somes-api puts in `HasError.meta`. `login` only sets `missing_email`
-    and `invalid_email`. */
+/** the flag struct somes-api puts in the error meta, login only sets the two email ones */
 export interface SignUpError {
 	missing_username: boolean;
 	missing_password: boolean;
@@ -426,7 +424,7 @@ export interface Mandate {
 }
 
 export interface Absence {
-	/** A plain calendar date ("2024-07-05"), not an instant. */
+	/** a plain calendar date, not an instant */
 	date: string;
 	inr: number;
 	gp: string;
@@ -434,8 +432,8 @@ export interface Absence {
 	missed_legis_init_ids: number[];
 }
 
-/** somes-frontend declares two different `NamedVote`s, which TypeScript silently merges.
-    Split here — the other one is `NamedVoteMatch`. */
+/** somes-frontend declares two different named vote types which typescript silently
+    merges, split here, the other one is namedvotematch */
 export interface NamedVote {
 	infavor: boolean | null;
 	was_absent: boolean | null;
@@ -497,8 +495,7 @@ export interface LegisPeriod {
 	start_date: Date;
 }
 
-/** `date_and_time` is a NaiveDateTime, so it arrives without a timezone and `new Date()`
-    reads it as local. */
+/** date_and_time has no timezone, so new date reads it as local */
 export interface PlenarDate {
 	date_and_time: string;
 }
@@ -531,7 +528,6 @@ export interface DelegateFilter {
 	day_offset: number | null;
 }
 
-/** The four axes a stance is scored on. Pairwise opposites. */
 export interface PoliticalScore {
 	socialist: number;
 	capitalist: number;
@@ -555,7 +551,7 @@ export interface GovPropFilter {
 	date_to: string | null;
 }
 
-/** The second `NamedVote` from somes-frontend's types.ts, renamed so it no longer merges. */
+/** the second named vote type from somes-frontend, renamed so it no longer merges */
 export interface NamedVoteMatch {
 	id: number;
 	infavor: boolean | null;
@@ -583,8 +579,8 @@ export interface NamedVoteInfo {
 	invalid_count: number;
 }
 
-/** Widened from somes-frontend, whose literal types no real response can satisfy.
-    Arrives in `meta` of a `HasError`; read it with `signUpFlags()`. */
+/** widened from somes-frontend, whose literal types no real response can satisfy,
+    arrives in the error meta, read it with signupflags */
 export interface LoginResponseError {
 	missing_username: boolean;
 	missing_password: boolean;
@@ -598,17 +594,12 @@ export interface LoginResponseError {
 }
 
 export function areDeeplyEqual(param1: unknown, param2: unknown) {
-	// check strict equality
 	if (param1 === param2) return true;
-	// check if props are not objects
 	if (!(param1 instanceof Object) || !(param2 instanceof Object)) return false;
 
-	// object keys
 	const keys1 = Object.keys(param1);
 	const keys2 = Object.keys(param2);
-	// check if number of keys are the same
 	if (keys1.length !== keys2.length) return false;
-	// Iterate over the keys and compare the values recursively
 	for (const key of keys1) {
 		const value1 = (param1 as Record<string, unknown>)[key];
 		const value2 = (param2 as Record<string, unknown>)[key];

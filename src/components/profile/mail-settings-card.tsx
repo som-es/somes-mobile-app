@@ -13,7 +13,7 @@ import type { MailSendInfo } from '@/types';
 
 type Row = { field: keyof MailSendInfo; title: string; description: string };
 
-/** Titles, descriptions and grouping are somes.at's, verbatim. */
+/** titles, descriptions and grouping are somes.at's, verbatim */
 const BY_INTEREST: Row[] = [
   {
     field: 'send_new_vote_results_mails',
@@ -69,7 +69,6 @@ const ALL_FIELDS: (keyof MailSendInfo)[] = [...BY_INTEREST, ...BY_FAVORITE].map(
   (row) => row.field
 );
 
-/** "E-Mail Benachrichtigungen" — Figma node 286:718. */
 export function MailSettingsCard() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -81,7 +80,7 @@ export function MailSettingsCard() {
     enabled: isAuthenticated,
   });
 
-  // There is no per-field endpoint: every toggle PUTs all nine booleans.
+  // there is no per field endpoint, every toggle puts all nine booleans
   const save = useMutation({
     mutationFn: async (next: MailSendInfo) => {
       const result = await updateMailSendInfo(next);
@@ -96,8 +95,8 @@ export function MailSettingsCard() {
     onError: (_error, _next, context) => {
       if (context?.previous) queryClient.setQueryData(['mail-send-info'], context.previous);
     },
-    // Refetch rather than trust the optimistic value: somes-api mis-binds
-    // `send_new_vote_result_by_favo_mails`, so that one toggle visibly snaps back.
+    // refetch instead of trusting the optimistic value, somes-api mis-binds one
+    // column so that toggle visibly snaps back
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['mail-send-info'] }),
   });
 
@@ -218,7 +217,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
   },
-  /** The hairline the Figma draws between the two groups (node 286:788). */
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.inputBorder,

@@ -10,7 +10,6 @@ type Props = {
   onPress: () => void;
 };
 
-/** The "Weitere Abstimmungen →" row under a section — Figma node 286:47. */
 export function SectionLink({ label, onPress }: Props) {
   return (
     <Pressable

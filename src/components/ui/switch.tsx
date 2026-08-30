@@ -3,7 +3,6 @@ import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 
 import { colors } from '@/theme/colors';
 
-/** Figma node 286:723 draws the toggle at 53×27. */
 const TRACK_WIDTH = 53;
 const TRACK_HEIGHT = 27;
 const PADDING = 3;
@@ -17,10 +16,10 @@ type Props = {
   accessibilityLabel?: string;
 };
 
-/** Custom, not RN's `Switch`: the platform controls disagree and the Figma wants one
-    shape. Only translateX/opacity animate, so it stays on the native driver. */
+/** custom instead of the react native switch, the platform ones disagree with each
+    other, only translatex and opacity animate so it stays on the native driver */
 export function Switch({ value, onValueChange, disabled = false, accessibilityLabel }: Props) {
-  // `useState`, not `useRef` — with the React Compiler on, reading `ref.current` during render lints.
+  // usestate, not useref, with the react compiler on reading ref.current during render lints
   const [progress] = useState(() => new Animated.Value(value ? 1 : 0));
 
   useEffect(() => {

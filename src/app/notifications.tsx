@@ -38,7 +38,7 @@ export default function NotificationsScreen() {
 
         <ScreenTitle title="Benachrichtigungen" subtitle="Noch keine Benachrichtigungen" />
 
-        {/* Dev aid: lets you send a test push from expo.dev to this device. */}
+        {/* dev aid, lets you send a test push from expo.dev to this device */}
         {__DEV__ ? (
           <Card>
             <Text style={typography.cardTitle}>Push-Token (nur Entwicklung)</Text>

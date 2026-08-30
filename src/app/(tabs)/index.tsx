@@ -42,7 +42,7 @@ export default function HomeScreen() {
     proposals.refetch();
   };
 
-  // The web takes the section's date from the first result, not from today.
+  // the web takes the section's date from the first result, not from today
   const voteDate = votes.data?.at(0)?.legislative_initiative.nr_plenary_activity_date;
 
   return (

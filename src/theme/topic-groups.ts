@@ -1,5 +1,5 @@
-/* The web's `TOPIC_MAP` from somes-frontend/src/lib/interestColors.ts, verbatim
-   (171 entries, 21 parents). Anything unmapped falls into 'Sonstige'. */
+/* the topic map from somes-frontend, verbatim, 171 entries and 21 parents,
+   anything unmapped falls into sonstige */
 const TOPIC_MAP: Record<string, string> = {
   'Arbeitsrecht': 'Arbeit',
   'Beschäftigung und Arbeitsbedingungen': 'Arbeit',
@@ -176,8 +176,8 @@ const TOPIC_MAP: Record<string, string> = {
 
 export const OTHER_GROUP = 'Sonstige';
 
-/** Case-folded: the endpoint returns `internationale Beziehungen` where the ported map
-    has it capitalised, and matching exactly drops such topics into "Sonstige". */
+/** case folded, the endpoint returns the topic lowercase where the ported map has it
+    capitalised, and matching exactly drops it into sonstige */
 const BY_LOWER_NAME: Record<string, string> = Object.fromEntries(
   Object.entries(TOPIC_MAP).map(([topic, group]) => [topic.toLowerCase(), group])
 );

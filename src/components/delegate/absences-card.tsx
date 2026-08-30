@@ -17,7 +17,7 @@ type Props = {
 export function AbsencesCard({ absences }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  // `Absence.date` is a plain "2024-07-05" calendar date — sorts and formats as a string.
+  // absence.date is a plain calendar date, so it sorts and formats as a string
   const sorted = absences
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
@@ -38,7 +38,7 @@ export function AbsencesCard({ absences }: Props) {
 
           <View style={styles.list}>
             {shown.map((absence, index) => (
-              // Two absences can share a plenary_session_id, so position it is.
+              // two absences can share a plenary_session_id, so use the position
               <View key={index} style={styles.row}>
                 <View style={styles.left}>
                   <View style={styles.dot} />
@@ -70,7 +70,6 @@ export function AbsencesCard({ absences }: Props) {
   );
 }
 
-/** The current year when it has absences, else the most recent one that does. */
 function headlineYear(sorted: Absence[]): { year: number; count: number } {
   const current = new Date().getFullYear();
   const years = sorted.map((absence) => Number(absence.date.slice(0, 4)));

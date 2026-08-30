@@ -9,7 +9,6 @@ type Props = {
   value: string;
   onChangeText: (value: string) => void;
   placeholder?: string;
-  /** The profile screen's topic search sits on a card and has a white fill. */
   filled?: boolean;
 };
 

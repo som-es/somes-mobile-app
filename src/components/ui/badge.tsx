@@ -6,12 +6,10 @@ import { typography } from '@/theme/typography';
 
 type Props = {
   label: string;
-  /** Override the peach fill, e.g. with a party colour. */
   color?: string;
   textColor?: string;
 };
 
-/** The peach metadata chip: "einfache Mehrheit", "XXVIII", "02.12.2025". */
 export function Badge({ label, color, textColor }: Props) {
   return (
     <View style={[styles.badge, color ? { backgroundColor: color } : null]}>

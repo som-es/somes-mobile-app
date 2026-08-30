@@ -20,7 +20,7 @@ export function VoteResultCard({ voteResult }: Props) {
 
   const title = ai_summary?.short_title ?? initiative.description;
   const accepted = initiative.accepted;
-  // `.slice()` first — `votes` belongs to the react-query cache.
+  // slice first, votes belongs to the react-query cache
   const votes = voteResult.votes.slice().sort(byPartySize);
 
   return (
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
   summary: {
     marginTop: spacing.sm,
   },
-  /** Six parties will not fit on one 353pt line — let them reflow. */
   votes: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -8,7 +8,6 @@ import { colors } from '@/theme/colors';
 import { spacing, TAB_BAR_HEIGHT } from '@/theme/layout';
 
 type Props<T> = {
-  /** The segmented control, title, search field and filter buttons. */
   header: ReactNode;
   items: T[];
   keyExtractor: (item: T) => string;
@@ -68,7 +67,7 @@ export function ResultList<T>({
       }
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       onEndReached={onEndReached}
-      // Prefetch roughly half a screen early, so the spinner rarely shows.
+      // prefetch about half a screen early, so the spinner rarely shows
       onEndReachedThreshold={0.5}
       showsVerticalScrollIndicator={false}
       contentInsetAdjustmentBehavior="never"

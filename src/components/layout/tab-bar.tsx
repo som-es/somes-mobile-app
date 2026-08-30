@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.chrome,
   },
-  /** 4 x 48pt buttons with 30pt gaps, centred — Figma node 286:4. */
   bar: {
     height: TAB_BAR_HEIGHT,
     flexDirection: 'row',

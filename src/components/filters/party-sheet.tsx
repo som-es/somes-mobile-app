@@ -8,7 +8,7 @@ import type { PartyVote } from '@/types';
 
 type Props = {
   visible: boolean;
-  /** Already sorted by fraction descending by the caller. */
+  /** already sorted by fraction descending by the caller */
   parties: { name: string; color: string | null }[];
   selected: PartyVote[];
   onChange: (selected: PartyVote[]) => void;
@@ -23,7 +23,6 @@ const STANCES: { value: Stance; label: string }[] = [
   { value: 'contra', label: 'Contra' },
 ];
 
-/** Tri-state per party. "Egal" drops the party from the filter entirely. */
 export function PartySheet({ visible, parties, selected, onChange, onClose }: Props) {
   function stanceOf(party: string): Stance {
     const match = selected.find((entry) => entry.party === party);

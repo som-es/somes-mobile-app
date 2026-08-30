@@ -9,12 +9,11 @@ import { spacing } from '@/theme/layout';
 
 type Props = {
   kind: FavoriteKind;
-  /** Null while the record is still loading. */
   id: number | null;
   size?: number;
 };
 
-/** Signed out it stays visible and routes to /anmelden rather than hiding. */
+/** signed out it stays visible and routes to anmelden instead of hiding */
 export function FavoriteButton({ kind, id, size = 22 }: Props) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();

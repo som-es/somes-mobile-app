@@ -20,7 +20,7 @@ export function DelegateHeaderCard({ delegate }: Props) {
   const party = delegate.party || delegate.current_party;
   const partyColor = usePartyColor(party);
 
-  // Committees first; the mandates stand in when a member sits on none.
+  // committees first, the mandates stand in when a member sits on none
   const divisions = delegate.divisions ?? [];
   const bullets = unique(
     divisions.length > 0
@@ -69,7 +69,7 @@ export function DelegateHeaderCard({ delegate }: Props) {
   );
 }
 
-/** A member can hold the same mandate name across several periods. */
+/** a member can hold the same mandate name across several periods */
 function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  /** The design sets the member's name at 22/600 — larger than `detailTitle`. */
   name: {
     fontSize: 22,
     fontWeight: '600',

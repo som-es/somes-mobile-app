@@ -7,15 +7,11 @@ import { typography } from '@/theme/typography';
 type Props = {
   label: string;
   onPress?: () => void;
-  /** Party chips pass `usePartyColor()`. Omit for the topic look, driven by `selected`. */
   color?: string;
-  /** Topic chips: filled navy when on, white with a hairline when off. */
   selected?: boolean;
-  /** Dim the chip when another filter is active. */
   dimmed?: boolean;
 };
 
-/** The small 22pt chips: party filters and the profile screen's topic picker. */
 export function Chip({ label, onPress, color, selected = true, dimmed = false }: Props) {
   const filled = color !== undefined || selected;
 
@@ -47,7 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: radius.chip,
     paddingHorizontal: spacing.sm,
-    /** Some eurovoc topics are long; keep one from overflowing a wrapped row. */
+    /** some eurovoc topics are long, keep one from overflowing a wrapped row */
     maxWidth: '100%',
   },
   unselected: {

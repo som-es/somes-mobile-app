@@ -1,8 +1,7 @@
-/* The API returns bare dates ("2026-03-26") and naive datetimes ("2026-04-23T09:00:00"). */
+/* the api returns bare dates and datetimes without a timezone, both are handled here */
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-/** "2026-03-26" → "26.03.2026". */
 export function dashDateToDotDate(date: string): string {
   const parts = date.split('-');
   return `${parts[2]}.${parts[1]}.${parts[0]}`;
@@ -25,7 +24,7 @@ export function relativeDayLabel(date: string): string | null {
   return rounded === 1 ? 'in 1 Tag' : `in ${rounded} Tagen`;
 }
 
-/** Calendar age, or null. Compares calendar fields — dividing days by 365 drifts. */
+/** calendar age, or null, compares calendar fields since dividing days by 365 drifts */
 export function age(birthdate: string | null): number | null {
   if (!birthdate) return null;
 
@@ -41,7 +40,7 @@ export function age(birthdate: string | null): number | null {
   return years >= 0 ? years : null;
 }
 
-/** A speech length. Under a minute still reads as "1 Min." rather than "0 Min.". */
+/** a speech length, under a minute still reads as 1 min rather than 0 min */
 export function minutes(seconds: number): string {
   return `${Math.max(1, Math.round(seconds / 60))} Min.`;
 }

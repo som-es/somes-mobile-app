@@ -10,16 +10,12 @@ import { Divider } from './section-card';
 
 type Props = {
   title: string;
-  /** "Abstimmung am: 02.12.2025" or "Ministerialentwurf vom 02.08.2026". */
   subtitle: string;
-  /** Omitted entirely when the record has no AI summary. */
   summary: string | null;
   badges: string[];
-  /** The tick / cross beside the title. Absent when the vote has no outcome. */
   accepted?: boolean | null;
 };
 
-/** The first card of both detail screens — Figma node 231:2844, top block. */
 export function SummaryCard({ title, subtitle, summary, badges, accepted = null }: Props) {
   return (
     <Card>

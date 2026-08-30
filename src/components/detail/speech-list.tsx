@@ -17,7 +17,6 @@ const PAGE = 3;
 
 type Props = {
   speeches: Speech[];
-  /** Every member sitting on the day of the vote, keyed by id. */
   delegates: Map<number, Delegate>;
 };
 
@@ -33,7 +32,7 @@ export function SpeechList({ speeches, delegates }: Props) {
         {shown.map(({ id, speech }) => {
           const delegate = delegates.get(speech.delegate_id);
           const party = delegate?.party;
-          // The first link is the one the old single `document_url` pointed at.
+          // the first link is the one the old single document_url pointed at
           const documentUrl = speech.document_urls?.[0] ?? null;
 
           return (

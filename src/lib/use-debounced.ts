@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/** Trails `value` by `delay` ms, to keep every keystroke out of the react-query key. */
+/** trails value by delay ms, keeps every keystroke out of the react-query key */
 export function useDebounced<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
 

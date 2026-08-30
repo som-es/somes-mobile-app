@@ -41,7 +41,7 @@ export default function AnmeldenScreen() {
   async function finish(accessToken: string) {
     await signIn(accessToken);
 
-    // Back rather than forward-to-Profil: both entry points re-render signed in.
+    // go back rather than to profil, both ways in re-render signed in anyway
     if (router.canGoBack()) {
       router.back();
     } else {
@@ -60,14 +60,14 @@ export default function AnmeldenScreen() {
     } else if (result.status === 'error') {
       setError('Anmeldung mit Google fehlgeschlagen.');
     }
-    // 'cancelled' is the user backing out — not an error worth reporting.
+    // cancelled is the user backing out, not an error worth showing
   }
 
   async function submit() {
     setPending(true);
     setError(null);
 
-    // Step 1 sends '' rather than null on purpose — see `login()`.
+    // step 1 sends '' rather than null on purpose, see login()
     const result = await login(email.trim(), step === 'email' ? '' : otp, false);
     setPending(false);
 
@@ -76,7 +76,7 @@ export default function AnmeldenScreen() {
       return;
     }
 
-    // An empty token means the code was mailed and the server is waiting for it.
+    // an empty token means the code was mailed and the server is waiting for it
     if (result.access_token.length === 0) {
       setStep('otp');
       return;
@@ -221,7 +221,6 @@ function messageFor(result: HasError): string {
 
   const flags = signUpFlags(result);
   if (flags?.missing_email) return 'E-Mail-Adresse fehlt.';
-  // Typo in somes-frontend's copy ("Felerhafte"), corrected here.
   if (flags?.invalid_email) return 'Fehlerhafte E-Mail-Adresse.';
 
   if (result.error_type === 'RateLimit') {
@@ -263,7 +262,6 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.inputBorder,
   },
-  /** White with a hairline, as on somes.at — Google's mark needs a light field. */
   google: {
     flexDirection: 'row',
     alignItems: 'center',

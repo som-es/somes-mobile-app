@@ -11,12 +11,10 @@ import { typography } from '@/theme/typography';
 type Props = {
   visible: boolean;
   title: string;
-  /** Every selectable value, e.g. the 184 eurovoc topics or the ministries. */
   values: string[];
   selected: string[];
   onChange: (selected: string[]) => void;
   onClose: () => void;
-  /** Long lists get their own filter field. */
   searchable?: boolean;
   searchPlaceholder?: string;
 };
@@ -94,7 +92,7 @@ export function MultiSelectSheet({
 }
 
 const styles = StyleSheet.create({
-  /** Bounded so the sheet's own max height still leaves room for "Anwenden". */
+  /** bounded so the sheet still has room for the apply button */
   list: {
     maxHeight: 380,
   },

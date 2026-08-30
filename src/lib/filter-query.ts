@@ -1,21 +1,21 @@
-/* Ported from somes-frontend's `convertVoteResultFilterToUrl` / `convertGovPropFilterToUrl`.
-   Built by hand with `encodeURIComponent`: Hermes' `URLSearchParams` is incomplete and the
-   bracket names are load-bearing — they must stay byte-identical or the API ignores them. */
+/* ported from the two url builders in somes-frontend, built by hand with
+   encodeuricomponent since hermes has an incomplete urlsearchparams and the bracket
+   names have to stay byte identical or the api just ignores them */
 import type { PartyVote } from '@/types';
 
-/** The web's `legisPeriodFilter` opens on the current period, not on "Alle". */
+/** the web opens on the current period, not on alle */
 export const DEFAULT_GP = 'XXVIII';
 
-/** `[eq]`, not the web's `[cn]` — `[cn]` returns FilterError/MeilisearchFailure on both
-    search endpoints, so topic filtering is broken on somes.at itself. */
+/** eq, not the cn the web uses, cn makes both search endpoints fail so topic
+    filtering is broken on somes.at itself */
 const TOPIC_OP = 'eq';
 
 export type VoteFilters = {
-  /** null means "Alle" — the parameter is omitted entirely. */
+  /** null means alle, the parameter is left out */
   gp: string | null;
-  /** 'a' angenommen, 'd' abgelehnt, 'p' frühzeitig abgelehnt. */
+  /** a angenommen, d abgelehnt, p frühzeitig abgelehnt */
   accepted: string | null;
-  /** 'Law' | 'Resolution' | 'Amendment' | 'Report'. */
+  /** law, resolution, amendment or report */
   voteType: string | null;
   simpleMajority: boolean | null;
   topics: string[];
@@ -49,7 +49,7 @@ function param(key: string, value: string): string {
   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
 }
 
-/** Sort by date only when nothing was typed, so a search keeps Meilisearch's relevance order. */
+/** sort by date only when nothing was typed, so a search keeps the relevance order */
 function baseParams(page: number, search: string): string[] {
   const parts = [`page=${page}`];
   if (search.length === 0) parts.push(param('sort', 'Desc'));
@@ -60,7 +60,7 @@ function baseParams(page: number, search: string): string[] {
 export function voteResultsQuery(filters: VoteFilters, search: string, page: number): string {
   const parts = baseParams(page, search);
 
-  // `/history/votes` appends this to every request; unfinished votes live elsewhere.
+  // the web appends this to every request, unfinished votes live elsewhere
   parts.push(param('is_finished', 'true'));
 
   if (filters.gp) {
@@ -103,7 +103,7 @@ export function govProposalsQuery(
   if (filters.gp) {
     parts.push(param('gov_proposal[ministrial_proposal][gp][in][0]', filters.gp));
   }
-  // The web only ever sets this when true — "ohne Abstimmung" is not expressible.
+  // the web only ever sets this when true, ohne abstimmung cannot be expressed
   if (filters.hasVoteResult) {
     parts.push(param('gov_proposal[ministrial_proposal][has_vote_result][eq]', 'true'));
   }
@@ -119,8 +119,8 @@ export function govProposalsQuery(
   return parts.join('&');
 }
 
-/** Filter count per button, for "Filter (2)". The period is excluded — it always has
-    a value, so the button would permanently read "(1)". */
+/** filter count per button, the period is left out since it always has a value and
+    the button would permanently read (1) */
 export function voteFilterCounts(filters: VoteFilters) {
   return {
     topics: filters.topics.length,
@@ -139,16 +139,16 @@ export function proposalFilterCounts(filters: ProposalFilters) {
   };
 }
 
-/** Delegate filters. `v1/delegates/search` is reached through `delegates_search_persons()`,
-    which builds its own parameters, so there is no `delegatesQuery()` beside the other two. */
+/** delegate filters, the search itself goes through delegates_search_persons which
+    builds its own parameters, so there is no query builder beside the other two */
 export type DelegateFilters = {
-  /** null means "Alle Perioden" — no `active_gps` parameter is sent. */
+  /** null means alle perioden, no active_gps parameter is sent */
   gp: string | null;
   parties: string[];
-  /** "Mandatsart": true Regierung, false Nationalrat, null egal. */
+  /** mandatsart, true regierung, false nationalrat, null egal */
   onlyGov: boolean | null;
   hasActiveMandate: boolean | null;
-  /** "Ehemalige Parteizugehörigkeit beachten" — on, the party filter matches any mandate. */
+  /** ehemalige parteizugehörigkeit, on means the party filter matches any mandate */
   mindPreviousPartyMembership: boolean;
 };
 
@@ -160,7 +160,6 @@ export const emptyDelegateFilters: DelegateFilters = {
   mindPreviousPartyMembership: true,
 };
 
-/** The single Filter pill holds everything except the party chips and the period. */
 export function delegateFilterCounts(filters: DelegateFilters) {
   return {
     parties: filters.parties.length,

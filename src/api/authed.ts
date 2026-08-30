@@ -1,4 +1,4 @@
-/* Ported from somes-core/somes-frontend/src/lib/api/authed.ts. */
+/* ported from somes-core/somes-frontend/src/lib/api/authed.ts */
 import type {
   DelegateFavo,
   ExtendedUserInfo,
@@ -58,7 +58,7 @@ export function deleteWithAuth<T>(route: string, body?: unknown, country = 'at/'
   return authedRequest<T>('DELETE', route, body, country);
 }
 
-// --- User ------------------------------------------------------------------
+// --- user ------------------------------------------------------------------
 export function getUser() {
   return getWithAuth<ExtendedUserInfo>('v1/user');
 }
@@ -85,7 +85,7 @@ export function login(
   });
 }
 
-// --- Notification preferences ----------
+// --- notification preferences ----------
 export function getMailSendInfo() {
   return getWithAuth<MailSendInfo>('v1/user/send_mail_info');
 }
@@ -94,7 +94,7 @@ export function updateMailSendInfo(mailSendInfo: MailSendInfo) {
   return putWithAuth<null>('v1/user/send_mail_info', mailSendInfo);
 }
 
-// --- Topic selection -------------------------------------------------------
+// --- topic selection -------------------------------------------------------
 export function getUserTopics() {
   return getWithAuth<UniqueTopic[]>('v1/user/topic_selection');
 }
@@ -107,7 +107,7 @@ export function removeUserTopic(uniqueTopic: UniqueTopic) {
   return deleteWithAuth<null>('v1/user/topic_selection', uniqueTopic);
 }
 
-// --- Bookmarks -------------------------------------------------------------
+// --- bookmarks -------------------------------------------------------------
 export function getFavoDelegates() {
   return getWithAuth<DelegateFavo[]>('v1/user/bookmark/delegate');
 }

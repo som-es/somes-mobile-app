@@ -10,7 +10,6 @@ type Props = {
   onPress?: () => void;
 };
 
-/** 12pt rounded rectangles, not pills. The small round chips are `Chip`. */
 export function FilterPill({ label, onPress }: Props) {
   return (
     <Pressable

@@ -69,12 +69,12 @@ export async function walo_questions() {
   return getWithRoute<WaloQuestion[]>('walo_questions', '');
 }
 
-// --- Plenary sessions ------------------------------------------------------
+// --- plenary sessions ------------------------------------------------------
 export async function next_plenar_date() {
   return getWithRoute<PlenarDate>('next_plenar_date');
 }
 
-// --- Delegates -------------------------------------------------------------
+// --- delegates -------------------------------------------------------------
 export async function delegates() {
   return getWithRoute<Delegate[]>('v1/delegates/all_active');
 }
@@ -155,7 +155,7 @@ export async function delegates_search_persons(
   return getWithRoute<DelegatesWithMaxPage>(query);
 }
 
-// --- Government officials --------------------------------------------------
+// --- government officials --------------------------------------------------
 export async function gov_officials_at(date_at: string) {
   return getWithRoute<Delegate[]>(`v1/delegates/gov_officials/all_at_date?at=${date_at}`);
 }
@@ -168,7 +168,7 @@ export async function general_gov_official_info(delegate_id: number) {
   return getWithRoute<GeneralGovOfficialInfo>(`v1/delegates/gov_officials/extend/${delegate_id}`);
 }
 
-// --- Vote results ----------------------------------------------------------
+// --- vote results ----------------------------------------------------------
 export async function latest_vote_results() {
   return getWithRoute<VoteResult[]>('v1/vote_results/latest');
 }
@@ -200,7 +200,7 @@ export async function vote_results_by_query_search(query: string) {
   return getWithRoute<VoteResultsWithMaxPage>(`v1/vote_results/search?${query}`);
 }
 
-// --- Ministerial proposals & decrees ---------------------------------------
+// --- ministerial proposals and decrees ---------------------------------------
 export async function latest_ministrial_proposals(days: number) {
   return getWithRoute<GovProposalDelegate[]>(`v1/gov_proposals/latest?days=${days}`);
 }

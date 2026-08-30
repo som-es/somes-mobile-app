@@ -5,8 +5,8 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSession } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
 
-/* Deep-link fallback for somesmobileapp://resolve_token?token=… — used when the
-   auth session is not around to catch the redirect itself. */
+/* deep link fallback for somesmobileapp://resolve_token, used when the auth session
+   is not around to catch the redirect itself */
 export default function ResolveTokenScreen() {
   const { token } = useLocalSearchParams<{ token?: string }>();
   const router = useRouter();

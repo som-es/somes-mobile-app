@@ -15,11 +15,9 @@ type Props = {
   id: number;
   name: string;
   party: string | null;
-  /** "Mitglied der Bundesregierung" and the like, from `issued_by_dels`. */
   role?: string | null;
 };
 
-/** The white row under "Eingebracht von", linking through to the member. */
 export function DelegateRow({ id, name, party, role }: Props) {
   const router = useRouter();
   const partyColor = usePartyColor(party);

@@ -8,18 +8,17 @@ import { topicColor } from '@/theme/topic-colors';
 import { typography } from '@/theme/typography';
 import type { InterestShare, PoliticalPosition, StanceTopicScore } from '@/types';
 
-/** Share of the plot per unit of score. 400 tracks the normalised (~0.3) scores —
-    at the old scale every member plots dead centre. */
+/** share of the plot per unit of score, 400 fits the normalised scores of about 0.3,
+    at the old scale every member ends up dead centre */
 const PERCENT_PER_UNIT = (800 / 200) * 100;
-/** Keep an off-the-chart score inside the frame rather than clipping it. */
+/** keep an off the chart score inside the frame instead of clipping it */
 const EDGE = 6;
 
 const DOT = 14;
 const STANCE_DOT = 16;
 const RAIL = 6;
-/** How wide a rotated side label lays out before it is turned upright. */
 const SIDE_LABEL = 120;
-/** `LeftRightChart` keeps the eight topics the member speaks about most. */
+/** the web keeps the eight topics the member speaks about most */
 const MAX_STANCES = 8;
 
 type Props = {
@@ -53,7 +52,7 @@ function Compass({
   color: string;
   position: PoliticalPosition;
 }) {
-  // Positive x leans capitalist, positive y authoritarian; screen y grows downwards.
+  // positive x leans capitalist, positive y authoritarian, screen y grows downwards
   const { socialist, capitalist, liberal, authoritarian } = position.total_score;
   const x = clamp(50 + (capitalist - socialist) * PERCENT_PER_UNIT);
   const y = clamp(50 - (authoritarian - liberal) * PERCENT_PER_UNIT);
@@ -105,7 +104,7 @@ function StanceRails({
   return (
     <View style={[styles.stances, hasCompass && styles.stancesSpaced]}>
       {stances.map((stance) => {
-        // The web maps a score of -0.5..0.5 across the full rail.
+        // the web maps a score of -0.5 to 0.5 across the full rail
         const at = clamp((stance.score * 2 + 1) * 50);
 
         return (

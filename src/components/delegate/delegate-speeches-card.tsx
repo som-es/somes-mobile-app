@@ -15,7 +15,7 @@ const PREVIEW = 3;
 
 type Props = {
   speeches: Speech[];
-  /** `entry_count` from the endpoint — one page carries only the first 16. */
+  /** entry_count from the endpoint, one page only carries the first 16 */
   total: number;
 };
 
@@ -34,7 +34,7 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
 
       <View style={styles.list}>
         {shown.map(({ id, speech }) => {
-          // The first link is the one the old single `document_url` pointed at.
+          // the first link is the one the old single document_url pointed at
           const documentUrl = speech.document_urls?.[0] ?? null;
 
           return (

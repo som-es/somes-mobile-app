@@ -41,7 +41,7 @@ export function SelectedTopicsSheet({ visible, topics, onRemove, onClose }: Prop
 }
 
 const styles = StyleSheet.create({
-  /** Bounded so the sheet's own max height still leaves room for "Anwenden". */
+  /** bounded so the sheet still has room for the apply button */
   list: {
     maxHeight: 340,
   },

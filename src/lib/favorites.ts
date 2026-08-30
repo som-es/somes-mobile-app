@@ -1,5 +1,5 @@
-/* Both `v1/user/bookmark/*` collections behind one interface, so the profile lists
-   and the detail-screen hearts share a cache entry. */
+/* both bookmark collections behind one interface, so the profile lists and the
+   detail screen hearts share a cache entry */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -17,13 +17,13 @@ import type { DelegateFavo, HasError, LegisInitFavo } from '@/types';
 
 export type FavoriteKind = 'delegate' | 'vote';
 
-/** somes-frontend sends no interval; its "Infoabstand" select starts at 7. */
+/** somes-frontend sends no interval, its infoabstand select starts at 7 */
 export const DEFAULT_INFO_DAYS = 7;
 
 export const DELEGATE_FAVO_KEY = ['favo-delegates'] as const;
 export const VOTE_FAVO_KEY = ['favo-legis-inits'] as const;
 
-/** Mutations must reject so react-query rolls back; the reads use `unwrap`. */
+/** mutations have to reject so react-query rolls back, the reads use unwrap */
 function assertOk(result: unknown | HasError): void {
   if (isHasError(result)) throw new Error(`${result.error_type}: ${result.error}`);
 }
@@ -46,7 +46,7 @@ export function useFavoriteVotes() {
   });
 }
 
-/** `isReady` is false while loading, so the heart stays inert rather than flashing. */
+/** isready is false while loading, so the heart stays inert rather than flashing */
 export function useFavorite(kind: FavoriteKind, id: number | null) {
   const queryClient = useQueryClient();
   const delegates = useFavoriteDelegates();
@@ -65,7 +65,7 @@ export function useFavorite(kind: FavoriteKind, id: number | null) {
     mutationFn: async () => {
       if (id === null) return;
       if (kind === 'delegate') {
-        // `user_info_days` is required by serde on both calls, even to remove.
+        // user_info_days is required by serde on both calls, even to remove
         const body: DelegateFavo = { delegate_id: id, user_info_days: DEFAULT_INFO_DAYS };
         assertOk(isFavorite ? await removeDelegateFavo(body) : await addDelegateFavo(body));
       } else {
@@ -109,7 +109,6 @@ export function useFavorite(kind: FavoriteKind, id: number | null) {
   };
 }
 
-/** The "Infoabstand" select on a favourited member. */
 export function useUpdateFavoriteInterval() {
   const queryClient = useQueryClient();
 
