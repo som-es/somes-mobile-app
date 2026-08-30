@@ -7,13 +7,8 @@ import { useAuth, useExtendedUser, useSession } from '@/lib/use-auth';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/**
- * "Benutzerinfos" — Figma node 286:694.
- *
- * The address comes from the JWT's `sub` claim rather than `GET v1/user`, which
- * is what somes-frontend does: for an anonymised account the stored column holds
- * an argon2 hash, so the token is the only place the readable address survives.
- */
+/** The address comes from the JWT `sub`, not `GET v1/user` — an anonymised account
+    stores an argon2 hash there. */
 export function AccountCard() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
@@ -40,8 +35,7 @@ export function AccountCard() {
         <View style={styles.grow}>
           <Text style={typography.cardHeading}>Benutzerinfos</Text>
           {account?.is_email_hashed ? (
-            // The web slices [36,60) out of the hash so a user can tell two
-            // anonymised accounts apart without revealing either address.
+            // The web slices [36,60) out of the hash so two anonymised accounts can be told apart.
             <Text style={typography.caption} numberOfLines={1}>
               anonymisiert ...{user?.sub.slice(36, 60)}...
             </Text>

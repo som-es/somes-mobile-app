@@ -15,23 +15,12 @@ type Props = {
   delegate: Delegate;
 };
 
-/**
- * The card at the top of a member's page: portrait, name and age, party, and the
- * committees they sit on as a bullet list — `Delegate.divisions`, which is what
- * the design's "Einsatzorganisationen / Gleichbehandlung / Diversität und
- * LGBTIQ" list actually is.
- *
- * The design also draws "AI Chat" and "Vorstellung" buttons. Neither ships: the
- * chat is out of scope, and `delegate_qa` is hardcoded to an empty list in
- * somes-api's `extend` handler, so "Vorstellung" could never have content.
- */
 export function DelegateHeaderCard({ delegate }: Props) {
   const years = age(delegate.birthdate);
   const party = delegate.party || delegate.current_party;
   const partyColor = usePartyColor(party);
 
-  // Committees first, as the design shows them; the mandates stand in when a
-  // member sits on none, so the card is never just a portrait.
+  // Committees first; the mandates stand in when a member sits on none.
   const divisions = delegate.divisions ?? [];
   const bullets = unique(
     divisions.length > 0

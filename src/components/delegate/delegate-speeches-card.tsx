@@ -19,19 +19,6 @@ type Props = {
   total: number;
 };
 
-/**
- * "Letzte Reden".
- *
- * `SpeechList` in `components/detail/` is the mirror image of this — many
- * members, one vote — so it leads with a portrait and a name. Here the member is
- * fixed and the agenda item is what varies.
- *
- * `Speech` carries no prose and no date: only `about` (the agenda item),
- * `opinion` — the literal string "Pro" or "Contra" — a duration and a link to
- * the stenographic protocol. The paragraph and date the design draws under each
- * speech have no field behind them and are deliberately not invented; the card
- * shows the agenda item, the length, and a link to the protocol instead.
- */
 export function DelegateSpeechesCard({ speeches, total }: Props) {
   const [expanded, setExpanded] = useState(false);
 
@@ -47,8 +34,7 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
 
       <View style={styles.list}>
         {shown.map(({ id, speech }) => {
-          // One speech can have several protocol links; the first is the one the
-          // old single `document_url` pointed at.
+          // The first link is the one the old single `document_url` pointed at.
           const documentUrl = speech.document_urls?.[0] ?? null;
 
           return (

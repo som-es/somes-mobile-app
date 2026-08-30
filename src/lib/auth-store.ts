@@ -1,14 +1,5 @@
-/**
- * JWT storage — the React Native counterpart of the web app's
- * `jwtStore` (somes-frontend/src/lib/persisted.svelte.ts, localStorage-backed).
- *
- * On mobile the token goes into the Keychain / Android Keystore via
- * expo-secure-store rather than AsyncStorage.
- *
- * A module-level cache is kept alongside it so the API layer can read the token
- * synchronously, the way `jwtStore.value` does on web. Call `loadToken()` once
- * at app start before any authenticated request.
- */
+/* JWT in expo-secure-store. The module-level cache exists so the API layer can read
+   the token synchronously — keep this file free of React imports. */
 import * as SecureStore from 'expo-secure-store';
 
 const JWT_KEY = 'somes.jwt';

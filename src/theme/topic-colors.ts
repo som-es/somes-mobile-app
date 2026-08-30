@@ -1,16 +1,7 @@
 import { colors } from './colors';
 
-/**
- * Topic colours, ported from `somes-frontend/src/lib/interestColors.ts`.
- *
- * Unlike party colours these are *not* an API field — the web hardcodes them,
- * so there is nothing to fetch and no risk of drifting from the backend.
- *
- * This file is only the colours. `TOPIC_MAP`, which folds raw eurovoc topics
- * into these buckets, lives in `./topic-groups.ts` — most screens never need it
- * because the API already hands back bucketed topics in `InterestShare.topic`,
- * but the profile's interest picker reads the unbucketed `v1/eurovoc_topics`.
- */
+/* Ported from somes-frontend's `interestColors.ts`. Unlike party colours these are not an
+   API field. `TOPIC_MAP` lives in ./topic-groups.ts. */
 const TOPIC_COLORS: Record<string, string> = {
   Sport: '#006400',
   'Budget und Finanzen': '#FFD700',

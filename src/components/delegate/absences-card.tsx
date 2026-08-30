@@ -14,22 +14,10 @@ type Props = {
   absences: Absence[];
 };
 
-/**
- * "Abwesenheiten" — how many plenary sittings the member missed, and which.
- *
- * The design labels the headline number with the current year. Most members
- * have missed nothing this year, which left a large "0" saying nothing at all,
- * so the year falls back to the most recent one that has absences and is
- * labelled accordingly. The shape stays the design's: a year, then the count.
- *
- * The Figma's coral "Alle Abwesenheiten anzeigen" button opens a modal on the
- * web; here it expands the list in place.
- */
 export function AbsencesCard({ absences }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  // `Absence.date` is a plain "2024-07-05" calendar date, so it sorts and
-  // formats as a string — no timezone conversion to get wrong.
+  // `Absence.date` is a plain "2024-07-05" calendar date — sorts and formats as a string.
   const sorted = absences
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
@@ -82,10 +70,7 @@ export function AbsencesCard({ absences }: Props) {
   );
 }
 
-/**
- * The current year when it has absences, otherwise the most recent year that
- * does — so the headline never reads "0" while the list below shows three.
- */
+/** The current year when it has absences, else the most recent one that does. */
 function headlineYear(sorted: Absence[]): { year: number; count: number } {
   const current = new Date().getFullYear();
   const years = sorted.map((absence) => Number(absence.date.slice(0, 4)));

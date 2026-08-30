@@ -13,14 +13,6 @@ type Props = {
   onClose: () => void;
 };
 
-/**
- * The interests already chosen, on demand.
- *
- * It is a summary, not the control surface — the accordions under the search are
- * where topics get picked, and each already shows its own `3/12` count. Keeping
- * these chips inline as well meant the card grew with every choice while
- * repeating what was visible two rows further down.
- */
 export function SelectedTopicsSheet({ visible, topics, onRemove, onClose }: Props) {
   return (
     <BottomSheet visible={visible} title="Deine Interessen" onClose={onClose}>

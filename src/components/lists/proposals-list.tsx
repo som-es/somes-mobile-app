@@ -135,11 +135,7 @@ export function ProposalsList({ control }: Props) {
   );
 }
 
-/**
- * The ministries of the selected period. With "Alle" selected it walks the
- * periods newest-first and dedupes, exactly as the web's `departments` does —
- * ministries get renamed every reshuffle, so the list would otherwise repeat.
- */
+/** Ministries of the selected period; "Alle" dedupes newest-first across renames. */
 function ministriesFor(
   departmentsPerGp: Record<string, string[]> | undefined,
   gp: string | null

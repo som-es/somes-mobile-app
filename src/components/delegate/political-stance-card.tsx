@@ -8,16 +8,8 @@ import { topicColor } from '@/theme/topic-colors';
 import { typography } from '@/theme/typography';
 import type { InterestShare, PoliticalPosition, StanceTopicScore } from '@/types';
 
-/**
- * somes-frontend offsets the dot by `SCALAR` points per unit of score
- * (`PoliticalSpectrum.svelte`) inside a 200pt plot. Ours is fluid, so the same
- * offset is a share of the plot instead.
- *
- * `SCALAR` went from 20 to 800 when the scores became normalised averages
- * (~0.3 each) rather than sums. This is not cosmetic: at the old factor every
- * member computes to within a fraction of a percent of dead centre, so the
- * compass would look broken rather than wrong.
- */
+/** Share of the plot per unit of score. 400 tracks the normalised (~0.3) scores —
+    at the old scale every member plots dead centre. */
 const PERCENT_PER_UNIT = (800 / 200) * 100;
 /** Keep an off-the-chart score inside the frame rather than clipping it. */
 const EDGE = 6;
@@ -38,10 +30,6 @@ type Props = {
   interests: InterestShare[];
 };
 
-/**
- * "Politische Haltung & Richtung" — the two-axis compass and the per-topic
- * left/right rails, both derived by the backend from the member's votes.
- */
 export function PoliticalStanceCard({ name, party, position, stances, interests }: Props) {
   const partyColor = usePartyColor(party);
   const ranked = rankStances(stances, interests);
@@ -65,10 +53,7 @@ function Compass({
   color: string;
   position: PoliticalPosition;
 }) {
-  // Positive x leans capitalist, positive y authoritarian. Screen y grows
-  // downwards, hence the negation. The four axes replaced the older
-  // `is_not_left`/`is_left` and `is_not_liberal`/`is_liberal` pairs — same two
-  // axes under clearer names, so the arithmetic is unchanged.
+  // Positive x leans capitalist, positive y authoritarian; screen y grows downwards.
   const { socialist, capitalist, liberal, authoritarian } = position.total_score;
   const x = clamp(50 + (capitalist - socialist) * PERCENT_PER_UNIT);
   const y = clamp(50 - (authoritarian - liberal) * PERCENT_PER_UNIT);
@@ -100,10 +85,6 @@ function Compass({
   );
 }
 
-/**
- * A pole label turned on its side. The text lays out at its natural width and
- * overflows the narrow column, then the rotation brings it upright inside it.
- */
 function SideLabel({ label }: { label: string }) {
   return (
     <View style={styles.sideLabel}>
@@ -160,10 +141,6 @@ function StanceRails({
   );
 }
 
-/**
- * The web ranks by how often the member actually speaks on a topic, keeps the
- * top eight, then orders those left to right.
- */
 function rankStances(stances: StanceTopicScore[], interests: InterestShare[]) {
   return stances
     .map((stance) => ({
@@ -266,11 +243,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  /**
-   * No fixed width: "Rechts" is wider than 38pt at 12pt type and was breaking
-   * onto a second line. Both words are constants, so letting them size to their
-   * content still leaves every rail in the column aligned.
-   */
   railEnd: {
     flexShrink: 0,
     color: '#6881A1',

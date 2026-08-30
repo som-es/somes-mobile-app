@@ -12,13 +12,7 @@ type Props = {
   removable?: boolean;
 };
 
-/**
- * A topic in the interest picker.
- *
- * Taller than the shared 22pt `Chip`: there, a chip is a label that happens to
- * be tappable, here it *is* the control, and 22pt is half the 44pt minimum
- * target. Same palette, so it still reads as the same family.
- */
+/** Taller than the shared 22pt `Chip`: here the chip is the control, not a label. */
 export function TopicChip({ label, selected, onPress, removable = false }: Props) {
   return (
     <Pressable

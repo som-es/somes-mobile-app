@@ -23,19 +23,6 @@ const RENEW_INTERVAL = 1000 * 60 * 60;
 
 let lastRenewedAt = 0;
 
-/**
- * The counterpart of somes-frontend's `RenewToken.svelte`, which runs on every
- * page load and swaps the stored JWT for a fresh one.
- *
- * Tokens last three days and somes-api issues no refresh token, so `renew_token`
- * — which itself needs a still-valid token — is the only thing keeping a session
- * alive. The web gets a renewal per navigation for free; an app that sits in the
- * background for days would silently expire, so this also runs on foreground.
- *
- * Deliberately not awaited before the first render: unlike `loadToken`, nothing
- * is correct-but-stale in the meantime, and holding the splash on a network call
- * would punish a bad connection.
- */
 async function renewSession() {
   if (getToken() === null) return;
   if (Date.now() - lastRenewedAt < RENEW_INTERVAL) return;
@@ -48,9 +35,7 @@ async function renewSession() {
     return;
   }
 
-  // Only an actually rejected token signs the user out. A failed fetch means the
-  // phone is offline, and dropping the token there would log them out of a
-  // tunnel and leave them unable to log back in.
+  // Only a rejected token signs the user out — a failed fetch just means offline.
   if (isAuthError(renewed)) {
     await clearToken();
     queryClient.clear();
@@ -60,9 +45,6 @@ async function renewSession() {
 }
 
 export default function RootLayout() {
-  /**
-   * The only bundled font, and it is used for exactly one string: the "somes"
-   */
   const [fontsLoaded] = useFonts({ Nunito_600SemiBold });
   const [tokenLoaded, setTokenLoaded] = useState(false);
 

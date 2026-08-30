@@ -12,11 +12,6 @@ type Props = {
   date: string | null;
 };
 
-/**
- * Figma node 286:428. The web's NextSessionInfo also offers a "Sitzungskalender"
- * popover; there is no calendar screen here yet, and PlenarCalendar.svelte
- * carries a TODO saying it is not responsive on mobile, so the button is left out.
- */
 export function NextSessionCard({ date }: Props) {
   const relative = date ? relativeDayLabel(date) : null;
 

@@ -10,7 +10,6 @@ type Props<T extends string> = {
   onChange: (value: T) => void;
 };
 
-/** The Nationalrat / Regierung switch at the top of the Abstimmungen screen. */
 export function SegmentedControl<T extends string>({ options, value, onChange }: Props<T>) {
   return (
     <View style={styles.track}>

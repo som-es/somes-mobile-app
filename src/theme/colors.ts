@@ -92,10 +92,7 @@ export const surface = {
   900: '#12141e',
 } as const;
 
-/**
- * Semantic aliases, straight from the Figma. Prefer these in components over
- * raw ramp values, so a design change lands in one place.
- */
+/** Semantic aliases from the Figma. Prefer these over raw ramp values. */
 export const colors = {
   /** Header and bottom tab bar. */
   chrome: '#2D3748',
@@ -116,7 +113,6 @@ export const colors = {
   /** The rail a stance dot slides along. Same tone as `inset`, different job. */
   rail: primary[50],
 
-  /** Metadata chips: "einfache Mehrheit", "XXVIII", dates. */
   badge: '#FAE9DA',
   onBadge: '#000000',
 
@@ -125,7 +121,6 @@ export const colors = {
   onAccent: '#FFFFFF',
   accentMuted: secondary[300],
 
-  /** Selected topic chip on the profile screen. */
   chipSelected: '#24283E',
 
   /** Section and screen headings. */
@@ -158,7 +153,6 @@ export type ColorName = keyof typeof colors;
 
 /** The elevations in the design, plus one for the chrome. */
 export const shadows = {
-  /** Cards: 0 2 2 rgba(104,129,161,0.25). */
   card: {
     shadowColor: '#6881A1',
     shadowOffset: { width: 0, height: 2 },
@@ -166,7 +160,6 @@ export const shadows = {
     shadowRadius: 2,
     elevation: 2,
   },
-  /** Person rows on the Abgeordnete list: 0 4 8 rgba(0,0,0,0.1). */
   row: {
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },

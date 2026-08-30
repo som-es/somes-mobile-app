@@ -13,7 +13,6 @@ type Props = {
   filled?: boolean;
 };
 
-/** Outlined search input — 41pt tall, 12pt radius, hairline border, no fill. */
 export function SearchField({
   value,
   onChangeText,

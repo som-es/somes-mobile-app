@@ -13,13 +13,6 @@ type Props = {
   interests: InterestShare[];
 };
 
-/**
- * "Themen" — the topics a member speaks on most, with how often.
- *
- * The web renders this as a d3 treemap. The design draws plain tiles, which is
- * both the better mobile fit and what it asks for, so there is no charting
- * dependency here.
- */
 export function TopicsCard({ interests }: Props) {
   if (interests.length === 0) return null;
 

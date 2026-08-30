@@ -20,11 +20,6 @@ type CardProps = {
   children: ReactNode;
 };
 
-/**
- * An inset card with a coloured left edge, shared by "Letzte Reden" and
- * "Letzte namentliche Abstimmungen". The edge carries the member's own
- * position, which is the whole point of both sections.
- */
 export function OpinionCard({ infavor, onPress, children }: CardProps) {
   const body = <View style={styles.body}>{children}</View>;
 

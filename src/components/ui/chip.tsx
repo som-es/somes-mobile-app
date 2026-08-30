@@ -7,11 +7,7 @@ import { typography } from '@/theme/typography';
 type Props = {
   label: string;
   onPress?: () => void;
-  /**
-   * Fill colour. Party chips pass the value from `usePartyColor()` — the
-   * Figma's hardcoded party hexes are mock data; the API is authoritative.
-   * Omit for the topic-chip look, which is driven by `selected`.
-   */
+  /** Party chips pass `usePartyColor()`. Omit for the topic look, driven by `selected`. */
   color?: string;
   /** Topic chips: filled navy when on, white with a hairline when off. */
   selected?: boolean;

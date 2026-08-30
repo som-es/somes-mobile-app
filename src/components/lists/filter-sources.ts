@@ -10,10 +10,7 @@ export type Sheet = 'topics' | 'second' | 'generic' | null;
 /** A day: topics and legislative periods change once per period at most. */
 const STALE = 1000 * 60 * 60 * 24;
 
-/**
- * The two option sources both tabs share. Kept in one hook so switching tabs
- * reuses the cached lists instead of refetching them.
- */
+/** Both tabs share one hook so switching tabs reuses the cached lists. */
 export function useFilterSources() {
   const topics = useQuery({
     queryKey: ['eurovoc-topics'],
@@ -38,13 +35,8 @@ export function withCount(label: string, count: number): string {
   return count > 0 ? `${label} (${count})` : label;
 }
 
-/**
- * The parties of the selected period, largest first — the web's `uniqueParties`.
- * With "Alle" selected it walks the periods newest-first and keeps the first
- * sighting of each party code, so a renamed party appears once.
- *
- * Shared by the Abstimmungen party sheet and the Abgeordnete chip row.
- */
+/** Parties of the selected period, largest first. "Alle" walks periods newest-first,
+    keeping the first sighting of each code so a renamed party appears once. */
 export function partiesFor(
   partiesPerGp: Record<string, Party[]> | undefined,
   gp: string | null

@@ -65,8 +65,6 @@ export function VotesList({ control }: Props) {
 
       <SearchField value={search} onChangeText={setSearch} />
 
-      {/* Each pill is wrapped so the three share the row evenly; `FilterPill`
-          itself sizes to its label. */}
       <View style={styles.filters}>
         <View style={styles.slot}>
           <FilterPill label={withCount('Themen', counts.topics)} onPress={() => setSheet('topics')} />

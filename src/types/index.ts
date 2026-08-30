@@ -119,15 +119,8 @@ export interface LegislativeInitiative {
 	is_urgent: boolean;
 }
 
-/**
- * A party's vote on one initiative, as per-member counts.
- *
- * This replaced the older `{ fraction, infavor }` pair, which said only how many
- * seats a party held and whether it voted yes. Nothing is lost: the seat count
- * is the four counts summed and the party's position is `infavor_count` against
- * `against_count` — see `partySeats()` and `partyInfavor()` in `@/lib/votes`,
- * which are the only places allowed to know that.
- */
+/** A party's vote as per-member counts. Replaced `{ fraction, infavor }` — see
+    `partySeats()` / `partyInfavor()` in `@/lib/votes`. */
 export interface Vote {
 	party: string;
 	code: string | null;
@@ -151,14 +144,8 @@ export interface SpeechDetail {
 	start: string | null;
 }
 
-/**
- * A speech and everything the backend has inferred about it.
- *
- * `ai_summary` and `relations` carry generated prose, key points and a glossary.
- * They are deliberately left untyped: the app renders neither, and typing a
- * payload nothing reads would invite someone to use it without checking whether
- * it is ever null. Type them when a screen actually needs them.
- */
+/** `ai_summary` and `relations` are left untyped on purpose: the app renders neither,
+    and typing them would invite use without checking nullability. */
 export interface Speech {
 	id: number;
 	debate_id: number;
@@ -292,14 +279,8 @@ export interface CallToOrdersPerPartyDelegate {
 	ratio: number;
 }
 
-/**
- * Where a member sits, plus the per-topic stances behind it.
- *
- * The axes were renamed from `is_left` / `is_not_left` / `is_liberal` /
- * `is_not_liberal` to socialist / capitalist / liberal / authoritarian. Same two
- * axes, clearer poles. `scores_by_topic` replaces the removed top-level
- * `left_right_stances` and carries the identical `{ topic, score }`.
- */
+/** Axes renamed from is_left/is_liberal to socialist/capitalist/liberal/authoritarian.
+    `scores_by_topic` replaces the removed top-level `left_right_stances`. */
 export interface PoliticalPosition {
 	total_score: PoliticalScore;
 	scores_by_topic: StanceTopicScore[];
@@ -328,12 +309,7 @@ export interface JWTInfo {
 	access_token: string;
 }
 
-/**
- * Two fixes over somes-frontend's version, which cannot run here:
- *  - `window` does not exist in React Native, so the global `atob` is used.
- *  - JWT segments are base64url, which `atob` does not accept; the -_ alphabet
- *    is translated and padding restored first.
- */
+/** Uses the global `atob` (no `window` here) and translates base64url first. */
 function decodeSegment(segment: string): any {
 	const base64 = segment.replace(/-/g, '+').replace(/_/g, '/');
 	const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
@@ -399,13 +375,8 @@ export interface InfoCounts {
 	answer_count: number[];
 }
 
-/**
- * The flag struct somes-api puts in `HasError.meta` when a login is rejected.
- * Field-for-field `somes-common-lib::errors::SignUpError`; somes-frontend's copy
- * misses `invalid_otp` and misspells the last field as `is_errorneous`.
- *
- * `login` only ever sets `missing_email` and `invalid_email`.
- */
+/** The flag struct somes-api puts in `HasError.meta`. `login` only sets `missing_email`
+    and `invalid_email`. */
 export interface SignUpError {
 	missing_username: boolean;
 	missing_password: boolean;
@@ -463,14 +434,8 @@ export interface Absence {
 	missed_legis_init_ids: number[];
 }
 
-/**
- * A delegate's own named-vote record, as returned inside `GeneralDelegateInfo`.
- * Matches `NamedVote` in somes-core/somes-common-lib/src/structs.rs.
- *
- * NOTE: somes-frontend declares two different `interface NamedVote`s in
- * types.ts, which TypeScript silently merges into one wrong shape. Here they
- * are split — see `NamedVoteMatch` for the other one.
- */
+/** somes-frontend declares two different `NamedVote`s, which TypeScript silently merges.
+    Split here — the other one is `NamedVoteMatch`. */
 export interface NamedVote {
 	infavor: boolean | null;
 	was_absent: boolean | null;
@@ -532,11 +497,8 @@ export interface LegisPeriod {
 	start_date: Date;
 }
 
-/**
- * A Nationalrat plenary sitting. `date_and_time` is a `NaiveDateTime` in
- * somes-api (routes/dates.rs), so it arrives as "2026-04-23T09:00:00" — no
- * timezone, which `new Date()` reads as local time.
- */
+/** `date_and_time` is a NaiveDateTime, so it arrives without a timezone and `new Date()`
+    reads it as local. */
 export interface PlenarDate {
 	date_and_time: string;
 }
@@ -593,11 +555,7 @@ export interface GovPropFilter {
 	date_to: string | null;
 }
 
-/**
- * A single delegate's entry within a vote result's named vote, including the
- * name-matching metadata. This is the second `NamedVote` from somes-frontend's
- * types.ts, renamed so it no longer merges with the delegate-facing one above.
- */
+/** The second `NamedVote` from somes-frontend's types.ts, renamed so it no longer merges. */
 export interface NamedVoteMatch {
 	id: number;
 	infavor: boolean | null;
@@ -625,15 +583,8 @@ export interface NamedVoteInfo {
 	invalid_count: number;
 }
 
-/**
- * Widened from somes-frontend, which declares every field as a *literal*
- * (`invalid_email: true`, `missing_email: false`). No real response can be
- * assigned to that, so the web's own type is unusable — this mirrors
- * `somes-common-lib::errors::SignUpError`, which is what the server serialises.
- *
- * Note it arrives in `meta` of a `HasError`, not as a bare body: read it with
- * `signUpFlags()` from `@/api/client`.
- */
+/** Widened from somes-frontend, whose literal types no real response can satisfy.
+    Arrives in `meta` of a `HasError`; read it with `signUpFlags()`. */
 export interface LoginResponseError {
 	missing_username: boolean;
 	missing_password: boolean;

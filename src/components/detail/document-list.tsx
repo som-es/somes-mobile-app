@@ -34,10 +34,7 @@ export function DocumentList({ documents }: Props) {
   );
 }
 
-/**
- * The web keeps only the PDF entries — every document is listed twice, once as
- * `DigitalPDF` and once as `HTML` — and sorts by title length descending.
- */
+/** PDFs only — every document is listed twice — sorted by title length descending. */
 export function pdfDocuments(documents: Document[]): Document[] {
   return documents
     .filter((document) => document.document_type.includes('PDF'))

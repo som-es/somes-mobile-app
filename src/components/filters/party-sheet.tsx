@@ -23,11 +23,7 @@ const STANCES: { value: Stance; label: string }[] = [
   { value: 'contra', label: 'Contra' },
 ];
 
-/**
- * "Parteien" — the web's `partyFilterState`, a tri-state per party that narrows
- * the list to votes where that party voted a particular way. "Egal" drops the
- * party from the filter rather than adding a neutral entry.
- */
+/** Tri-state per party. "Egal" drops the party from the filter entirely. */
 export function PartySheet({ visible, parties, selected, onChange, onClose }: Props) {
   function stanceOf(party: string): Stance {
     const match = selected.find((entry) => entry.party === party);

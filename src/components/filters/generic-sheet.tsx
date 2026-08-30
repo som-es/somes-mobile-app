@@ -5,10 +5,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import type { DelegateFilters, ProposalFilters, VoteFilters } from '@/lib/filter-query';
 import { spacing } from '@/theme/layout';
 
-/**
- * Option sets copied from the web's `genericFilters`, labels included — these
- * strings appear in the UI and match somes.at exactly.
- */
+/** Copied from the web's `genericFilters`; the labels are UI strings. */
 const ACCEPTED = [
   { label: 'egal', value: null },
   { label: 'angenommen', value: 'a' },
@@ -154,16 +151,6 @@ type DelegateProps = PeriodProps & {
   onClose: () => void;
 };
 
-/**
- * The Abgeordnete filter sheet — the web's four `genericFilters` groups plus
- * the period picker, which lives in the same popover there.
- *
- * Caveat worth knowing while reading the results: `delegates_search_persons()`
- * sends the period as `active_gov_gps` whenever Mandatsart is "Regierung" and
- * as `active_gps` otherwise. somes-frontend has an unreachable `active_nr_gps`
- * branch there; our port reproduces the same behaviour byte for byte so the two
- * stay diffable. Fix it in somes-frontend first, not here.
- */
 export function DelegateGenericSheet({
   visible,
   periods,

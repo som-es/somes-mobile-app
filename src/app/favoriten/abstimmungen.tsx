@@ -55,9 +55,7 @@ export default function FavoriteVotesScreen() {
 function FavoriteVote({ id, voteResult }: { id: number; voteResult: VoteResult | undefined }) {
   const { toggle, isPending } = useFavorite('vote', id);
 
-  // The card carries its own navigation, so the remove control sits under it
-  // rather than beside it — at full width there is no room for both on one line
-  // without shrinking the card, which is what made this feel cramped.
+  // The card carries its own navigation, so the remove control sits under it.
   return (
     <View style={styles.item}>
       {voteResult ? <VoteResultCard voteResult={voteResult} /> : <CardSkeleton />}

@@ -52,8 +52,6 @@ type TitleProps = {
 export function ScreenTitle({ title, subtitle, centered = false, section = false }: TitleProps) {
   return (
     <View style={[styles.titleBlock, centered && styles.centered]}>
-      {/* `alignItems` alone only centres a single line — a title that wraps still
-          sets its own lines flush left, so the text needs centring too. */}
       <Text
         style={[
           section ? typography.sectionTitle : typography.screenTitle,

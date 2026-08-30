@@ -1,11 +1,4 @@
-/**
- * Expo push notifications — client side only.
- *
- * IMPORTANT: somes-api has NO push support today. It only knows about email
- * (`MailSendInfo`, see src/api/authed.ts). There is no device-token table and
- * no endpoint to register one. `registerPushToken` below is written against the
- * endpoint we expect to add, and is a no-op until it exists.
- */
+/* Client side only. somes-api has NO push support: no device-token table, no endpoint. */
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -23,10 +16,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-/**
- * Asks for permission and returns the Expo push token, or null if the user
- * declined, the device is a simulator, or the project id is missing.
- */
+/** Null if the user declined, the device is a simulator, or the project id is missing. */
 export async function getExpoPushToken(): Promise<string | null> {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
@@ -67,11 +57,7 @@ export async function getExpoPushToken(): Promise<string | null> {
   }
 }
 
-/**
- * TODO(somes-core): implement `POST /api/at/v1/user/push_token` in somes-api
- * (device-token table + a sender mirroring the existing MailSendInfo fan-out),
- * then delete the guard below. Nothing else in the app needs to change.
- */
+/** TODO(somes-core): add `POST /api/at/v1/user/push_token`, then drop this guard. */
 const PUSH_TOKEN_ENDPOINT_EXISTS = false;
 
 export async function registerPushToken(token: string): Promise<void> {

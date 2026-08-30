@@ -1,16 +1,5 @@
-/**
- * Which of the ~20 broad areas each eurovoc topic belongs to — the web's
- * `TOPIC_MAP` from `somes-frontend/src/lib/interestColors.ts`, ported verbatim
- * (171 entries, 21 parents).
- *
- * `src/theme/topic-colors.ts` deliberately left this out, because the endpoints
- * it serves (`InterestShare.topic`) already hand back bucketed topics. The
- * profile's interest picker is the one place that needs the raw mapping:
- * `v1/eurovoc_topics` returns the unbucketed list, and presenting ~184 flat
- * entries is what made the picker unusable.
- *
- * Anything unmapped falls into 'Sonstige', as on the web.
- */
+/* The web's `TOPIC_MAP` from somes-frontend/src/lib/interestColors.ts, verbatim
+   (171 entries, 21 parents). Anything unmapped falls into 'Sonstige'. */
 const TOPIC_MAP: Record<string, string> = {
   'Arbeitsrecht': 'Arbeit',
   'Beschäftigung und Arbeitsbedingungen': 'Arbeit',
@@ -187,12 +176,8 @@ const TOPIC_MAP: Record<string, string> = {
 
 export const OTHER_GROUP = 'Sonstige';
 
-/**
- * Case-folded, because the two ends disagree on it: the map was transcribed from
- * somes-frontend with `Internationale Beziehungen`, while the endpoint returns
- * `internationale Beziehungen`. Matching exactly drops such topics into
- * "Sonstige" over a single letter.
- */
+/** Case-folded: the endpoint returns `internationale Beziehungen` where the ported map
+    has it capitalised, and matching exactly drops such topics into "Sonstige". */
 const BY_LOWER_NAME: Record<string, string> = Object.fromEntries(
   Object.entries(TOPIC_MAP).map(([topic, group]) => [topic.toLowerCase(), group])
 );

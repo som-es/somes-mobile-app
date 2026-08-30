@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/**
- * Trails `value` by `delay` ms. Used to keep the search field's every keystroke
- * out of the react-query key — typing "Budget" would otherwise fire six
- * requests and six cache entries.
- */
+/** Trails `value` by `delay` ms, to keep every keystroke out of the react-query key. */
 export function useDebounced<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value);
 

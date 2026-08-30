@@ -41,10 +41,7 @@ export default function AnmeldenScreen() {
   async function finish(accessToken: string) {
     await signIn(accessToken);
 
-    // Back rather than forward-to-Profil: this screen is reached both from the
-    // Profil tab's "Anmelden" and from a favourite heart on a detail screen, and
-    // in both cases the place the user came from is the place they wanted. Both
-    // re-render signed in, so the state change is visible either way.
+    // Back rather than forward-to-Profil: both entry points re-render signed in.
     if (router.canGoBack()) {
       router.back();
     } else {
@@ -154,10 +151,6 @@ export default function AnmeldenScreen() {
                   returnKeyType="send"
                   editable={!pending}
                 />
-                {/* No resend button on purpose: while a code is still alive in
-                    Redis, somes-api answers a repeat request with the same empty
-                    token and does *not* send a second mail, so the button would
-                    lie. Switching address is the one thing that does work. */}
                 <Text style={typography.caption}>
                   Keine E-Mail erhalten? Sieh im Spam-Ordner nach. Manche Anbieter filtern sie
                   aus — dann hilft eine andere Adresse.
@@ -221,13 +214,6 @@ export default function AnmeldenScreen() {
   );
 }
 
-/**
- * somes-api's error envelopes, in the order they can actually occur.
- *
- * `field` carries the Rust variant name, so `WrongOtp` is an exact match — the
- * web substring-matches `error.includes('OTP')` instead, which also catches any
- * future message merely mentioning one.
- */
 function messageFor(result: HasError): string {
   if (result.field === 'WrongOtp') {
     return 'Fehlerhaftes One-Time Passwort.';

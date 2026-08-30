@@ -20,8 +20,7 @@ export function DangerZoneCard() {
     const result = await delete_account();
     setPending(false);
 
-    // somes-frontend discards this result and clears the JWT regardless, so a
-    // failed delete still looks like it worked. Only sign out on success.
+    // somes-frontend clears the JWT regardless, so a failed delete looks like it worked.
     if (isHasError(result)) {
       Alert.alert(
         'Account konnte nicht gelöscht werden',

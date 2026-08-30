@@ -9,11 +9,7 @@ type Variant = 'filled' | 'outlined';
 type Props = {
   children: ReactNode;
   onPress?: () => void;
-  /**
-   * `filled` is the blue-grey card holding list items (the default).
-   * `outlined` is the white, hairline-bordered card the profile screen uses
-   * for Benutzerinfos and the Favoriten rows.
-   */
+  /** `filled` is the blue-grey list card, `outlined` the white profile one. */
   variant?: Variant;
   /** Person rows use a heavier shadow than content cards. */
   elevation?: keyof typeof shadows;

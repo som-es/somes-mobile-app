@@ -13,15 +13,7 @@ import type { MailSendInfo } from '@/types';
 
 type Row = { field: keyof MailSendInfo; title: string; description: string };
 
-/**
- * Titles and descriptions are somes.at's, verbatim.
- *
- * The grouping is somes.at's too, and it disagrees with Figma node 286:718,
- * which files "Aktivitäten" under "NACH INTERESSEN" and shows 5 + 4. The field
- * names settle it: `send_new_delegate_activity_mails` fires on favourited
- * people, so it belongs with the other `_by_favo_` flags. The Figma's subtitles
- * in that block are duplicated template text and contradict each other.
- */
+/** Titles, descriptions and grouping are somes.at's, verbatim. */
 const BY_INTEREST: Row[] = [
   {
     field: 'send_new_vote_results_mails',
@@ -104,10 +96,8 @@ export function MailSettingsCard() {
     onError: (_error, _next, context) => {
       if (context?.previous) queryClient.setQueryData(['mail-send-info'], context.previous);
     },
-    // Refetch rather than trust the optimistic value. somes-api's UPDATE binds
-    // `send_new_vote_result_by_favo_mails` to `send_new_vote_results_mails`
-    // (see CLAUDE.md), so that one toggle will visibly snap back. Showing the
-    // server's truth is better than hiding a bug behind the optimistic state.
+    // Refetch rather than trust the optimistic value: somes-api mis-binds
+    // `send_new_vote_result_by_favo_mails`, so that one toggle visibly snaps back.
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['mail-send-info'] }),
   });
 
@@ -117,8 +107,6 @@ export function MailSettingsCard() {
     return (
       <Card>
         <Text style={typography.cardHeading}>E-Mail Benachrichtigungen</Text>
-        {/* The web renders the "Alle" switch outside this branch, so anonymised
-            accounts get a master toggle that silently does nothing. Hidden here. */}
         <Text style={[typography.bodyMuted, styles.unavailable]}>
           nicht verfügbar: Anonymisierung durch Mail-Wechsel aufheben
         </Text>

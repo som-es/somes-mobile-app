@@ -22,18 +22,7 @@ type Props = {
   namedVotes: NamedVote[];
 };
 
-/**
- * "Letzte namentliche Abstimmungen".
- *
- * A member's `NamedVote` carries only `legis_init_id` and how they voted — no
- * title. So, exactly as the web's `NamedVoteBar` does, each one is resolved
- * through `vote_result_by_id` — one request per row, which is why they are
- * revealed a few at a time rather than all at once.
- *
- * The rows are laid out here rather than handed to `VoteResultCard`: that card
- * is a card, and nesting one inside a section card reads as a box in a box. The
- * design wants an inset row whose left edge carries the member's own vote.
- */
+/** Each row needs its own `vote_result_by_id` — a NamedVote carries no title. */
 export function NamedVotesCard({ namedVotes }: Props) {
   const router = useRouter();
   const [visible, setVisible] = useState(PREVIEW);

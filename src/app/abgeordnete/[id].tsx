@@ -19,15 +19,6 @@ import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import type { Delegate, GeneralDelegateInfo, SpeechesWithMaxPage } from '@/types';
 
-/**
- * Abgeordnete detail.
- *
- * Three requests, the same split somes.at makes: the base record, the aggregate
- * in `v1/delegates/extend/{id}` (interests, political position, absences, named
- * votes, stance scores) and the first page of speeches. The two aggregates are
- * slower than the base record, so each section renders as soon as its own data
- * lands rather than blocking on all three.
- */
 export default function AbgeordneteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -90,8 +81,7 @@ function DelegateDetail({
             name={delegate.name}
             party={delegate.party}
             position={info.political_position}
-            // `left_right_stances` was removed; the same {topic, score} list
-            // now hangs off the position it was always derived from.
+            // `left_right_stances` was removed; the same {topic, score} list hangs off the position.
             stances={info.political_position?.scores_by_topic ?? []}
             interests={info.interests}
           />

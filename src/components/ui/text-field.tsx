@@ -12,11 +12,6 @@ type Props = TextInputProps & {
   hint?: string | null;
 };
 
-/**
- * A labelled input. `SearchField` is the same 41pt / 12pt-radius shape but is
- * built around a leading icon and carries no label or error slot, which a login
- * form needs.
- */
 export function TextField({ label, error, hint, style, ...input }: Props) {
   return (
     <View style={styles.group}>

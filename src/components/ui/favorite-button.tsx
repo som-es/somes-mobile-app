@@ -14,13 +14,7 @@ type Props = {
   size?: number;
 };
 
-/**
- * The heart on a detail screen.
- *
- * Signed out it stays visible and routes to the login screen instead of hiding.
- * Hiding it would leave no hint that favourites exist, and this is the natural
- * second way into `/anmelden` besides the Profil tab.
- */
+/** Signed out it stays visible and routes to /anmelden rather than hiding. */
 export function FavoriteButton({ kind, id, size = 22 }: Props) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();

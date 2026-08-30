@@ -1,7 +1,4 @@
-/**
- * The API hands back two shapes: bare dates ("2026-03-26") and naive datetimes
- * ("2026-04-23T09:00:00"). `isoToDotDate` accepts either.
- */
+/* The API returns bare dates ("2026-03-26") and naive datetimes ("2026-04-23T09:00:00"). */
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -28,12 +25,7 @@ export function relativeDayLabel(date: string): string | null {
   return rounded === 1 ? 'in 1 Tag' : `in ${rounded} Tagen`;
 }
 
-/**
- * Calendar age from an ISO `birthdate`, or null when the value is unusable.
- *
- * somes-frontend does `Math.floor(dateDiffInDays(birth, now) / 365)`, which
- * drifts a year across leap-heavy spans. This compares calendar fields instead.
- */
+/** Calendar age, or null. Compares calendar fields — dividing days by 365 drifts. */
 export function age(birthdate: string | null): number | null {
   if (!birthdate) return null;
 

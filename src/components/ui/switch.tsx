@@ -17,19 +17,10 @@ type Props = {
   accessibilityLabel?: string;
 };
 
-/**
- * Deliberately not React Native's `Switch`, for the same reason the tab bar is
- * custom: the platform controls do not agree with each other — Android's
- * Material 3 switch draws a checkmark inside the thumb and sizes itself — and
- * the Figma specifies one shape for both.
- *
- * Only `translateX` and `opacity` are animated, so the whole thing runs on the
- * native driver; `backgroundColor` cannot, hence the accent fill is a second
- * layer that fades in rather than a colour interpolation.
- */
+/** Custom, not RN's `Switch`: the platform controls disagree and the Figma wants one
+    shape. Only translateX/opacity animate, so it stays on the native driver. */
 export function Switch({ value, onValueChange, disabled = false, accessibilityLabel }: Props) {
-  // `useState` rather than `useRef`, matching `bottom-sheet.tsx`: with the React
-  // Compiler on, reading `ref.current` during render is a lint error.
+  // `useState`, not `useRef` — with the React Compiler on, reading `ref.current` during render lints.
   const [progress] = useState(() => new Animated.Value(value ? 1 : 0));
 
   useEffect(() => {

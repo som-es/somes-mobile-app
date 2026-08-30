@@ -1,10 +1,4 @@
-/**
- * The React binding over `@/lib/auth-store`, which ships `subscribeToToken`
- * precisely so this can exist.
- *
- * somes-frontend has no equivalent: its `jwtStore` is a Svelte rune, so reading
- * `.value` is already reactive. `useSyncExternalStore` is the React counterpart.
- */
+/* React binding over `@/lib/auth-store`. */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
@@ -27,9 +21,7 @@ function decode(token: string | null): BasicUserInfo | null {
   if (token === null) return null;
   try {
     const user = getUserFromJwt(token);
-    // `exp` is seconds. A token past it is refused by the server anyway, so
-    // treating it as signed-out here avoids rendering a logged-in shell that
-    // then fails every request. somes-frontend decodes `exp` and never reads it.
+    // `exp` is seconds. A past token is refused by the server anyway, so treat it as signed out.
     if (typeof user?.exp !== 'number' || user.exp * 1000 <= Date.now()) return null;
     return user;
   } catch (error) {
@@ -45,11 +37,8 @@ export function useAuth() {
   return { token, user, isAuthenticated: user !== null };
 }
 
-/**
- * Sign-in and sign-out both have to touch the query cache, so they live here
- * rather than in the token store, which must stay free of React imports for the
- * API layer's synchronous `getToken()`.
- */
+/** Sign-in/out touch the query cache, so they live here — the token store must stay
+    free of React imports for the API layer's synchronous `getToken()`. */
 export function useSession() {
   const queryClient = useQueryClient();
 
@@ -65,18 +54,14 @@ export function useSession() {
 
   const signOut = useCallback(async () => {
     await clearToken();
-    // Not just the user keys: clearing everything stops the next account from
-    // seeing this one's favourites flash in before the refetch lands.
+    // Clear everything, so the next account never sees this one's favourites flash in.
     queryClient.clear();
   }, [queryClient]);
 
   return { signIn, signOut };
 }
 
-/**
- * `GET v1/user`. The only field worth fetching is `is_email_hashed` — the id and
- * e-mail are already in the token, and `is_admin` is unused here as on the web.
- */
+/** Only `is_email_hashed` is worth fetching; the id and e-mail are already in the token. */
 export function useExtendedUser() {
   const { isAuthenticated } = useAuth();
   return useQuery({

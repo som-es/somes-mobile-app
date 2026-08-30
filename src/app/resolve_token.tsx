@@ -5,16 +5,8 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSession } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
 
-/**
- * Deep-link fallback for `somesmobileapp://resolve_token?token=…`, the mobile
- * counterpart of somes-frontend's `/resolve_token` page.
- *
- * In the normal flow this never renders: `openAuthSessionAsync` intercepts the
- * redirect and hands the URL straight back to the login screen. It matters when
- * that session is not there to catch it — the user backgrounded the app
- * mid-login, or the OS delivered the link cold. Without this route expo-router
- * would land on an unmatched path holding a perfectly good token.
- */
+/* Deep-link fallback for somesmobileapp://resolve_token?token=… — used when the
+   auth session is not around to catch the redirect itself. */
 export default function ResolveTokenScreen() {
   const { token } = useLocalSearchParams<{ token?: string }>();
   const router = useRouter();

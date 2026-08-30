@@ -19,11 +19,6 @@ type Props = {
   style?: ViewStyle;
 };
 
-/**
- * Every button in the app was an ad-hoc `Pressable` + `StyleSheet` — the same
- * coral block written out in `profil.tsx` and again in `bottom-sheet.tsx`. This
- * is that block, once.
- */
 export function Button({
   label,
   onPress,

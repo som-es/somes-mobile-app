@@ -21,10 +21,6 @@ type Props = {
   searchPlaceholder?: string;
 };
 
-/**
- * The "Themen" and "Ministerien" sheets — the web's `MultiValuesFilter`, which
- * is likewise a plain checklist.
- */
 export function MultiSelectSheet({
   visible,
   title,

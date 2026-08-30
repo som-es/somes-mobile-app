@@ -26,10 +26,6 @@ export function TopicList({ topics }: Props) {
   );
 }
 
-/**
- * The web's precedence: eurovoc topics if there are any, otherwise the AI
- * summary's, sorted shortest-first so the list reads evenly.
- */
 export function topicNames(eurovoc: Topic[], aiSummary: DbAiSummary | null): string[] {
   const names =
     eurovoc.length > 0

@@ -22,13 +22,6 @@ import { typography } from '@/theme/typography';
 /** The web asks for 50 at a time; a phone shows a fraction of that per screen. */
 const ENTRIES_PER_PAGE = 25;
 
-/**
- * Abgeordnete list, backed by `v1/delegates/search` through
- * `delegates_search_persons()`.
- *
- * Unlike the Abstimmungen tab this screen hosts a single list, so it holds the
- * query itself instead of delegating to `src/components/lists/`.
- */
 export default function AbgeordneteScreen() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(emptyDelegateFilters);
@@ -119,8 +112,6 @@ export default function AbgeordneteScreen() {
         ))}
       </ScrollView>
 
-      {/* The leading spacer stands in for the portrait so the labels sit over
-          the columns; the trailing one for the chevron. */}
       <View style={styles.tableHead}>
         <View style={styles.avatarSpacer} />
         <Text style={[typography.tableHead, styles.nameCol]}>Name</Text>

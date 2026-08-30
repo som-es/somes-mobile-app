@@ -17,10 +17,6 @@ type Props = {
   children: ReactNode;
 };
 
-/**
- * The chrome both detail screens share: header, a "Zurück" row, and the
- * out-link to parliament, matching the top of Figma node 231:2844.
- */
 export function DetailScreen({ sourceUrl, action, children }: Props) {
   const router = useRouter();
 

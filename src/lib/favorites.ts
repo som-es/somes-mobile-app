@@ -1,12 +1,5 @@
-/**
- * Bookmarks — the two `v1/user/bookmark/*` collections behind one interface, so
- * the profile lists and the hearts on the detail screens read and write the same
- * cache entry and can never disagree.
- *
- * somes-frontend keeps these in `src/lib/caching/favos.ts`, whose module-level
- * `let` bindings are never written back, so its "cache" refetches every time.
- * react-query replaces that outright.
- */
+/* Both `v1/user/bookmark/*` collections behind one interface, so the profile lists
+   and the detail-screen hearts share a cache entry. */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -24,11 +17,7 @@ import type { DelegateFavo, HasError, LegisInitFavo } from '@/types';
 
 export type FavoriteKind = 'delegate' | 'vote';
 
-/**
- * The interval a new favourite starts on. somes-frontend never sends one on
- * `addDelegateFavo` — it posts whatever `DelegateFavo` the caller built — and its
- * "Infoabstand" select offers 7/14/30/60, so a week is the shortest real choice.
- */
+/** somes-frontend sends no interval; its "Infoabstand" select starts at 7. */
 export const DEFAULT_INFO_DAYS = 7;
 
 export const DELEGATE_FAVO_KEY = ['favo-delegates'] as const;
@@ -57,11 +46,7 @@ export function useFavoriteVotes() {
   });
 }
 
-/**
- * One favourite's state and its toggle. `isReady` is false while the list is
- * still loading, so the heart can stay inert rather than flashing "not
- * favourited" and then filling in.
- */
+/** `isReady` is false while loading, so the heart stays inert rather than flashing. */
 export function useFavorite(kind: FavoriteKind, id: number | null) {
   const queryClient = useQueryClient();
   const delegates = useFavoriteDelegates();
@@ -80,8 +65,7 @@ export function useFavorite(kind: FavoriteKind, id: number | null) {
     mutationFn: async () => {
       if (id === null) return;
       if (kind === 'delegate') {
-        // `user_info_days` is required by serde on both calls even though the
-        // remove handler only reads `delegate_id`.
+        // `user_info_days` is required by serde on both calls, even to remove.
         const body: DelegateFavo = { delegate_id: id, user_info_days: DEFAULT_INFO_DAYS };
         assertOk(isFavorite ? await removeDelegateFavo(body) : await addDelegateFavo(body));
       } else {

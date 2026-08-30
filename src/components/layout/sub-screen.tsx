@@ -15,13 +15,7 @@ type Props = {
   onRefresh?: () => void;
 };
 
-/**
- * A pushed screen that is not a detail record: header, a "Zurück" row, content.
- *
- * `DetailScreen` is the same shape but demands a `sourceUrl`, because everything
- * it wraps came from parlament.gv.at. These screens show the user's own data,
- * which has no source link.
- */
+/** A pushed screen with no source link — `DetailScreen` is the same shape but requires one. */
 export function SubScreen({ children, refreshing, onRefresh }: Props) {
   const router = useRouter();
 

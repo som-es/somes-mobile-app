@@ -18,13 +18,7 @@ type Props = {
   delegate: Delegate;
 };
 
-/**
- * A person row on the Abgeordnete list: portrait, name, party, age.
- *
- * The three text columns carry the same flex weights as the `Name / Partei /
- * Alter` header above the list, which is the only thing keeping the two
- * aligned — change one and change the other.
- */
+/** Column flex weights must match the Name/Partei/Alter header above the list. */
 export function DelegateCard({ delegate }: Props) {
   const router = useRouter();
   const party = partyLabel(delegate.party);

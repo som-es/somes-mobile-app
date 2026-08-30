@@ -9,14 +9,6 @@ import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
-/**
- * The two favourite rows on the profile — Figma nodes 286:701 and 286:706.
- *
- * The Figma draws each as a 71pt card with a chevron, i.e. a link, and that is
- * the right call: a member card and a vote card are both full-width objects, so
- * listing them inside a card on a screen that already has five other cards
- * squeezes everything. They get their own screens instead.
- */
 export function FavoritesLinkCards() {
   const delegates = useFavoriteDelegates();
   const votes = useFavoriteVotes();

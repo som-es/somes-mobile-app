@@ -9,10 +9,7 @@ const VOTE_TYPE: Record<string, string> = {
   Report: 'Bericht',
 };
 
-/**
- * An unknown `voting` yields '' rather than 'Andere' — the web only labels the
- * null case, and shows nothing for a type it does not recognise.
- */
+/** An unknown `voting` yields '' rather than 'Andere', as on the web. */
 export function voteTypeLabel(voting: string | null): string {
   if (!voting) return 'Andere';
   return VOTE_TYPE[voting] ?? '';

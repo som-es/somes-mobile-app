@@ -20,25 +20,9 @@ import type { UniqueTopic } from '@/types';
 /** A day: the eurovoc list changes at most once per legislative period. */
 const STALE = 1000 * 60 * 60 * 24;
 
-/**
- * How many search hits to show. The results sit inline rather than in a
- * scrollable overlay, so the list has to stay short enough not to bury the rest
- * of the card — and a query matching more than this wants refining anyway.
- */
+/** Search hits render inline, so the list has to stay short. */
 const MAX_RESULTS = 10;
 
-/**
- * "Wähle deine Interessen" — Figma node 286:789, interaction modelled on
- * somes.at's own picker.
- *
- * Two ways in, as on the web: type to search, or browse the ~184 eurovoc topics
- * by the broad area they belong to. The web renders its search hits in an
- * absolutely-positioned dropdown; here they expand in place. On a phone an
- * overlay would open straight into the keyboard and cover the very list it is
- * filtering, and absolute overlays inside a ScrollView clip unpredictably on
- * Android. Same interaction — type, see matches, tap to toggle — without either
- * problem.
- */
 export function InterestsCard() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -98,15 +82,6 @@ export function InterestsCard() {
       .forEach((topic) => toggle.mutate({ topic, select }));
   }
 
-  /**
-   * Grouped by the broad area, alphabetically, with "Sonstige" last.
-   *
-   * The web additionally folds every group of four or fewer into one combined
-   * accordion whose title is all their names joined by "·". That earns space in
-   * a wide desktop column; on a 393pt phone it produces a title too long to read
-   * and hides small areas behind a meaningless label, so each area keeps its own
-   * row here.
-   */
   const groups = useMemo(() => {
     const byGroup = new Map<string, UniqueTopic[]>();
     (topics.data ?? []).forEach((topic) => {

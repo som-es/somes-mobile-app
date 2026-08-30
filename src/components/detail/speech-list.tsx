@@ -21,18 +21,6 @@ type Props = {
   delegates: Map<number, Delegate>;
 };
 
-/**
- * "Reden".
- *
- * Each row shows the agenda item and the length, and tapping it opens the
- * stenographic protocol.
- *
- * The paragraph the Figma draws here is now backable: every speech carries an
- * `ai_summary` with a short title, several summary lengths, key points and a
- * glossary. It is deliberately not rendered yet — that is a design change, not
- * an API migration, and this pass only keeps the screen working against the new
- * payload. See `Speech` in `@/types`.
- */
 export function SpeechList({ speeches, delegates }: Props) {
   const [expanded, setExpanded] = useState(false);
   const { data: partyColors } = usePartyColors();
@@ -45,8 +33,7 @@ export function SpeechList({ speeches, delegates }: Props) {
         {shown.map(({ id, speech }) => {
           const delegate = delegates.get(speech.delegate_id);
           const party = delegate?.party;
-          // One speech can have several protocol links; the first is the one the
-          // old single `document_url` pointed at.
+          // The first link is the one the old single `document_url` pointed at.
           const documentUrl = speech.document_urls?.[0] ?? null;
 
           return (

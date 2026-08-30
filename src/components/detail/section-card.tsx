@@ -13,7 +13,6 @@ type Props = {
   children: ReactNode;
 };
 
-/** A titled card — "Themen", "Abstimmung", "Reden", "Dokumente". */
 export function SectionCard({ title, action, children }: Props) {
   return (
     <Card>
@@ -26,7 +25,6 @@ export function SectionCard({ title, action, children }: Props) {
   );
 }
 
-/** The hairline the design draws between a card's blocks. */
 export function Divider() {
   return <View style={styles.divider} />;
 }

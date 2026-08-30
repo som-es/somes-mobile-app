@@ -2,30 +2,12 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from './colors';
 
-/**
- * Sizes are taken literally from the Figma, which designs at 393pt width.
- *
- * No style sets `fontFamily`, deliberately. The Figma specifies Segoe UI, which
- * is Microsoft-proprietary and absent from both platforms, and the web frontend
- * bundles no font files either — it just uses `system-ui`. Leaving `fontFamily`
- * unset is the React Native equivalent: SF Pro on iOS, Roboto on Android. It is
- * also the only safe option, since an unresolvable family name on iOS can stop
- * `fontWeight` from applying, and the weights below are load-bearing.
- *
- * Segoe's weight 350 "Semilight" maps to the nearest available weight, '300'.
- */
+/* Sizes taken from the Figma (393pt width). No style sets `fontFamily`, deliberately:
+   the Figma asks for Segoe UI, which neither platform has, and an unresolvable family on
+   iOS can stop `fontWeight` applying. Segoe's 350 maps to '300'. */
 export const typography = StyleSheet.create({
-  /**
-   * The word "somes" beside the mark in the header — the one place in the app
-   * that uses a bundled font, loaded in `src/app/_layout.tsx`.
-   *
-   * The web renders the wordmark from `somes_with_text2.svg`, whose `<text>`
-   * carries `font-family="Tahoma, Geneva, Verdana, sans-serif"` — none of which
-   * exist on iOS or Android. Nunito is the closest widely-available match to
-   * Proxima Soft, the face the original brand file (`somes_with_text.svg`)
-   * names. No `fontWeight` here on purpose: the family name already encodes the
-   * weight, and setting both can conflict on iOS.
-   */
+  /** The one bundled font, used for the wordmark only. No `fontWeight` — the family name
+      already encodes it, and setting both can conflict on iOS. */
   logo: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 24,
@@ -60,11 +42,7 @@ export const typography = StyleSheet.create({
     color: colors.textTitle,
     lineHeight: 25,
   },
-  /**
-   * The headline of a detail screen's first card. Larger than `cardTitle`,
-   * because on the detail screen it is the page's subject rather than one row
-   * in a list — the web steps up from `text-base` to `text-xl` in the same spot.
-   */
+  /** The headline of a detail screen's first card. Larger than `cardTitle`. */
   detailTitle: {
     fontSize: 17,
     fontWeight: '700',
@@ -98,56 +76,44 @@ export const typography = StyleSheet.create({
     color: colors.textCaption,
     lineHeight: 16,
   },
-  /** Metadata chip text. */
   badge: {
     fontSize: 12,
     fontWeight: '600',
     color: colors.onBadge,
     lineHeight: 16,
   },
-  /** Party / topic chip text. */
   chip: {
     fontSize: 12,
     fontWeight: '400',
     color: colors.onAccent,
     lineHeight: 14,
   },
-  /**
-   * Filter pill label ("Themen", "Parteien", "Filter").
-   *
-   * The Figma draws 16, but that was without the active-filter count the pills
-   * now carry — at 16 "Ministerien (12)" cannot fit a third of the row.
-   */
+  /** Filter pill label. The Figma draws 16, but that was before the active-filter count. */
   pillLabel: {
     fontSize: 14,
     fontWeight: '400',
     color: colors.onAccent,
   },
-  /** Segmented control label. */
   segment: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.text,
     letterSpacing: -0.56,
   },
-  /** Abmelden / Account löschen. */
   button: {
     fontSize: 16,
     fontWeight: '400',
   },
-  /** Column header on the Abgeordnete list. */
   tableHead: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.textPlaceholder,
   },
-  /** A person's name in a list row. */
   rowTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.textTitle,
   },
-  /** Party and age columns in a list row. */
   rowMeta: {
     fontSize: 16,
     fontWeight: '600',

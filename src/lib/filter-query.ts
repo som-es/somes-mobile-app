@@ -1,32 +1,13 @@
-/**
- * Query-string builders for the two search endpoints, ported from
- * somes-frontend's `convertVoteResultFilterToUrl` and `convertGovPropFilterToUrl`.
- *
- * The web builds a `URL` and reads `.search`; we return the string directly.
- * Parameters are assembled by hand with `encodeURIComponent`, the way
- * `delegates_search_persons` in `src/api/api.ts` already does — Hermes ships an
- * incomplete `URLSearchParams` polyfill and the bracket-heavy names below are
- * load-bearing. They must stay byte-identical to the web's, or the API quietly
- * ignores them and returns unfiltered results.
- */
+/* Ported from somes-frontend's `convertVoteResultFilterToUrl` / `convertGovPropFilterToUrl`.
+   Built by hand with `encodeURIComponent`: Hermes' `URLSearchParams` is incomplete and the
+   bracket names are load-bearing — they must stay byte-identical or the API ignores them. */
 import type { PartyVote } from '@/types';
 
 /** The web's `legisPeriodFilter` opens on the current period, not on "Alle". */
 export const DEFAULT_GP = 'XXVIII';
 
-/**
- * The one deliberate divergence from somes-frontend.
- *
- * The web uses `[cn]` (contains) for topics. That operator currently makes the
- * API return `{"error_type":"FilterError","field":"MeilisearchFailure"}` on
- * both `v1/vote_results/search` and `v1/gov_proposals/search` — so the topic
- * filter is broken on somes.at itself right now. `[eq]` works, and is the
- * better fit anyway: the values come from the `eurovoc_topics` endpoint, so we
- * are picking exact topics from a list rather than matching substrings.
- * Several topics OR together, which is what the multi-select implies.
- *
- * If the backend fixes `[cn]`, this is the single line to reconsider.
- */
+/** `[eq]`, not the web's `[cn]` — `[cn]` returns FilterError/MeilisearchFailure on both
+    search endpoints, so topic filtering is broken on somes.at itself. */
 const TOPIC_OP = 'eq';
 
 export type VoteFilters = {
@@ -68,10 +49,7 @@ function param(key: string, value: string): string {
   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
 }
 
-/**
- * The web sorts by date only when nothing was typed, so that a search falls back
- * to Meilisearch's relevance ordering. Reproduced deliberately.
- */
+/** Sort by date only when nothing was typed, so a search keeps Meilisearch's relevance order. */
 function baseParams(page: number, search: string): string[] {
   const parts = [`page=${page}`];
   if (search.length === 0) parts.push(param('sort', 'Desc'));
@@ -82,8 +60,7 @@ function baseParams(page: number, search: string): string[] {
 export function voteResultsQuery(filters: VoteFilters, search: string, page: number): string {
   const parts = baseParams(page, search);
 
-  // `/history/votes` appends this to every request; unfinished votes live on
-  // their own route we do not mirror.
+  // `/history/votes` appends this to every request; unfinished votes live elsewhere.
   parts.push(param('is_finished', 'true'));
 
   if (filters.gp) {
@@ -142,13 +119,8 @@ export function govProposalsQuery(
   return parts.join('&');
 }
 
-/**
- * How many filters each of the three buttons currently holds, so the label can
- * read "Filter (2)" — the web shows the same count in `FilterDropdown`.
- *
- * The legislative period is excluded: it always has a value, so counting it
- * would leave the button permanently reading "(1)".
- */
+/** Filter count per button, for "Filter (2)". The period is excluded — it always has
+    a value, so the button would permanently read "(1)". */
 export function voteFilterCounts(filters: VoteFilters) {
   return {
     topics: filters.topics.length,
@@ -167,15 +139,8 @@ export function proposalFilterCounts(filters: ProposalFilters) {
   };
 }
 
-/**
- * Delegate filters.
- *
- * There is deliberately no `delegatesQuery()` beside the two builders above:
- * `v1/delegates/search` is reached through `delegates_search_persons()`, which
- * takes positional arguments and assembles its own bracket parameters — the web
- * does the same, and keeping the two diffable matters more than symmetry here.
- * This type only carries the screen's filter state and its badge count.
- */
+/** Delegate filters. `v1/delegates/search` is reached through `delegates_search_persons()`,
+    which builds its own parameters, so there is no `delegatesQuery()` beside the other two. */
 export type DelegateFilters = {
   /** null means "Alle Perioden" — no `active_gps` parameter is sent. */
   gp: string | null;
@@ -183,10 +148,7 @@ export type DelegateFilters = {
   /** "Mandatsart": true Regierung, false Nationalrat, null egal. */
   onlyGov: boolean | null;
   hasActiveMandate: boolean | null;
-  /**
-   * "Ehemalige Parteizugehörigkeit beachten". On, the party filter matches any
-   * mandate's party; off, only the member's current one.
-   */
+  /** "Ehemalige Parteizugehörigkeit beachten" — on, the party filter matches any mandate. */
   mindPreviousPartyMembership: boolean;
 };
 
@@ -198,11 +160,7 @@ export const emptyDelegateFilters: DelegateFilters = {
   mindPreviousPartyMembership: true,
 };
 
-/**
- * The single "Filter" pill holds everything except the party chips, which sit
- * in their own row. The period is excluded for the same reason as on the other
- * two screens: it always has a value.
- */
+/** The single Filter pill holds everything except the party chips and the period. */
 export function delegateFilterCounts(filters: DelegateFilters) {
   return {
     parties: filters.parties.length,

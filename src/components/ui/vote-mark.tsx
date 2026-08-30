@@ -7,7 +7,6 @@ type Props = {
   size?: number;
 };
 
-/** The green tick / red cross */
 export function VoteMark({ infavor, size = 16 }: Props) {
   return (
     <Ionicons

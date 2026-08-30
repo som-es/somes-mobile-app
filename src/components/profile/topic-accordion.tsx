@@ -16,12 +16,7 @@ type Props = {
   onToggleAll: (topics: UniqueTopic[], select: boolean) => void;
 };
 
-/**
- * One collapsible area of interests — the web's `AccordionTopics`.
- *
- * The select-all box is tri-state (none / some / all) and, as on the web, must
- * not also expand the row, so it stops the press from reaching the header.
- */
+/** The tri-state select-all box must not also expand the row. */
 export function TopicAccordion({ title, topics, selectedIds, onToggle, onToggleAll }: Props) {
   const [open, setOpen] = useState(false);
 

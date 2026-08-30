@@ -13,14 +13,10 @@ export const radius = {
   card: 15,
   /** Filter pills and the search field. */
   control: 12,
-  /** Party and topic chips. */
   chip: 12,
-  /** Segmented control track / thumb. */
   track: 10,
   thumb: 8,
-  /** Abmelden, Account löschen. */
   button: 10,
-  /** Metadata badges only. */
   badge: 999,
 } as const;
 
