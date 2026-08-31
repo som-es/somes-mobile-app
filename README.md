@@ -32,6 +32,19 @@ npm start
 ```
 
 and scan the QR Code to see the current version of the app.
+
+## Test Submission
+
+iOS Example:
+
+```bash
+npx eas-cli build --profile production --platform ios
+npx eas-cli submit --platform ios --latest
+```
+
+Both ask for the Apple login. The first build creates the certificates and can create the
+App Store Connect entry for you.
+
 ## Layout
 
 ```
