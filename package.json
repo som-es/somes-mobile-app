@@ -6,17 +6,18 @@
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@som-es/somes-ts": "git+https://github.com/som-es/somes-ts.git",
     "@tanstack/react-query": "^5.101.4",
-    "expo": "^56.0.19",
+    "expo": "~56.0.21",
     "expo-constants": "~56.0.23",
-    "expo-dev-client": "~56.0.24",
+    "expo-dev-client": "~56.0.26",
     "expo-device": "~56.0.4",
     "expo-font": "~56.0.7",
-    "expo-linking": "~56.0.16",
-    "expo-notifications": "~56.0.23",
-    "expo-router": "~56.2.18",
+    "expo-linking": "~56.0.17",
+    "expo-notifications": "~56.0.25",
+    "expo-router": "~56.2.20",
     "expo-secure-store": "~56.0.4",
-    "expo-splash-screen": "~56.0.14",
+    "expo-splash-screen": "~56.0.15",
     "expo-status-bar": "~56.0.4",
     "expo-web-browser": "~56.0.6",
     "react": "19.2.3",
@@ -34,17 +35,22 @@
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~56.0.4",
+    "patch-package": "^8.0.1",
     "react-native-svg-transformer": "^1.5.3",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start --dev-client",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "start:clear": "expo start --dev-client --clear"
+    "start:clear": "expo start --dev-client --clear",
+    "postinstall": "patch-package"
   },
-  "private": true
+  "private": true,
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
+  }
 }
