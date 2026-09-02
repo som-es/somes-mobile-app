@@ -1,6 +1,9 @@
-/* ported from the two url builders in somes-frontend, built by hand with
-   encodeuricomponent since hermes has an incomplete urlsearchparams and the bracket
-   names have to stay byte identical or the api just ignores them */
+/* the search endpoints take a bracketed filter syntax rather than plain parameters,
+   the library's client serialises whatever record it is handed, so these builders
+   only have to name the keys. the names have to stay byte identical or the api
+   silently ignores them */
+import type { QueryParams } from '@som-es/somes-ts';
+
 import type { PartyVote } from '@/types';
 
 /** the web opens on the current period, not on alle */
@@ -45,78 +48,71 @@ export const emptyProposalFilters: ProposalFilters = {
   departments: [],
 };
 
-function param(key: string, value: string): string {
-  return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-}
-
 /** sort by date only when nothing was typed, so a search keeps the relevance order */
-function baseParams(page: number, search: string): string[] {
-  const parts = [`page=${page}`];
-  if (search.length === 0) parts.push(param('sort', 'Desc'));
-  parts.push(param('search', search));
-  return parts;
+function baseParams(page: number, search: string): QueryParams {
+  return search.length === 0 ? { page, sort: 'Desc', search } : { page, search };
 }
 
-export function voteResultsQuery(filters: VoteFilters, search: string, page: number): string {
-  const parts = baseParams(page, search);
-
-  // the web appends this to every request, unfinished votes live elsewhere
-  parts.push(param('is_finished', 'true'));
+export function voteResultsQuery(
+  filters: VoteFilters,
+  search: string,
+  page: number
+): QueryParams {
+  const query: QueryParams = {
+    ...baseParams(page, search),
+    // required, the endpoint answers 400 without it, and unfinished votes live elsewhere
+    is_finished: true,
+  };
 
   if (filters.gp) {
-    parts.push(param('legislative_initiative[gp][in][0]', filters.gp));
+    query['legislative_initiative[gp][in][0]'] = filters.gp;
   }
   if (filters.accepted !== null) {
-    parts.push(param('legislative_initiative[accepted][eq]', filters.accepted));
+    query['legislative_initiative[accepted][eq]'] = filters.accepted;
   }
   if (filters.voteType !== null) {
-    parts.push(param('legislative_initiative[voting][in][0]', filters.voteType));
+    query['legislative_initiative[voting][in][0]'] = filters.voteType;
   }
   if (filters.simpleMajority !== null) {
-    parts.push(
-      param(
-        'legislative_initiative[requires_simple_majority][eq]',
-        String(filters.simpleMajority)
-      )
-    );
+    query['legislative_initiative[requires_simple_majority][eq]'] = filters.simpleMajority;
   }
 
   filters.partyVotes.forEach((partyVote, i) => {
-    parts.push(param(`party_votes[${i}][infavor]`, String(partyVote.infavor)));
-    parts.push(param(`party_votes[${i}][party]`, partyVote.party));
+    query[`party_votes[${i}][infavor]`] = partyVote.infavor;
+    query[`party_votes[${i}][party]`] = partyVote.party;
   });
 
   filters.topics.forEach((topic, i) => {
-    parts.push(param(`eurovoc_topics[${i}][topic][${TOPIC_OP}]`, topic));
+    query[`eurovoc_topics[${i}][topic][${TOPIC_OP}]`] = topic;
   });
 
-  return parts.join('&');
+  return query;
 }
 
 export function govProposalsQuery(
   filters: ProposalFilters,
   search: string,
   page: number
-): string {
-  const parts = baseParams(page, search);
+): QueryParams {
+  const query: QueryParams = baseParams(page, search);
 
   if (filters.gp) {
-    parts.push(param('gov_proposal[ministrial_proposal][gp][in][0]', filters.gp));
+    query['gov_proposal[ministrial_proposal][gp][in][0]'] = filters.gp;
   }
   // the web only ever sets this when true, ohne abstimmung cannot be expressed
   if (filters.hasVoteResult) {
-    parts.push(param('gov_proposal[ministrial_proposal][has_vote_result][eq]', 'true'));
+    query['gov_proposal[ministrial_proposal][has_vote_result][eq]'] = true;
   }
 
   filters.topics.forEach((topic, i) => {
-    parts.push(param(`gov_proposal[eurovoc_topics][${i}][topic][${TOPIC_OP}]`, topic));
+    query[`gov_proposal[eurovoc_topics][${i}][topic][${TOPIC_OP}]`] = topic;
   });
 
   filters.departments.forEach((department, i) => {
-    parts.push(param(`gov_proposal[ministrial_proposal][ressort][in][${i}]`, department));
+    query[`gov_proposal[ministrial_proposal][ressort][in][${i}]`] = department;
   });
 
-  return parts.join('&');
+  return query;
 }
 
 /** filter count per button, the period is left out since it always has a value and
@@ -139,7 +135,7 @@ export function proposalFilterCounts(filters: ProposalFilters) {
   };
 }
 
-/** delegate filters, the search itself goes through delegates_search_persons which
+/** delegate filters, the search itself goes through somes.delegates.search which
     builds its own parameters, so there is no query builder beside the other two */
 export type DelegateFilters = {
   /** null means alle perioden, no active_gps parameter is sent */

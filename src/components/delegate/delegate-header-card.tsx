@@ -1,8 +1,8 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { url } from '@/api/client';
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -34,7 +34,7 @@ export function DelegateHeaderCard({ delegate }: Props) {
     <Card>
       <View style={styles.head}>
         <Image
-          source={{ uri: `${url}assets/${delegate.id}.jpg` }}
+          source={{ uri: somes.delegateImageUrl(delegate.id) }}
           style={styles.portrait}
           accessibilityLabel={delegate.name}
         />

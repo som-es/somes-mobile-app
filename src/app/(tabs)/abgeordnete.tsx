@@ -2,8 +2,6 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { delegates_search_persons, parties_per_gp } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { AVATAR, DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
 import { partiesFor, useFilterSources, withCount } from '@/components/lists/filter-sources';
@@ -14,6 +12,7 @@ import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
+import { somes } from '@/lib/somes';
 import { useDebounced } from '@/lib/use-debounced';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -33,19 +32,17 @@ export default function AbgeordneteScreen() {
     // the filter object is part of the key, react-query hashes it stably
     queryKey: ['delegates', filters, debouncedSearch],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) =>
-      unwrap(
-        await delegates_search_persons(
-          pageParam,
-          ENTRIES_PER_PAGE,
-          debouncedSearch || null,
-          filters.gp ? [filters.gp] : [],
-          filters.parties,
-          filters.onlyGov,
-          filters.mindPreviousPartyMembership,
-          filters.hasActiveMandate
-        )
-      ),
+    queryFn: ({ pageParam }) =>
+      somes.delegates.search({
+        page: pageParam,
+        entriesPerPage: ENTRIES_PER_PAGE,
+        name: debouncedSearch || null,
+        legisPeriods: filters.gp ? [filters.gp] : [],
+        parties: filters.parties,
+        onlyGovernment: filters.onlyGov,
+        includePreviousPartyMembership: filters.mindPreviousPartyMembership,
+        hasActiveMandate: filters.hasActiveMandate,
+      }),
     getNextPageParam: (last, pages) =>
       pages.length < last.max_page ? pages.length + 1 : undefined,
   });
@@ -54,7 +51,7 @@ export default function AbgeordneteScreen() {
 
   const parties = useQuery({
     queryKey: ['parties-per-gp'],
-    queryFn: async () => unwrap(await parties_per_gp()),
+    queryFn: () => somes.reference.partiesPerGp(),
     staleTime: 1000 * 60 * 60 * 24,
   });
 

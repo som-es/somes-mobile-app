@@ -4,7 +4,6 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import { postWithAuth } from '@/api/authed';
 import { colors } from '@/theme/colors';
 
 Notifications.setNotificationHandler({
@@ -56,13 +55,9 @@ export async function getExpoPushToken(): Promise<string | null> {
   }
 }
 
-/** todo, add the push token endpoint in somes-api, then drop this guard */
-const PUSH_TOKEN_ENDPOINT_EXISTS = false;
-
-export async function registerPushToken(token: string): Promise<void> {
-  if (!PUSH_TOKEN_ENDPOINT_EXISTS) {
-    console.info(`Push token not registered — no backend endpoint yet. Token: ${token}`);
-    return;
-  }
-  await postWithAuth('v1/user/push_token', { token, platform: Platform.OS });
+/** there is nothing to call yet, somes-api has no push token route and somes-ts has
+    no resource for one, see MISSING_FEATURES.md in the somes-ts repository */
+export function registerPushToken(token: string): Promise<void> {
+  console.info(`Push token not registered — no backend endpoint yet. Token: ${token}`);
+  return Promise.resolve();
 }

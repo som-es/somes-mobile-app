@@ -2,8 +2,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { url } from '@/api/client';
 import { Card } from '@/components/ui/card';
+import { somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -29,7 +29,7 @@ export function DelegateRow({ id, name, party, role }: Props) {
       onPress={() => router.push({ pathname: '/abgeordnete/[id]', params: { id } })}>
       <View style={styles.row}>
         <Image
-          source={{ uri: `${url}assets/${id}.jpg` }}
+          source={{ uri: somes.delegateImageUrl(id) }}
           style={styles.avatar}
           accessibilityLabel={name}
         />

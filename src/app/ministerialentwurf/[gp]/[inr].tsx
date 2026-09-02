@@ -2,8 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { gov_proposal_by_path } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { DelegateRow } from '@/components/detail/delegate-row';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
@@ -14,6 +12,7 @@ import { topicNames, TopicList } from '@/components/detail/topic-list';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { spacing } from '@/theme/layout';
 import type { GovProposalDelegate } from '@/types';
 
@@ -22,7 +21,7 @@ export default function ProposalDetailScreen() {
 
   const proposal = useQuery({
     queryKey: ['gov-proposal', gp, inr],
-    queryFn: async () => unwrap(await gov_proposal_by_path(gp, inr)),
+    queryFn: () => somes.govProposals.byPath(gp, inr),
   });
 
   return (

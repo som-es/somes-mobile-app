@@ -3,8 +3,6 @@ import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { delegate_by_id } from '@/api/api';
-import { unwrap, url } from '@/api/client';
 import { OptionGroup } from '@/components/filters/option-group';
 import { SubScreen } from '@/components/layout/sub-screen';
 import { Card } from '@/components/ui/card';
@@ -12,6 +10,7 @@ import { Notice } from '@/components/ui/notice';
 import { ScreenTitle } from '@/components/ui/screen';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { useFavorite, useFavoriteDelegates, useUpdateFavoriteInterval } from '@/lib/favorites';
+import { somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -36,7 +35,7 @@ export default function FavoriteDelegatesScreen() {
   const delegates = useQueries({
     queries: entries.map((favo) => ({
       queryKey: ['delegate', String(favo.delegate_id)],
-      queryFn: async () => unwrap(await delegate_by_id(favo.delegate_id)),
+      queryFn: () => somes.delegates.byId(favo.delegate_id),
     })),
   });
 
@@ -87,7 +86,7 @@ function FavoriteDelegate({
         }
         style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
         <Image
-          source={{ uri: `${url}assets/${favo.delegate_id}.jpg` }}
+          source={{ uri: somes.delegateImageUrl(favo.delegate_id) }}
           style={styles.avatar}
           accessibilityLabel={delegate?.name}
         />

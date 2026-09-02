@@ -2,8 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { latest_ministrial_proposals, latest_vote_results, next_plenar_date } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { ProposalCard } from '@/components/cards/proposal-card';
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { NextSessionCard } from '@/components/home/next-session-card';
@@ -12,6 +10,7 @@ import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { SectionLink } from '@/components/ui/section-link';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { spacing } from '@/theme/layout';
 
 const LATEST_COUNT = 3;
@@ -22,17 +21,17 @@ export default function HomeScreen() {
 
   const session = useQuery({
     queryKey: ['next-plenar-date'],
-    queryFn: async () => unwrap(await next_plenar_date()),
+    queryFn: () => somes.reference.nextPlenarDate(),
   });
 
   const votes = useQuery({
     queryKey: ['latest-vote-results'],
-    queryFn: async () => unwrap(await latest_vote_results()),
+    queryFn: () => somes.voteResults.latest(),
   });
 
   const proposals = useQuery({
     queryKey: ['latest-proposals', PROPOSAL_DAYS],
-    queryFn: async () => unwrap(await latest_ministrial_proposals(PROPOSAL_DAYS)),
+    queryFn: () => somes.govProposals.latest(PROPOSAL_DAYS),
   });
 
   const refreshing = session.isRefetching || votes.isRefetching || proposals.isRefetching;

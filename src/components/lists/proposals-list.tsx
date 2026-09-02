@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { departments_per_gp, gov_proposals_by_search } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { ProposalCard } from '@/components/cards/proposal-card';
 import { ProposalGenericSheet } from '@/components/filters/generic-sheet';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
@@ -14,6 +12,7 @@ import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
 import { emptyProposalFilters, govProposalsQuery, proposalFilterCounts } from '@/lib/filter-query';
+import { somes } from '@/lib/somes';
 import { useDebounced } from '@/lib/use-debounced';
 import { spacing } from '@/theme/layout';
 
@@ -34,8 +33,8 @@ export function ProposalsList({ control }: Props) {
   const results = useInfiniteQuery({
     queryKey: ['gov-proposals', query],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) =>
-      unwrap(await gov_proposals_by_search(govProposalsQuery(filters, debouncedSearch, pageParam))),
+    queryFn: ({ pageParam }) =>
+      somes.govProposals.search(govProposalsQuery(filters, debouncedSearch, pageParam)),
     getNextPageParam: (last, pages) => (pages.length < last.max_page ? pages.length + 1 : undefined),
   });
 
@@ -43,7 +42,7 @@ export function ProposalsList({ control }: Props) {
 
   const ministries = useQuery({
     queryKey: ['departments-per-gp'],
-    queryFn: async () => unwrap(await departments_per_gp()),
+    queryFn: () => somes.reference.departmentsPerGp(),
     staleTime: 1000 * 60 * 60 * 24,
   });
 

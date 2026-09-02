@@ -3,14 +3,13 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { vote_result_by_id } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { OpinionCard, OpinionLegend } from '@/components/delegate/opinion';
 import { SectionCard } from '@/components/detail/section-card';
 import { Badge } from '@/components/ui/badge';
 import { SectionLink } from '@/components/ui/section-link';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { isoToDotDate } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -32,7 +31,7 @@ export function NamedVotesCard({ namedVotes }: Props) {
   const results = useQueries({
     queries: shown.map((namedVote) => ({
       queryKey: ['vote-result', String(namedVote.legis_init_id)],
-      queryFn: async () => unwrap(await vote_result_by_id(String(namedVote.legis_init_id))),
+      queryFn: () => somes.voteResults.byId(namedVote.legis_init_id),
     })),
   });
 

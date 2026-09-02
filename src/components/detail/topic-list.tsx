@@ -2,8 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-import type { DbAiSummary } from '@/types/ai-summary';
-import type { Topic } from '@/types';
+import type { DbAiSummary, Topic } from '@/types';
 
 import { SectionCard } from './section-card';
 

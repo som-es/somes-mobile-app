@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { ApiError } from '@som-es/somes-ts';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -11,19 +12,17 @@ import {
   View,
 } from 'react-native';
 
-import { login } from '@/api/authed';
-import { isHasError, signUpFlags } from '@/api/client';
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { TextField } from '@/components/ui/text-field';
 import { signInWithProvider } from '@/lib/oauth';
+import { isRateLimited, signUpFlags, somes } from '@/lib/somes';
 import { useSession } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-import type { HasError } from '@/types';
 
 type Step = 'email' | 'otp';
 
@@ -67,22 +66,24 @@ export default function AnmeldenScreen() {
     setPending(true);
     setError(null);
 
-    // step 1 sends '' rather than null on purpose, see login()
-    const result = await login(email.trim(), step === 'email' ? '' : otp, false);
-    setPending(false);
-
-    if (isHasError(result)) {
-      setError(messageFor(result));
+    let accessToken: string;
+    try {
+      if (step === 'email') {
+        // the server mails the code and waits for it, there is nothing to hand back
+        await somes.auth.requestOtp(email.trim());
+        setStep('otp');
+        return;
+      }
+      accessToken = await somes.auth.login(email.trim(), otp);
+    } catch (error) {
+      setError(messageFor(error));
       return;
+    } finally {
+      setPending(false);
     }
 
-    // an empty token means the code was mailed and the server is waiting for it
-    if (result.access_token.length === 0) {
-      setStep('otp');
-      return;
-    }
-
-    await finish(result.access_token);
+    // outside the catch, a failed navigation is not a login error
+    await finish(accessToken);
   }
 
   const onEmailStep = step === 'email';
@@ -214,22 +215,24 @@ export default function AnmeldenScreen() {
   );
 }
 
-function messageFor(result: HasError): string {
-  if (result.field === 'WrongOtp') {
-    return 'Fehlerhaftes One-Time Passwort.';
+function messageFor(error: unknown): string {
+  if (error instanceof ApiError) {
+    if (error.field === 'WrongOtp') {
+      return 'Fehlerhaftes One-Time Passwort.';
+    }
+
+    const flags = signUpFlags(error);
+    if (flags?.missing_email) return 'E-Mail-Adresse fehlt.';
+    if (flags?.invalid_email) return 'Fehlerhafte E-Mail-Adresse.';
+
+    if (isRateLimited(error)) {
+      return 'Zu viele Versuche. Bitte warte einen Moment.';
+    }
+    return 'Ein serverseitiger Fehler ist aufgetreten. Es kann nicht fortgefahren werden.';
   }
 
-  const flags = signUpFlags(result);
-  if (flags?.missing_email) return 'E-Mail-Adresse fehlt.';
-  if (flags?.invalid_email) return 'Fehlerhafte E-Mail-Adresse.';
-
-  if (result.error_type === 'RateLimit') {
-    return 'Zu viele Versuche. Bitte warte einen Moment.';
-  }
-  if (result.error_type === 'FetchError') {
-    return 'Keine Verbindung zum Server.';
-  }
-  return 'Ein serverseitiger Fehler ist aufgetreten. Es kann nicht fortgefahren werden.';
+  // anything that never reached the server, fetch throws rather than resolving
+  return 'Keine Verbindung zum Server.';
 }
 
 const styles = StyleSheet.create({

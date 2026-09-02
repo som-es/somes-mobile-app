@@ -2,14 +2,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQueries } from '@tanstack/react-query';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { vote_result_by_id } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { SubScreen } from '@/components/layout/sub-screen';
 import { Notice } from '@/components/ui/notice';
 import { ScreenTitle } from '@/components/ui/screen';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { useFavorite, useFavoriteVotes } from '@/lib/favorites';
+import { somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -22,7 +21,7 @@ export default function FavoriteVotesScreen() {
   const votes = useQueries({
     queries: entries.map((favo) => ({
       queryKey: ['vote-result', String(favo.vote_result_id)],
-      queryFn: async () => unwrap(await vote_result_by_id(String(favo.vote_result_id))),
+      queryFn: () => somes.voteResults.byId(favo.vote_result_id),
     })),
   });
 

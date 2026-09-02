@@ -50,9 +50,13 @@ App Store Connect entry for you.
 ```
 src/app/          expo-router routes, file-based
   (tabs)/         home, abstimmungen, abgeordnete, profil
-src/api/          endpoints
-src/types/        API response types
+src/types/        wire types, re-exported from @som-es/somes-ts
 src/theme/        colors, layout, typography, party colors
 src/components/   ui/ primitives, plus one folder per screen area
-src/lib/          auth, favorites, query client, filter building, dates
+src/lib/          somes client, auth, favorites, query client, filter building, dates
 ```
+
+Every request goes through [@som-es/somes-ts](https://github.com/som-es/somes-ts).
+`src/lib/somes.ts` configures it once — base url, parliament, and the token in
+expo-secure-store — and is the only place allowed to talk to the API directly. The
+gaps the library still has are listed in `MISSING_FEATURES.md` in that repository.

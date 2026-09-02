@@ -1,12 +1,10 @@
-/* react binding over the auth store */
+/* react binding over the library's token store */
+import { getUserFromJwt } from '@som-es/somes-ts';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
-import { getUser } from '@/api/authed';
-import { unwrap } from '@/api/client';
-import { clearToken, getToken, setToken, subscribeToToken } from '@/lib/auth-store';
+import { clearToken, getToken, setToken, somes, subscribeToToken } from '@/lib/somes';
 import type { BasicUserInfo } from '@/types';
-import { getUserFromJwt } from '@/types';
 
 export const USER_QUERY_KEYS = [
   ['user'],
@@ -37,7 +35,7 @@ export function useAuth() {
 }
 
 /** sign in and out both touch the query cache, so they live here, the token store
-    has to stay free of react imports for the synchronous read in the api layer */
+    itself stays free of react so the api layer can read it synchronously */
 export function useSession() {
   const queryClient = useQueryClient();
 
@@ -65,7 +63,7 @@ export function useExtendedUser() {
   const { isAuthenticated } = useAuth();
   return useQuery({
     queryKey: ['user'],
-    queryFn: async () => unwrap(await getUser()),
+    queryFn: () => somes.account.me(),
     enabled: isAuthenticated,
   });
 }

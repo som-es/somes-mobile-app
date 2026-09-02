@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { parties } from '@/api/api';
-import { unwrap } from '@/api/client';
+import { somes } from '@/lib/somes';
 
 import { colors } from './colors';
 
@@ -9,8 +8,8 @@ export function usePartyColors() {
   return useQuery({
     queryKey: ['party-colors'],
     queryFn: async () => {
-      const result = unwrap(await parties());
-      return new Map(result.map((party) => [party.name, party.color]));
+      const parties = await somes.reference.parties();
+      return new Map(parties.map((party) => [party.name, party.color]));
     },
     // parties change once per legislative period at most
     staleTime: 1000 * 60 * 60 * 24,
