@@ -2,8 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { delegates_at, vote_result_by_path } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { DelegateRow } from '@/components/detail/delegate-row';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
 import { FavoriteButton } from '@/components/ui/favorite-button';
@@ -16,6 +14,7 @@ import { VoteBreakdown } from '@/components/detail/vote-breakdown';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -26,7 +25,7 @@ export default function VoteDetailScreen() {
 
   const vote = useQuery({
     queryKey: ['vote-result', gp, ityp, inr],
-    queryFn: async () => unwrap(await vote_result_by_path(gp, ityp, inr)),
+    queryFn: () => somes.voteResults.byPath(gp, ityp, inr),
   });
 
   const activityDate = vote.data?.legislative_initiative.nr_plenary_activity_date;
@@ -35,8 +34,8 @@ export default function VoteDetailScreen() {
   const delegates = useQuery({
     queryKey: ['delegates-at', activityDate],
     queryFn: async () => {
-      const result = unwrap(await delegates_at(activityDate!));
-      return new Map(result.map((delegate) => [delegate.id, delegate]));
+      const delegatesAtDate = await somes.delegates.allAtDate(activityDate!);
+      return new Map(delegatesAtDate.map((delegate) => [delegate.id, delegate]));
     },
     enabled: activityDate !== undefined,
     staleTime: 1000 * 60 * 60 * 24,

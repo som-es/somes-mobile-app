@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text } from 'react-native';
 
-import { delete_account } from '@/api/authed';
-import { isHasError } from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { somes } from '@/lib/somes';
 import { useSession } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -16,16 +15,17 @@ export function DangerZoneCard() {
 
   async function remove() {
     setPending(true);
-    const result = await delete_account();
-    setPending(false);
-
-    // somes-frontend clears the jwt regardless, so a failed delete looks like it worked
-    if (isHasError(result)) {
+    try {
+      await somes.account.deleteAccount();
+    } catch {
+      // somes-frontend clears the jwt regardless, so a failed delete looks like it worked
       Alert.alert(
         'Account konnte nicht gelöscht werden',
         'Bitte versuche es später erneut. Dein Account ist unverändert.'
       );
       return;
+    } finally {
+      setPending(false);
     }
     await signOut();
   }

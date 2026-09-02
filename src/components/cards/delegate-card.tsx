@@ -2,9 +2,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { url } from '@/api/client';
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -32,7 +32,7 @@ export function DelegateCard({ delegate }: Props) {
       }>
       <View style={styles.row}>
         <Image
-          source={{ uri: `${url}assets/${delegate.id}.jpg` }}
+          source={{ uri: somes.delegateImageUrl(delegate.id) }}
           style={styles.avatar}
           accessibilityLabel={delegate.name}
         />

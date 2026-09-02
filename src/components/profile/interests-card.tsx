@@ -3,13 +3,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { get_eurovoc_topics } from '@/api/api';
-import { addUserTopic, getUserTopics, removeUserTopic } from '@/api/authed';
-import { isHasError, unwrap } from '@/api/client';
 import { SelectedTopicsSheet } from '@/components/profile/selected-topics-sheet';
 import { TopicAccordion } from '@/components/profile/topic-accordion';
 import { Card } from '@/components/ui/card';
 import { SearchField } from '@/components/ui/search-field';
+import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -31,13 +29,13 @@ export function InterestsCard() {
 
   const topics = useQuery({
     queryKey: ['eurovoc-topics'],
-    queryFn: async () => unwrap(await get_eurovoc_topics()),
+    queryFn: () => somes.reference.eurovocTopics(),
     staleTime: STALE,
   });
 
   const selection = useQuery({
     queryKey: ['user-topics'],
-    queryFn: async () => unwrap(await getUserTopics()),
+    queryFn: () => somes.account.topics(),
     enabled: isAuthenticated,
   });
 
@@ -48,11 +46,10 @@ export function InterestsCard() {
   const selectedIds = useMemo(() => new Set(selected.map((topic) => topic.id)), [selected]);
 
   const toggle = useMutation({
-    mutationFn: async ({ topic, select }: { topic: UniqueTopic; select: boolean }) => {
+    mutationFn: ({ topic, select }: { topic: UniqueTopic; select: boolean }) => {
       // only id is read server side, but serde needs the field to be there
       const body: UniqueTopic = { id: topic.id, topic: '' };
-      const result = select ? await addUserTopic(body) : await removeUserTopic(body);
-      if (isHasError(result)) throw new Error(`${result.error_type}: ${result.error}`);
+      return select ? somes.account.addTopic(body) : somes.account.removeTopic(body);
     },
     onMutate: async ({ topic, select }) => {
       await queryClient.cancelQueries({ queryKey: ['user-topics'] });

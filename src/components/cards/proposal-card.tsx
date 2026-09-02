@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { url } from '@/api/client';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { isoToDotDate } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { GovProposalDelegate } from '@/types';
@@ -34,7 +34,7 @@ export function ProposalCard({ proposal }: Props) {
       <View style={styles.titleRow}>
         {delegate ? (
           <Image
-            source={{ uri: `${url}assets/${delegate.id}.jpg` }}
+            source={{ uri: somes.delegateImageUrl(delegate.id) }}
             style={styles.avatar}
             accessibilityLabel={delegate.name}
           />

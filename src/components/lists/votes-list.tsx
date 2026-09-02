@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { parties_per_gp, vote_results_by_query_search } from '@/api/api';
-import { unwrap } from '@/api/client';
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { VoteGenericSheet } from '@/components/filters/generic-sheet';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
@@ -15,6 +13,7 @@ import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
 import { emptyVoteFilters, voteFilterCounts, voteResultsQuery } from '@/lib/filter-query';
+import { somes } from '@/lib/somes';
 import { useDebounced } from '@/lib/use-debounced';
 import { spacing } from '@/theme/layout';
 
@@ -35,8 +34,8 @@ export function VotesList({ control }: Props) {
   const results = useInfiniteQuery({
     queryKey: ['vote-results', query],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) =>
-      unwrap(await vote_results_by_query_search(voteResultsQuery(filters, debouncedSearch, pageParam))),
+    queryFn: ({ pageParam }) =>
+      somes.voteResults.search(voteResultsQuery(filters, debouncedSearch, pageParam)),
     getNextPageParam: (last, pages) => (pages.length < last.max_page ? pages.length + 1 : undefined),
   });
 
@@ -44,7 +43,7 @@ export function VotesList({ control }: Props) {
 
   const parties = useQuery({
     queryKey: ['parties-per-gp'],
-    queryFn: async () => unwrap(await parties_per_gp()),
+    queryFn: () => somes.reference.partiesPerGp(),
     staleTime: 1000 * 60 * 60 * 24,
   });
 

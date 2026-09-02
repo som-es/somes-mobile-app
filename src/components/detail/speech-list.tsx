@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { url } from '@/api/client';
 import { minutes } from '@/lib/date';
+import { somes } from '@/lib/somes';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -41,7 +41,7 @@ export function SpeechList({ speeches, delegates }: Props) {
               onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
               <Image
-                source={{ uri: `${url}assets/${speech.delegate_id}.jpg` }}
+                source={{ uri: somes.delegateImageUrl(speech.delegate_id) }}
                 style={styles.avatar}
                 accessibilityLabel={delegate?.name}
               />

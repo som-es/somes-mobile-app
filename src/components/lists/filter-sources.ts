@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { all_gps, get_eurovoc_topics } from '@/api/api';
-import { unwrap } from '@/api/client';
+import { somes } from '@/lib/somes';
 import type { Party } from '@/types';
 
 export type Sheet = 'topics' | 'second' | 'generic' | null;
@@ -13,13 +12,13 @@ const STALE = 1000 * 60 * 60 * 24;
 export function useFilterSources() {
   const topics = useQuery({
     queryKey: ['eurovoc-topics'],
-    queryFn: async () => unwrap(await get_eurovoc_topics()),
+    queryFn: () => somes.reference.eurovocTopics(),
     staleTime: STALE,
   });
 
   const periods = useQuery({
     queryKey: ['all-gps'],
-    queryFn: async () => unwrap(await all_gps()),
+    queryFn: () => somes.reference.legisPeriods(),
     staleTime: STALE,
   });
 

@@ -7,10 +7,8 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { renew_token } from '@/api/authed';
-import { isAuthError, isHasError } from '@/api/client';
-import { clearToken, getToken, loadToken, setToken } from '@/lib/auth-store';
 import { queryClient } from '@/lib/query-client';
+import { clearToken, getToken, isAuthError, loadToken, somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 
 // rejects if the splash is already gone, e.g. on a fast refresh remount
@@ -28,19 +26,17 @@ async function renewSession() {
   if (Date.now() - lastRenewedAt < RENEW_INTERVAL) return;
   lastRenewedAt = Date.now();
 
-  const renewed = await renew_token();
-
-  if (!isHasError(renewed)) {
-    await setToken(renewed.access_token);
-    return;
-  }
-
-  // only a rejected token signs the user out, a failed fetch just means offline
-  if (isAuthError(renewed)) {
-    await clearToken();
-    queryClient.clear();
-  } else {
-    lastRenewedAt = 0;
+  try {
+    // the library stores the renewed token itself
+    await somes.auth.renewToken();
+  } catch (error) {
+    // only a rejected token signs the user out, a failed fetch just means offline
+    if (isAuthError(error)) {
+      await clearToken();
+      queryClient.clear();
+    } else {
+      lastRenewedAt = 0;
+    }
   }
 }
 

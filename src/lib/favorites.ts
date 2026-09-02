@@ -2,18 +2,9 @@
    detail screen hearts share a cache entry */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  addDelegateFavo,
-  addLegisInitFavo,
-  getFavoDelegates,
-  getFavoLegisInits,
-  removeDelegateFavo,
-  removeLegisInitFavo,
-  updateDelegateFavo,
-} from '@/api/authed';
-import { isHasError, unwrap } from '@/api/client';
+import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
-import type { DelegateFavo, HasError, LegisInitFavo } from '@/types';
+import type { DelegateFavo, LegisInitFavo } from '@/types';
 
 export type FavoriteKind = 'delegate' | 'vote';
 
@@ -23,16 +14,11 @@ export const DEFAULT_INFO_DAYS = 7;
 export const DELEGATE_FAVO_KEY = ['favo-delegates'] as const;
 export const VOTE_FAVO_KEY = ['favo-legis-inits'] as const;
 
-/** mutations have to reject so react-query rolls back, the reads use unwrap */
-function assertOk(result: unknown | HasError): void {
-  if (isHasError(result)) throw new Error(`${result.error_type}: ${result.error}`);
-}
-
 export function useFavoriteDelegates() {
   const { isAuthenticated } = useAuth();
   return useQuery({
     queryKey: DELEGATE_FAVO_KEY,
-    queryFn: async () => unwrap(await getFavoDelegates()),
+    queryFn: () => somes.account.bookmarkedDelegates(),
     enabled: isAuthenticated,
   });
 }
@@ -41,7 +27,7 @@ export function useFavoriteVotes() {
   const { isAuthenticated } = useAuth();
   return useQuery({
     queryKey: VOTE_FAVO_KEY,
-    queryFn: async () => unwrap(await getFavoLegisInits()),
+    queryFn: () => somes.account.bookmarkedVoteResults(),
     enabled: isAuthenticated,
   });
 }
@@ -67,10 +53,15 @@ export function useFavorite(kind: FavoriteKind, id: number | null) {
       if (kind === 'delegate') {
         // user_info_days is required by serde on both calls, even to remove
         const body: DelegateFavo = { delegate_id: id, user_info_days: DEFAULT_INFO_DAYS };
-        assertOk(isFavorite ? await removeDelegateFavo(body) : await addDelegateFavo(body));
+        // the library rejects on failure, which is what react-query needs to roll back
+        await (isFavorite
+          ? somes.account.removeDelegateBookmark(body)
+          : somes.account.addDelegateBookmark(body));
       } else {
         const body: LegisInitFavo = { vote_result_id: id };
-        assertOk(isFavorite ? await removeLegisInitFavo(body) : await addLegisInitFavo(body));
+        await (isFavorite
+          ? somes.account.removeVoteResultBookmark(body)
+          : somes.account.addVoteResultBookmark(body));
       }
     },
     onMutate: async () => {
@@ -113,7 +104,7 @@ export function useUpdateFavoriteInterval() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (favo: DelegateFavo) => assertOk(await updateDelegateFavo(favo)),
+    mutationFn: (favo: DelegateFavo) => somes.account.updateDelegateBookmark(favo),
     onMutate: async (favo) => {
       await queryClient.cancelQueries({ queryKey: DELEGATE_FAVO_KEY });
       const previous = queryClient.getQueryData<DelegateFavo[]>(DELEGATE_FAVO_KEY);
