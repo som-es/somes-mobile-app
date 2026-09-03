@@ -9,16 +9,17 @@ import { typography } from '@/theme/typography';
 
 type Props = {
   date: string | null;
+  title: string;
 };
 
-export function NextSessionCard({ date }: Props) {
+export function NextSessionCard({ date, title }: Props) {
   const relative = date ? relativeDayLabel(date) : null;
 
   return (
     <Card style={styles.card}>
       <View style={styles.row}>
         <View style={styles.text}>
-          <Text style={typography.cardTitle}>Nächste Nationalratssitzung</Text>
+          <Text style={typography.cardTitle}>{title}</Text>
           <Text style={typography.caption}>
             {date
               ? `am ${isoToDotDate(date)}${relative ? ` (${relative})` : ''}`

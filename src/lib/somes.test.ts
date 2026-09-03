@@ -8,6 +8,7 @@ import {
   loadCountry,
   setCountry,
   signUpFlags,
+  somes,
   subscribeToCountry,
 } from '@/lib/somes';
 
@@ -115,5 +116,13 @@ describe('country', () => {
 
     expect(result).toBe('at');
     expect(getCountry()).toBe('at');
+  });
+
+  it('rebuilds the somes client when the country changes, country is baked in at construction', async () => {
+    const before = somes;
+
+    await setCountry('eu');
+
+    expect(somes).not.toBe(before);
   });
 });

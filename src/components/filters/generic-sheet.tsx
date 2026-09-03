@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { OptionGroup } from '@/components/filters/option-group';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import type { DelegateFilters, ProposalFilters, VoteFilters } from '@/lib/filter-query';
+import { useCountry } from '@/lib/use-country';
 import { spacing } from '@/theme/layout';
 
 /** copied from the web, the labels are ui strings */
@@ -157,6 +158,8 @@ export function DelegateGenericSheet({
   onChange,
   onClose,
 }: DelegateProps) {
+  const country = useCountry();
+
   return (
     <BottomSheet
       visible={visible}
@@ -177,12 +180,14 @@ export function DelegateGenericSheet({
           value={filters.gp}
           onChange={(gp) => onChange({ ...filters, gp })}
         />
-        <OptionGroup
-          title="Mandatsart"
-          options={MANDATE_KIND}
-          value={filters.onlyGov}
-          onChange={(onlyGov) => onChange({ ...filters, onlyGov })}
-        />
+        {country === 'eu' ? null : (
+          <OptionGroup
+            title="Mandatsart"
+            options={MANDATE_KIND}
+            value={filters.onlyGov}
+            onChange={(onlyGov) => onChange({ ...filters, onlyGov })}
+          />
+        )}
         <OptionGroup
           title="Aktives Mandat"
           options={ACTIVE_MANDATE}
