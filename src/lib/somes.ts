@@ -44,10 +44,8 @@ const secureStore: TokenPersistence = {
 /** the store caches synchronously, so the token can be read during a render */
 export const tokenStore = new TokenStore(secureStore);
 
-export const somes = new SomesClient({ baseUrl: address, country: 'at', tokenStore });
+export let somes = new SomesClient({ baseUrl: address, country: 'at', tokenStore });
 
-/** just the persisted at/eu preference for now, the toggle itself does not yet
-    change what the app requests or displays — that's a follow-up task */
 let country: Country = DEFAULT_COUNTRY;
 const countryListeners = new Set<(country: Country) => void>();
 
@@ -59,8 +57,9 @@ function isCountry(value: string | null): value is Country {
 export async function loadCountry(): Promise<Country> {
   try {
     const stored = await AsyncStorage.getItem(COUNTRY_KEY);
-    if (isCountry(stored)) {
+    if (isCountry(stored) && stored !== country) {
       country = stored;
+      somes = new SomesClient({ baseUrl: address, country, tokenStore });
       countryListeners.forEach((listener) => listener(country));
     }
   } catch (error) {
@@ -74,9 +73,12 @@ export function getCountry(): Country {
   return country;
 }
 
+/** country is baked into every resource at construction, so switching rebuilds
+    the client rather than mutating a field, the token store carries over as-is */
 export async function setCountry(next: Country): Promise<void> {
   if (next === country) return;
   country = next;
+  somes = new SomesClient({ baseUrl: address, country, tokenStore });
   countryListeners.forEach((listener) => listener(country));
   try {
     await AsyncStorage.setItem(COUNTRY_KEY, next);
@@ -88,6 +90,13 @@ export async function setCountry(next: Country): Promise<void> {
 export function subscribeToCountry(listener: (country: Country) => void): () => void {
   countryListeners.add(listener);
   return () => countryListeners.delete(listener);
+}
+
+/** somes-api only mirrors AT portraits under /api/assets/{id}.jpg, EU MEPs get a
+    404 there — their record instead carries a working image_url that points
+    straight at europarl.europa.eu, so eu falls back to that */
+export function delegateAvatarUrl(country: Country, id: number, imageUrl: string | null): string {
+  return country === 'eu' && imageUrl ? imageUrl : somes.delegateImageUrl(id);
 }
 
 /** reads the persisted token into the cache, call once before the first request */

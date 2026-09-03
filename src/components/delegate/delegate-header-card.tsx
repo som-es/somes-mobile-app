@@ -2,7 +2,8 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -16,9 +17,11 @@ type Props = {
 };
 
 export function DelegateHeaderCard({ delegate }: Props) {
+  const country = useCountry();
   const years = age(delegate.birthdate);
   const party = delegate.party || delegate.current_party;
   const partyColor = usePartyColor(party);
+  const copyrightFallback = country === 'eu' ? 'Europäisches Parlament' : 'Parlamentsdirektion';
 
   // committees first, the mandates stand in when a member sits on none
   const divisions = delegate.divisions ?? [];
@@ -34,7 +37,7 @@ export function DelegateHeaderCard({ delegate }: Props) {
     <Card>
       <View style={styles.head}>
         <Image
-          source={{ uri: somes.delegateImageUrl(delegate.id) }}
+          source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
           style={styles.portrait}
           accessibilityLabel={delegate.name}
         />
@@ -63,7 +66,7 @@ export function DelegateHeaderCard({ delegate }: Props) {
       ) : null}
 
       <Text style={[typography.caption, styles.copyright]}>
-        © {delegate.image_copyright ?? 'Parlamentsdirektion'}
+        © {delegate.image_copyright ?? copyrightFallback}
       </Text>
     </Card>
   );

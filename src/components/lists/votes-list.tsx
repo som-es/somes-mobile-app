@@ -14,6 +14,7 @@ import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
 import { emptyVoteFilters, voteFilterCounts, voteResultsQuery } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
 import { spacing } from '@/theme/layout';
 
@@ -24,8 +25,9 @@ type Props = {
 };
 
 export function VotesList({ control }: Props) {
+  const country = useCountry();
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState(emptyVoteFilters);
+  const [filters, setFilters] = useState(() => emptyVoteFilters(country));
   const [sheet, setSheet] = useState<Sheet>(null);
 
   const debouncedSearch = useDebounced(search);
