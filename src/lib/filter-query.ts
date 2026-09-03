@@ -2,12 +2,13 @@
    the library's client serialises whatever record it is handed, so these builders
    only have to name the keys. the names have to stay byte identical or the api
    silently ignores them */
-import type { QueryParams } from '@som-es/somes-ts';
+import type { Country, QueryParams } from '@som-es/somes-ts';
 
 import type { PartyVote } from '@/types';
 
-/** the web opens on the current period, not on alle */
-export const DEFAULT_GP = 'XXVIII';
+/** the web opens on the current period, not on alle. EU periods are plain integers
+    ("10"), not AT's roman-numeral scheme ("XXVIII") */
+export const DEFAULT_GP: Record<Country, string> = { at: 'XXVIII', eu: '10' };
 
 /** eq, not the cn the web uses, cn makes both search endpoints fail so topic
     filtering is broken on somes.at itself */
@@ -32,21 +33,25 @@ export type ProposalFilters = {
   departments: string[];
 };
 
-export const emptyVoteFilters: VoteFilters = {
-  gp: DEFAULT_GP,
-  accepted: null,
-  voteType: null,
-  simpleMajority: null,
-  topics: [],
-  partyVotes: [],
-};
+export function emptyVoteFilters(country: Country): VoteFilters {
+  return {
+    gp: DEFAULT_GP[country],
+    accepted: null,
+    voteType: null,
+    simpleMajority: null,
+    topics: [],
+    partyVotes: [],
+  };
+}
 
-export const emptyProposalFilters: ProposalFilters = {
-  gp: DEFAULT_GP,
-  hasVoteResult: null,
-  topics: [],
-  departments: [],
-};
+export function emptyProposalFilters(country: Country): ProposalFilters {
+  return {
+    gp: DEFAULT_GP[country],
+    hasVoteResult: null,
+    topics: [],
+    departments: [],
+  };
+}
 
 /** sort by date only when nothing was typed, so a search keeps the relevance order */
 function baseParams(page: number, search: string): QueryParams {
@@ -148,13 +153,15 @@ export type DelegateFilters = {
   mindPreviousPartyMembership: boolean;
 };
 
-export const emptyDelegateFilters: DelegateFilters = {
-  gp: DEFAULT_GP,
-  parties: [],
-  onlyGov: null,
-  hasActiveMandate: null,
-  mindPreviousPartyMembership: true,
-};
+export function emptyDelegateFilters(country: Country): DelegateFilters {
+  return {
+    gp: DEFAULT_GP[country],
+    parties: [],
+    onlyGov: null,
+    hasActiveMandate: null,
+    mindPreviousPartyMembership: true,
+  };
+}
 
 export function delegateFilterCounts(filters: DelegateFilters) {
   return {

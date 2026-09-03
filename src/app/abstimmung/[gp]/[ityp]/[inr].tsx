@@ -105,6 +105,7 @@ function VoteDetail({ voteResult, delegates }: DetailProps) {
                       name={delegate?.name ?? 'Unbekannt'}
                       party={delegate?.party ?? null}
                       role={issuer.text}
+                      imageUrl={delegate?.image_url ?? null}
                     />
                   );
                 })}

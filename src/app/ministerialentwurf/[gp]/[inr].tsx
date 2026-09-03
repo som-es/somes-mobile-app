@@ -75,6 +75,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
                 id={delegate.id}
                 name={delegate.name}
                 party={delegate.party}
+                imageUrl={delegate.image_url}
               />
             ))}
           </View>

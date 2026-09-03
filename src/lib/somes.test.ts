@@ -1,6 +1,16 @@
 import { ApiError } from '@som-es/somes-ts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { isAuthError, isRateLimited, signUpFlags } from '@/lib/somes';
+import {
+  getCountry,
+  isAuthError,
+  isRateLimited,
+  loadCountry,
+  setCountry,
+  signUpFlags,
+  somes,
+  subscribeToCountry,
+} from '@/lib/somes';
 
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
@@ -53,5 +63,66 @@ describe('signUpFlags', () => {
 
   it('returns null for a non-ApiError value', () => {
     expect(signUpFlags(new Error('nope'))).toBeNull();
+  });
+});
+
+describe('country', () => {
+  afterEach(async () => {
+    // leave the module in its default state for the next test
+    await setCountry('at');
+    await AsyncStorage.clear();
+    jest.clearAllMocks();
+  });
+
+  it('defaults to at', () => {
+    expect(getCountry()).toBe('at');
+  });
+
+  it('persists the new country and notifies subscribers', async () => {
+    const listener = jest.fn();
+    const unsubscribe = subscribeToCountry(listener);
+
+    await setCountry('eu');
+
+    expect(getCountry()).toBe('eu');
+    expect(listener).toHaveBeenCalledWith('eu');
+    expect(await AsyncStorage.getItem('somes.country')).toBe('eu');
+
+    unsubscribe();
+  });
+
+  it('is a no-op when setting the already-current country', async () => {
+    const listener = jest.fn();
+    subscribeToCountry(listener);
+
+    await setCountry('at');
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('loadCountry applies a previously persisted country', async () => {
+    await AsyncStorage.setItem('somes.country', 'eu');
+
+    const result = await loadCountry();
+
+    expect(result).toBe('eu');
+    expect(getCountry()).toBe('eu');
+  });
+
+  it('loadCountry ignores an invalid stored value', async () => {
+    await AsyncStorage.setItem('somes.country', 'de');
+
+    const result = await loadCountry();
+
+    expect(result).toBe('at');
+    expect(getCountry()).toBe('at');
+  });
+
+  it('rebuilds the somes client when the country changes, country is baked in at construction', async () => {
+    const before = somes;
+
+    await setCountry('eu');
+
+    expect(somes).not.toBe(before);
   });
 });

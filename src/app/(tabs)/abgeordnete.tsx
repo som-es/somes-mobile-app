@@ -13,6 +13,7 @@ import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -22,8 +23,14 @@ import { typography } from '@/theme/typography';
 const ENTRIES_PER_PAGE = 25;
 
 export default function AbgeordneteScreen() {
+  const country = useCountry();
+  return <AbgeordneteScreenContent key={country} />;
+}
+
+function AbgeordneteScreenContent() {
+  const country = useCountry();
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState(emptyDelegateFilters);
+  const [filters, setFilters] = useState(() => emptyDelegateFilters(country));
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const debouncedSearch = useDebounced(search);
@@ -73,7 +80,7 @@ export default function AbgeordneteScreen() {
   const header = (
     <>
       <ScreenTitle
-        title="Abgeordnete des Nationalrats"
+        title={country === 'eu' ? 'Mitglieder des Europäischen Parlaments' : 'Abgeordnete des Nationalrats'}
         subtitle={updatedAt ? `Aktualisiert am ${isoToDotDate(updatedAt)}` : undefined}
         centered
       />

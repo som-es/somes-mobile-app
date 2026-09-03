@@ -4,7 +4,8 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { isoToDotDate } from '@/lib/date';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { GovProposalDelegate } from '@/types';
@@ -17,6 +18,7 @@ type Props = {
 
 export function ProposalCard({ proposal }: Props) {
   const router = useRouter();
+  const country = useCountry();
   const { ministrial_proposal: draft, ai_summary } = proposal.gov_proposal;
   const delegate = proposal.delegates?.at(0);
 
@@ -34,7 +36,7 @@ export function ProposalCard({ proposal }: Props) {
       <View style={styles.titleRow}>
         {delegate ? (
           <Image
-            source={{ uri: somes.delegateImageUrl(delegate.id) }}
+            source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
             style={styles.avatar}
             accessibilityLabel={delegate.name}
           />

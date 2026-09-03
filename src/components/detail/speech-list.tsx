@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { minutes } from '@/lib/date';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function SpeechList({ speeches, delegates }: Props) {
+  const country = useCountry();
   const [expanded, setExpanded] = useState(false);
   const { data: partyColors } = usePartyColors();
 
@@ -41,7 +43,9 @@ export function SpeechList({ speeches, delegates }: Props) {
               onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
               <Image
-                source={{ uri: somes.delegateImageUrl(speech.delegate_id) }}
+                source={{
+                  uri: delegateAvatarUrl(country, speech.delegate_id, delegate?.image_url ?? null),
+                }}
                 style={styles.avatar}
                 accessibilityLabel={delegate?.name}
               />

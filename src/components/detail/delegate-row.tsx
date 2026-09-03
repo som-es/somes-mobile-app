@@ -3,7 +3,8 @@ import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui/card';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -16,10 +17,12 @@ type Props = {
   name: string;
   party: string | null;
   role?: string | null;
+  imageUrl?: string | null;
 };
 
-export function DelegateRow({ id, name, party, role }: Props) {
+export function DelegateRow({ id, name, party, role, imageUrl = null }: Props) {
   const router = useRouter();
+  const country = useCountry();
   const partyColor = usePartyColor(party);
 
   return (
@@ -29,7 +32,7 @@ export function DelegateRow({ id, name, party, role }: Props) {
       onPress={() => router.push({ pathname: '/abgeordnete/[id]', params: { id } })}>
       <View style={styles.row}>
         <Image
-          source={{ uri: somes.delegateImageUrl(id) }}
+          source={{ uri: delegateAvatarUrl(country, id, imageUrl) }}
           style={styles.avatar}
           accessibilityLabel={name}
         />

@@ -11,6 +11,7 @@ import { SectionLink } from '@/components/ui/section-link';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { spacing } from '@/theme/layout';
 
 const LATEST_COUNT = 3;
@@ -18,6 +19,7 @@ const PROPOSAL_DAYS = 30;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const country = useCountry();
 
   const session = useQuery({
     queryKey: ['next-plenar-date'],
@@ -32,6 +34,8 @@ export default function HomeScreen() {
   const proposals = useQuery({
     queryKey: ['latest-proposals', PROPOSAL_DAYS],
     queryFn: () => somes.govProposals.latest(PROPOSAL_DAYS),
+    // MEPs have no government concept, the endpoint always answers empty for eu
+    enabled: country === 'at',
   });
 
   const refreshing = session.isRefetching || votes.isRefetching || proposals.isRefetching;
@@ -46,7 +50,14 @@ export default function HomeScreen() {
 
   return (
     <Screen refreshing={refreshing} onRefresh={onRefresh}>
-      <NextSessionCard date={session.data?.date_and_time ?? null} />
+      <NextSessionCard
+        date={session.data?.date_and_time ?? null}
+        title={
+          country === 'eu'
+            ? 'Nächste Plenarsitzung des Europäischen Parlaments'
+            : 'Nächste Nationalratssitzung'
+        }
+      />
 
       <View style={styles.section}>
         <ScreenTitle
@@ -75,31 +86,33 @@ export default function HomeScreen() {
         />
       </View>
 
-      <View style={styles.section}>
-        <ScreenTitle title="Ministerialentwürfe" subtitle="Der letzten 30 Tage" section />
+      {country === 'at' && (
+        <View style={styles.section}>
+          <ScreenTitle title="Ministerialentwürfe" subtitle="Der letzten 30 Tage" section />
 
-        {proposals.isPending ? (
-          <Skeletons />
-        ) : proposals.isError ? (
-          <Notice message="Ministerialentwürfe konnten nicht geladen werden." />
-        ) : proposals.data.length === 0 ? (
-          <Notice message="Keine." />
-        ) : (
-          proposals.data
-            .slice(0, LATEST_COUNT)
-            .map((proposal) => (
-              <ProposalCard
-                key={proposal.gov_proposal.ministrial_proposal.id}
-                proposal={proposal}
-              />
-            ))
-        )}
+          {proposals.isPending ? (
+            <Skeletons />
+          ) : proposals.isError ? (
+            <Notice message="Ministerialentwürfe konnten nicht geladen werden." />
+          ) : proposals.data.length === 0 ? (
+            <Notice message="Keine." />
+          ) : (
+            proposals.data
+              .slice(0, LATEST_COUNT)
+              .map((proposal) => (
+                <ProposalCard
+                  key={proposal.gov_proposal.ministrial_proposal.id}
+                  proposal={proposal}
+                />
+              ))
+          )}
 
-        <SectionLink
-          label="Weitere Ministerialentwürfe"
-          onPress={() => router.navigate('/abstimmungen')}
-        />
-      </View>
+          <SectionLink
+            label="Weitere Ministerialentwürfe"
+            onPress={() => router.navigate('/abstimmungen')}
+          />
+        </View>
+      )}
     </Screen>
   );
 }

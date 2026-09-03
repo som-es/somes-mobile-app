@@ -4,7 +4,8 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -20,6 +21,7 @@ type Props = {
 /** the column flex weights have to match the header above the list */
 export function DelegateCard({ delegate }: Props) {
   const router = useRouter();
+  const country = useCountry();
   const party = partyLabel(delegate.party);
   const partyColor = usePartyColor(delegate.party);
   const years = age(delegate.birthdate);
@@ -32,7 +34,7 @@ export function DelegateCard({ delegate }: Props) {
       }>
       <View style={styles.row}>
         <Image
-          source={{ uri: somes.delegateImageUrl(delegate.id) }}
+          source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
           style={styles.avatar}
           accessibilityLabel={delegate.name}
         />

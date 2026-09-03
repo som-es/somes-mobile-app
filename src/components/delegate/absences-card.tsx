@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { SectionCard } from '@/components/detail/section-card';
 import { isoToDotDate } from '@/lib/date';
+import { useCountry } from '@/lib/use-country';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -15,7 +16,9 @@ type Props = {
 };
 
 export function AbsencesCard({ absences }: Props) {
+  const country = useCountry();
   const [expanded, setExpanded] = useState(false);
+  const sittingLabel = country === 'eu' ? 'Plenarsitzung' : 'Nationalratssitzung';
 
   // absence.date is a plain calendar date, so it sorts and formats as a string
   const sorted = absences
@@ -43,7 +46,7 @@ export function AbsencesCard({ absences }: Props) {
                 <View style={styles.left}>
                   <View style={styles.dot} />
                   <Text style={[typography.subtitle, styles.sitting]} numberOfLines={1}>
-                    {absence.inr}. Nationalratssitzung
+                    {absence.inr}. {sittingLabel}
                   </Text>
                 </View>
                 <Text style={typography.caption}>

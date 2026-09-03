@@ -10,7 +10,8 @@ import { Notice } from '@/components/ui/notice';
 import { ScreenTitle } from '@/components/ui/screen';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { useFavorite, useFavoriteDelegates, useUpdateFavoriteInterval } from '@/lib/favorites';
-import { somes } from '@/lib/somes';
+import { delegateAvatarUrl, somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -73,6 +74,7 @@ function FavoriteDelegate({
   delegate: Delegate | undefined;
 }) {
   const router = useRouter();
+  const country = useCountry();
   const updateInterval = useUpdateFavoriteInterval();
   const { toggle, isPending } = useFavorite('delegate', favo.delegate_id);
   const party = delegate?.current_party ?? delegate?.party ?? null;
@@ -86,7 +88,9 @@ function FavoriteDelegate({
         }
         style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
         <Image
-          source={{ uri: somes.delegateImageUrl(favo.delegate_id) }}
+          source={{
+            uri: delegateAvatarUrl(country, favo.delegate_id, delegate?.image_url ?? null),
+          }}
           style={styles.avatar}
           accessibilityLabel={delegate?.name}
         />
