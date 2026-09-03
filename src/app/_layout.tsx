@@ -8,7 +8,7 @@ import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { queryClient } from '@/lib/query-client';
-import { clearToken, getToken, isAuthError, loadToken, somes } from '@/lib/somes';
+import { clearToken, getToken, isAuthError, loadCountry, loadToken, somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
 
 // rejects if the splash is already gone, e.g. on a fast refresh remount
@@ -43,13 +43,17 @@ async function renewSession() {
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({ Nunito_600SemiBold });
   const [tokenLoaded, setTokenLoaded] = useState(false);
+  const [countryLoaded, setCountryLoaded] = useState(false);
 
   useEffect(() => {
     // load the jwt before anything can make an authenticated request
     loadToken().finally(() => setTokenLoaded(true));
+    // load the region before the first request, so it doesn't fire against
+    // the default country and then have to be redone against the stored one
+    loadCountry().finally(() => setCountryLoaded(true));
   }, []);
 
-  const ready = fontsLoaded && tokenLoaded;
+  const ready = fontsLoaded && tokenLoaded && countryLoaded;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();

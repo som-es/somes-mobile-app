@@ -4,6 +4,7 @@
 export type {
   Absence,
   BasicUserInfo,
+  Country,
   DbAiSummary,
   Decree,
   Delegate,
