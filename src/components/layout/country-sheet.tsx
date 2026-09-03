@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
@@ -20,15 +21,33 @@ type Props = {
 };
 
 export function CountrySheet({ visible, value, onChange, onClose }: Props) {
+  /** staged locally, only committed on Anwenden — closing any other way
+      (backdrop tap, drag-to-dismiss, back button) discards the pick */
+  const [pending, setPending] = useState(value);
+  const [wasVisible, setWasVisible] = useState(visible);
+
+  // re-stage from the committed value each time the sheet opens, so a
+  // discarded pick from a previous visit never lingers
+  if (visible !== wasVisible) {
+    setWasVisible(visible);
+    if (visible) setPending(value);
+  }
+
   return (
-    <BottomSheet visible={visible} title="Region" onClose={onClose}>
+    <BottomSheet
+      visible={visible}
+      title="Region"
+      onClose={onClose}
+      onApply={() => {
+        if (pending !== value) onChange(pending);
+      }}>
       <View style={styles.options}>
         {OPTIONS.map((option) => {
-          const selected = option.value === value;
+          const selected = option.value === pending;
           return (
             <Pressable
               key={option.value}
-              onPress={() => onChange(option.value)}
+              onPress={() => setPending(option.value)}
               accessibilityRole="radio"
               accessibilityState={{ selected }}
               style={({ pressed }) => [
