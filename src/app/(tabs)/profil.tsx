@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { AccountCard } from '@/components/profile/account-card';
@@ -6,7 +7,6 @@ import { DangerZoneCard } from '@/components/profile/danger-zone-card';
 import { FavoritesLinkCards } from '@/components/profile/favorites-link-card';
 import { InterestsCard } from '@/components/profile/interests-card';
 import { Card } from '@/components/ui/card';
-import { ComingSoon } from '@/components/ui/coming-soon';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { useAuth } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
@@ -14,6 +14,7 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 export default function ProfilScreen() {
+  const router = useRouter();
   const { isAuthenticated } = useAuth();
 
   return (
@@ -27,12 +28,15 @@ export default function ProfilScreen() {
           <InterestsCard />
           <FavoritesLinkCards />
 
-          <Card>
-            <ComingSoon
-              icon="notifications-outline"
-              title="Benachrichtigungen"
-              description="Coming Soon."
-            />
+          <Card onPress={() => router.push('/notifications')}>
+            <View style={styles.link}>
+              <Ionicons name="notifications-outline" size={22} color={colors.accent} />
+              <View style={styles.linkText}>
+                <Text style={typography.cardHeading}>Benachrichtigungen</Text>
+                <Text style={typography.caption}>Push und E-Mail einstellen</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+            </View>
           </Card>
 
           <DangerZoneCard />
@@ -66,6 +70,15 @@ const BENEFITS = [
 ];
 
 const styles = StyleSheet.create({
+  link: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  linkText: {
+    flex: 1,
+    gap: 2,
+  },
   blurbCard: {
     gap: spacing.md,
   },

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { PushRegistrar } from '@/components/push-registrar';
 import { queryClient } from '@/lib/query-client';
 import { clearToken, getToken, isAuthError, loadCountry, loadToken, somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
@@ -77,6 +78,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         {/* android is edge to edge in sdk 57, the header safe area padding paints behind it */}
         <StatusBar style="light" />
+        <PushRegistrar />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.screen } }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="notifications" />

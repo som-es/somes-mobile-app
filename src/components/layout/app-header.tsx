@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,7 +25,11 @@ type Props = {
 export function AppHeader({ hasUnread = false }: Props) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const pathname = usePathname();
   const country = useCountry();
+  // the header renders on the notifications screen too, so the bell has to stop
+  // pushing another copy of the screen it is already showing
+  const onNotifications = pathname === '/notifications';
   const switchCountry = useSwitchCountry();
   const [showCountrySheet, setShowCountrySheet] = useState(false);
 
@@ -54,12 +58,14 @@ export function AppHeader({ hasUnread = false }: Props) {
 
           <Pressable
             onPress={() => router.push('/notifications')}
+            disabled={onNotifications}
             hitSlop={12}
             accessibilityRole="button"
             accessibilityLabel="Benachrichtigungen"
+            accessibilityState={{ selected: onNotifications, disabled: onNotifications }}
             style={({ pressed }) => [styles.bell, pressed && styles.pressed]}>
             <Ionicons
-              name={hasUnread ? 'notifications' : 'notifications-outline'}
+              name={hasUnread || onNotifications ? 'notifications' : 'notifications-outline'}
               size={22}
               color={colors.onChrome}
             />

@@ -60,7 +60,7 @@
   "private": true,
   "allowScripts": {
     "unrs-resolver@1.12.2": true,
-    "github:som-es/somes-ts#0dac80d6ef400cd89e20e36bd90fa7fdd233156f": true,
+    "github:som-es/somes-ts#de2c8e5679c5b040993f584101359fadab10add3": true,
     "@parcel/watcher@2.6.0": true
   }
 }

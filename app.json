@@ -10,13 +10,13 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "at.somes.app",
+      "bundleIdentifier": "com.leonbinder.somesmobileapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "at.somes.app",
+      "package": "com.leonbinder.somesmobileapp",
       "adaptiveIcon": {
         "backgroundColor": "#2D3748",
         "foregroundImage": "./assets/brand/adaptive-icon-foreground.png",
