@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
 
+import { PushSettingsCard } from '@/components/notifications/push-settings-card';
 import { getExpoPushToken, type PushTokenResult } from '@/lib/push';
 import { somes } from '@/lib/somes';
 import {
@@ -40,6 +41,11 @@ jest.mock('@/lib/somes', () => ({
 const TOKEN = 'ExponentPushToken[abc]';
 
 const REGISTERED: PushTokenInfo[] = [{ push_token: TOKEN, platform: 'ios', enabled: true }];
+
+/** shortened, but the wording android actually rejects with when the build has no
+    google-services.json — the string the ui has to pass through untouched */
+const FCM_MESSAGE =
+  'Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config?';
 
 const SETTINGS: NotificationSettings = {
   platform: 'ios',
@@ -134,6 +140,73 @@ describe('usePushEnabled', () => {
     await waitFor(() => expect(result.current.deviceStatus).toBe('unsupported'));
     expect(result.current.enabled).toBe(false);
     expect(result.current.deviceToken).toBeNull();
+    // an emulator has nothing to report beyond being an emulator
+    expect(result.current.deviceError).toBeNull();
+
+    await flushPendingQueryEffects();
+  });
+
+  it('surfaces the native reason of a failed token read, without any toggle press', async () => {
+    (getExpoPushToken as jest.Mock).mockResolvedValue({
+      status: 'error',
+      message: FCM_MESSAGE,
+    });
+    const client = createTestQueryClient();
+
+    const { result } = await renderHook(() => usePushEnabled(), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.deviceStatus).toBe('error'));
+    expect(result.current.deviceError).toBe(FCM_MESSAGE);
+    expect(result.current.enabled).toBe(false);
+    expect(result.current.deviceToken).toBeNull();
+
+    await flushPendingQueryEffects();
+  });
+});
+
+/* the regression this pair guards: a build without google-services.json used to report
+   itself as an incapable device and grey the switch out for good */
+describe('PushSettingsCard, master switch', () => {
+  async function renderCard() {
+    const client = createTestQueryClient();
+    await render(<PushSettingsCard onToggleMaster={jest.fn()} masterPending={false} />, {
+      wrapper: createWrapper(client),
+    });
+  }
+
+  /** re-queried on every check, the row re-renders as the two queries resolve and the
+      node captured before that is a stale copy */
+  function masterDisabled() {
+    return screen.getByRole('switch', { name: 'Auf diesem Gerät' }).props
+      .accessibilityState.disabled;
+  }
+
+  it('stays tappable and shows the native message when the token read errored', async () => {
+    (getExpoPushToken as jest.Mock).mockResolvedValue({
+      status: 'error',
+      message: FCM_MESSAGE,
+    });
+
+    await renderCard();
+
+    // the message only appears once the device query resolves, and until it does the
+    // row is disabled for being pending — so wait on the text, not on disabled
+    await waitFor(() => expect(screen.getByText(FCM_MESSAGE)).toBeTruthy());
+    expect(masterDisabled()).toBe(false);
+    expect(screen.queryByText(/echtes Gerät/)).toBeNull();
+
+    await flushPendingQueryEffects();
+  });
+
+  it('disables itself only on a device that can never get a token', async () => {
+    (getExpoPushToken as jest.Mock).mockResolvedValue({ status: 'unsupported' });
+
+    await renderCard();
+
+    await waitFor(() => expect(screen.getByText(/echtes Gerät/)).toBeTruthy());
+    expect(masterDisabled()).toBe(true);
 
     await flushPendingQueryEffects();
   });

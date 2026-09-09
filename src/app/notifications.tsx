@@ -9,6 +9,7 @@ import { SubScreen } from '@/components/layout/sub-screen';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScreenTitle } from '@/components/ui/screen';
+import type { PushTokenResult } from '@/lib/push';
 import { useAuth } from '@/lib/use-auth';
 import {
   MAIL_INFO_KEY,
@@ -24,7 +25,9 @@ export default function NotificationsScreen() {
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
   const toggle = useTogglePush();
-  const [permissionRefused, setPermissionRefused] = useState(false);
+  /** why the last attempt to turn push on did not stick, so the banner below can tell a
+      refused permission from a device that never got a token */
+  const [failure, setFailure] = useState<PushTokenResult | null>(null);
 
   function refresh() {
     queryClient.invalidateQueries({ queryKey: PUSH_TOKENS_KEY });
@@ -33,10 +36,13 @@ export default function NotificationsScreen() {
   }
 
   function toggleMaster(next: boolean) {
-    setPermissionRefused(false);
+    setFailure(null);
     toggle.mutate(next, {
-      // null is the off direction, only an attempt to turn on can be refused
-      onSuccess: (result) => setPermissionRefused(result?.status === 'denied'),
+      // null is the off direction, only an attempt to turn on can fail
+      onSuccess: (result) =>
+        setFailure(
+          result?.status === 'denied' || result?.status === 'error' ? result : null
+        ),
     });
   }
 
@@ -63,7 +69,7 @@ export default function NotificationsScreen() {
         subtitle="Wähle, worüber wir dich informieren dürfen"
       />
 
-      {permissionRefused ? (
+      {failure?.status === 'denied' ? (
         <Card style={styles.card}>
           <Text style={typography.cardHeading}>Berechtigung fehlt</Text>
           <Text style={typography.bodyMuted}>
@@ -76,6 +82,19 @@ export default function NotificationsScreen() {
             variant="ghost"
             size="lg"
           />
+        </Card>
+      ) : null}
+
+      {failure?.status === 'error' ? (
+        <Card style={styles.card}>
+          <Text style={typography.cardHeading}>Push konnte nicht aktiviert werden</Text>
+          <Text style={typography.bodyMuted}>
+            Die Berechtigung steht, dieses Gerät hat aber keinen Push-Token bekommen. Das
+            liegt an der App selbst, nicht an deinen Einstellungen — versuch es später
+            noch einmal.
+          </Text>
+          {/* the native message verbatim, so a config fault names itself */}
+          <Text style={typography.caption}>{failure.message}</Text>
         </Card>
       ) : null}
 

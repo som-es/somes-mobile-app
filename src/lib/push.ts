@@ -18,12 +18,15 @@ Notifications.setNotificationHandler({
 });
 
 /** ok carries a token to register, denied means the user said no or has not been
-    asked yet, unsupported means asking would be pointless — an emulator or a build
-    without an eas project id never gets a token no matter the permission */
+    asked yet. the last two are deliberately separate: unsupported is the one case that
+    can never work no matter what — an emulator has no fcm/apns registration to build a
+    token on — while error is something broken right now, a missing project id or a
+    build without google-services.json, which a retry fixes once the config is right */
 export type PushTokenResult =
   | { status: 'ok'; token: string }
   | { status: 'denied' }
-  | { status: 'unsupported' };
+  | { status: 'unsupported' }
+  | { status: 'error'; message: string };
 
 export function pushPlatform(): PushPlatform {
   if (Platform.OS === 'ios') return 'ios';
@@ -38,7 +41,7 @@ export async function getExpoPushToken({
 }: {
   request: boolean;
 }): Promise<PushTokenResult> {
-  // push only works on physical devices
+  // the only genuine unsupported: a simulator has no push registration to hand out
   if (!Device.isDevice) {
     return { status: 'unsupported' };
   }
@@ -46,8 +49,11 @@ export async function getExpoPushToken({
   const projectId =
     Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
   if (!projectId) {
-    console.warn('No EAS projectId found — cannot fetch an Expo push token.');
-    return { status: 'unsupported' };
+    // a config bug, not a device limitation — the same device works once it is built
+    // against an app config that carries extra.eas.projectId
+    const message = 'Keine EAS projectId in der App-Konfiguration gefunden.';
+    console.warn(message);
+    return { status: 'error', message };
   }
 
   const existing = await Notifications.getPermissionsAsync();
@@ -70,11 +76,15 @@ export async function getExpoPushToken({
     });
   }
 
+  // the native message is the useful part and has to survive to the ui: android
+  // rejects here when the build has no google-services.json, and it says so by name,
+  // which is the difference between a one line config fix and a debugging session
   try {
     const { data } = await Notifications.getExpoPushTokenAsync({ projectId });
     return { status: 'ok', token: data };
   } catch (error) {
-    console.warn(`Could not fetch the Expo push token: ${error}`);
-    return { status: 'unsupported' };
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Could not fetch the Expo push token: ${message}`);
+    return { status: 'error', message };
   }
 }

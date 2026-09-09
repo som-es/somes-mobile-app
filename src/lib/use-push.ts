@@ -46,8 +46,12 @@ export function usePushEnabled() {
   return {
     enabled,
     deviceToken,
-    /** unsupported hides the toggle, denied only means not granted yet */
+    /** unsupported disables the toggle, denied only means not granted yet, error is
+        fixable and leaves it tappable */
     deviceStatus: device.data?.status ?? null,
+    /** the native reason, from the passive read at mount — the config failures this
+        names surface here long before anyone presses the toggle */
+    deviceError: device.data?.status === 'error' ? device.data.message : null,
     isPending: device.isPending || tokens.isPending,
   };
 }
