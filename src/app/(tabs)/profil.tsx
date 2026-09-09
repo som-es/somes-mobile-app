@@ -28,7 +28,7 @@ export default function ProfilScreen() {
           <InterestsCard />
           <FavoritesLinkCards />
 
-          <Card onPress={() => router.push('/notifications')}>
+          <Card onPress={() => router.navigate('/notifications')}>
             <View style={styles.link}>
               <Ionicons name="notifications-outline" size={22} color={colors.accent} />
               <View style={styles.linkText}>

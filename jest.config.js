@@ -1,6 +1,9 @@
 module.exports = {
   preset: 'jest-expo',
   moduleNameMapper: {
+    // tsconfig carries both aliases and the assets one is not under src, so it has to
+    // be matched first — the general rule below would swallow it
+    '^@/assets/(.*)$': '<rootDir>/assets/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   // sdk 57 keeps expo-modules-core nested under expo/ rather than hoisted, but

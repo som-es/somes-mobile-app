@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CATEGORIES, mailKey } from '@/components/notifications/categories';
+import { CATEGORIES, LOAD_ERROR, mailKey } from '@/components/notifications/categories';
 import { Card } from '@/components/ui/card';
 import { SettingRow } from '@/components/ui/setting-row';
 import { useMailSettings, useUpdateMailSettings } from '@/lib/use-push';
@@ -21,11 +21,11 @@ export function MailSettingsCard() {
     <Card style={styles.card}>
       <Text style={typography.cardHeading}>E-Mail-Benachrichtigungen</Text>
       <Text style={typography.caption}>
-        Gehen an die E-Mail-Adresse deines Kontos, unabhängig von diesem Gerät.
+        Diese E-Mails gehen an die Adresse deines Kontos, unabhängig von diesem Gerät.
       </Text>
 
       {settings.isError ? (
-        <Text style={typography.bodyMuted}>Einstellungen konnten nicht geladen werden.</Text>
+        <Text style={typography.bodyMuted}>{LOAD_ERROR}</Text>
       ) : (
         <View style={styles.rows}>
           {CATEGORIES.map((category) => {

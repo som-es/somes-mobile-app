@@ -53,8 +53,8 @@ export default function NotificationsScreen() {
         <Card style={styles.card}>
           <Text style={typography.cardHeading}>Melde dich an</Text>
           <Text style={typography.bodyMuted}>
-            Benachrichtigungen richten sich nach deinen gemerkten Abgeordneten und Themen,
-            dafür braucht es ein Konto.
+            Benachrichtigungen richten sich nach deinen Favoriten und Interessen. Dafür
+            brauchst du ein Konto.
           </Text>
           <Button label="Anmelden" onPress={() => router.push('/anmelden')} size="lg" />
         </Card>
@@ -89,12 +89,10 @@ export default function NotificationsScreen() {
         <Card style={styles.card}>
           <Text style={typography.cardHeading}>Push konnte nicht aktiviert werden</Text>
           <Text style={typography.bodyMuted}>
-            Die Berechtigung steht, dieses Gerät hat aber keinen Push-Token bekommen. Das
-            liegt an der App selbst, nicht an deinen Einstellungen — versuch es später
-            noch einmal.
+            Die Berechtigung steht, aber dieses Gerät konnte sich nicht für Push
+            registrieren. Das liegt an der App, nicht an deinen Einstellungen. Bitte
+            versuche es später erneut.
           </Text>
-          {/* the native message verbatim, so a config fault names itself */}
-          <Text style={typography.caption}>{failure.message}</Text>
         </Card>
       ) : null}
 

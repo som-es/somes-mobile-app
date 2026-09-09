@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CATEGORIES } from '@/components/notifications/categories';
+import { CATEGORIES, LOAD_ERROR } from '@/components/notifications/categories';
 import { Card } from '@/components/ui/card';
 import { SettingRow } from '@/components/ui/setting-row';
 import { usePushEnabled, usePushSettings, useUpdatePushSettings } from '@/lib/use-push';
@@ -39,9 +39,9 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
           label="Auf diesem Gerät"
           description={
             unsupported
-              ? 'Push braucht ein echtes Gerät, im Simulator gibt es keinen Token.'
+              ? 'Push funktioniert nur auf einem echten Gerät, nicht im Simulator.'
               : failed
-                ? 'Dieses Gerät konnte keinen Push-Token abrufen. Tippe erneut, um es zu versuchen.'
+                ? 'Dieses Gerät konnte sich nicht für Push registrieren. Tippe erneut, um es noch einmal zu versuchen.'
                 : 'Wir fragen beim Einschalten einmalig nach der Berechtigung.'
           }
           value={enabled}
@@ -60,12 +60,13 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
           stay editable with the switch above off, they just have nowhere to arrive */}
       {!enabled ? (
         <Text style={typography.caption}>
-          Gilt für alle deine Geräte. Damit etwas ankommt, muss der Schalter oben an sein.
+          Diese Auswahl gilt für alle deine Geräte. Damit auf diesem Gerät etwas ankommt,
+          muss der Schalter oben eingeschaltet sein.
         </Text>
       ) : null}
 
       {settings.isError ? (
-        <Text style={typography.bodyMuted}>Einstellungen konnten nicht geladen werden.</Text>
+        <Text style={typography.bodyMuted}>{LOAD_ERROR}</Text>
       ) : (
         <View style={styles.rows}>
           {CATEGORIES.map((category) => (

@@ -195,7 +195,7 @@ describe('PushSettingsCard, master switch', () => {
     // row is disabled for being pending — so wait on the text, not on disabled
     await waitFor(() => expect(screen.getByText(FCM_MESSAGE)).toBeTruthy());
     expect(masterDisabled()).toBe(false);
-    expect(screen.queryByText(/echtes Gerät/)).toBeNull();
+    expect(screen.queryByText(/nur auf einem echten Gerät/)).toBeNull();
 
     await flushPendingQueryEffects();
   });
@@ -205,7 +205,7 @@ describe('PushSettingsCard, master switch', () => {
 
     await renderCard();
 
-    await waitFor(() => expect(screen.getByText(/echtes Gerät/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/nur auf einem echten Gerät/)).toBeTruthy());
     expect(masterDisabled()).toBe(true);
 
     await flushPendingQueryEffects();
