@@ -39,10 +39,10 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
           label="Auf diesem Gerät"
           description={
             unsupported
-              ? 'Push funktioniert nur auf einem echten Gerät, nicht im Simulator.'
+              ? 'Push funktioniert nur auf einem echten Gerät, nicht im Emulator.'
               : failed
                 ? 'Dieses Gerät konnte sich nicht für Push registrieren. Tippe erneut, um es noch einmal zu versuchen.'
-                : 'Wir fragen beim Einschalten einmalig nach der Berechtigung.'
+                : undefined
           }
           value={enabled}
           onValueChange={onToggleMaster}

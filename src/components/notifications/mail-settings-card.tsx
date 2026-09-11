@@ -34,6 +34,7 @@ export function MailSettingsCard() {
               <SettingRow
                 key={key}
                 label={category.label}
+                description={category.description}
                 value={settings.data?.[key] ?? false}
                 onValueChange={(value) => toggle(key, value)}
                 disabled={settings.data === undefined}

@@ -10,12 +10,23 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 type Props = {
-  sourceUrl: string;
+  /** optional because a decree only carries its link once the fetch resolves, and
+      may not have one at all, unlike the parlament.gv.at url the other screens build
+      from their route params */
+  sourceUrl?: string;
+  /** naming the destination is the useful part of the label, and a decree is the one
+      source that is not parliament */
+  sourceLabel?: string;
   action?: ReactNode;
   children: ReactNode;
 };
 
-export function DetailScreen({ sourceUrl, action, children }: Props) {
+export function DetailScreen({
+  sourceUrl,
+  sourceLabel = 'Auf parlament.gv.at öffnen',
+  action,
+  children,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -30,13 +41,15 @@ export function DetailScreen({ sourceUrl, action, children }: Props) {
 
           <View style={styles.actions}>
             {action}
-            <Pressable
-              onPress={() => Linking.openURL(sourceUrl)}
-              hitSlop={8}
-              accessibilityRole="link"
-              accessibilityLabel="Auf parlament.gv.at öffnen">
-              <Ionicons name="open-outline" size={20} color={colors.textMuted} />
-            </Pressable>
+            {sourceUrl ? (
+              <Pressable
+                onPress={() => Linking.openURL(sourceUrl)}
+                hitSlop={8}
+                accessibilityRole="link"
+                accessibilityLabel={sourceLabel}>
+                <Ionicons name="open-outline" size={20} color={colors.textMuted} />
+              </Pressable>
+            ) : null}
           </View>
         </View>
 

@@ -8,6 +8,7 @@ import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { PushRegistrar } from '@/components/push-registrar';
+import { PushRouter } from '@/components/push-router';
 import { queryClient } from '@/lib/query-client';
 import { clearToken, getToken, isAuthError, loadCountry, loadToken, somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
@@ -79,6 +80,7 @@ export default function RootLayout() {
         {/* android is edge to edge in sdk 57, the header safe area padding paints behind it */}
         <StatusBar style="light" />
         <PushRegistrar />
+        <PushRouter />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.screen } }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="notifications" />
@@ -89,6 +91,7 @@ export default function RootLayout() {
           <Stack.Screen name="abgeordnete/[id]" />
           <Stack.Screen name="abstimmung/[gp]/[ityp]/[inr]" />
           <Stack.Screen name="ministerialentwurf/[gp]/[inr]" />
+          <Stack.Screen name="verordnung/[risId]" />
         </Stack>
       </QueryClientProvider>
     </SafeAreaProvider>
