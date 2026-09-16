@@ -10,6 +10,9 @@ export type {
   Delegate,
   DelegateFavo,
   DelegateQA,
+  DelegateQuestionCreated,
+  DelegateQuestionRecipient,
+  DelegateQuestionsWithMaxPage,
   DelegatesWithMaxPage,
   Document,
   ExtendedUserInfo,
@@ -31,8 +34,11 @@ export type {
   PlenarySession,
   PoliticalPosition,
   PoliticalScore,
+  PublicDelegateQuestion,
+  PublicDelegateQuestionAnswer,
   PushPlatform,
   PushTokenInfo,
+  QuestionDelivery,
   SpeechesWithMaxPage,
   StanceTopicInfluences,
   StanceTopicScore,
@@ -52,6 +58,8 @@ export type { DelegateNamedVote as NamedVote } from '@som-es/somes-ts';
 /** one MEP's ballot on a roll-call vote, nested in NamedVotes.named_votes —
     upstream names this NamedVote too, distinct from DelegateNamedVote above */
 export type { NamedVote as RollCallVote } from '@som-es/somes-ts';
+
+export type { CreateDelegateQuestion, DelegateQuestionSearchOptions } from '@som-es/somes-ts';
 
 /** a party filter row, the search endpoints take these as bracketed parameters */
 export interface PartyVote {
