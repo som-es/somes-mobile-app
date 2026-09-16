@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "somes",
-    "slug": "somes-mobile-app",
+    "sdkVersion": "57",
+    "slug": "somes-app",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/brand/icon.png",
@@ -16,6 +17,7 @@
     },
     "android": {
       "package": "at.somes.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#2D3748",
         "foregroundImage": "./assets/brand/adaptive-icon-foreground.png",
@@ -64,10 +66,10 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8837b175-e31a-4d2c-beba-5b6634d67d7a"
+        "projectId": "f0629cba-d18d-494d-a1f1-c8fccabe6107"
       }
     },
-    "owner": "leonbinder",
+    "owner": "somes-app",
     "backgroundColor": "#FAF8FF"
   }
 }

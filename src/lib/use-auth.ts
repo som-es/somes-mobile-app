@@ -3,6 +3,7 @@ import { getUserFromJwt } from '@som-es/somes-ts';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
+import { getExpoPushToken } from '@/lib/push';
 import { clearToken, getToken, setToken, somes, subscribeToToken } from '@/lib/somes';
 import type { BasicUserInfo } from '@/types';
 
@@ -50,6 +51,15 @@ export function useSession() {
   );
 
   const signOut = useCallback(async () => {
+    // before clearToken, the delete needs the jwt. best effort: a device left registered
+    // would keep pushing this account's notifications at whoever signs in next
+    try {
+      const device = await getExpoPushToken({ request: false });
+      if (device.status === 'ok') await somes.account.removePushToken(device.token);
+    } catch (error) {
+      console.warn(`Could not remove the push token on sign out: ${error}`);
+    }
+
     await clearToken();
     // clear everything, so the next account never sees this one favourites flash in
     queryClient.clear();

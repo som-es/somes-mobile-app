@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,14 +18,14 @@ const COUNTRY_LABEL: Record<Country, string> = {
   eu: 'Europäische Union',
 };
 
-type Props = {
-  hasUnread?: boolean;
-};
-
-export function AppHeader({ hasUnread = false }: Props) {
+export function AppHeader() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const pathname = usePathname();
   const country = useCountry();
+  // the header renders on the notifications screen too, so the bell has to stop
+  // offering the screen it is already showing
+  const onNotifications = pathname === '/notifications';
   const switchCountry = useSwitchCountry();
   const [showCountrySheet, setShowCountrySheet] = useState(false);
 
@@ -52,18 +52,26 @@ export function AppHeader({ hasUnread = false }: Props) {
             <CountryFlag country={country} size={22} />
           </Pressable>
 
+          {/* navigate, not push: a NAVIGATE action reuses the route when it is already
+              on top, so a second tap that lands before the guard below re-renders
+              cannot stack a duplicate screen. push never dedupes. */}
           <Pressable
-            onPress={() => router.push('/notifications')}
+            onPress={() => router.navigate('/notifications')}
+            disabled={onNotifications}
             hitSlop={12}
             accessibilityRole="button"
             accessibilityLabel="Benachrichtigungen"
-            style={({ pressed }) => [styles.bell, pressed && styles.pressed]}>
+            accessibilityState={{ selected: onNotifications, disabled: onNotifications }}
+            style={({ pressed }) => [
+              styles.bell,
+              onNotifications && styles.inactive,
+              pressed && styles.pressed,
+            ]}>
             <Ionicons
-              name={hasUnread ? 'notifications' : 'notifications-outline'}
+              name={onNotifications ? 'notifications' : 'notifications-outline'}
               size={22}
               color={colors.onChrome}
             />
-            {hasUnread ? <View style={styles.dot} /> : null}
           </Pressable>
         </View>
       </View>
@@ -116,13 +124,9 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.6,
   },
-  dot: {
-    position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
-    width: 9,
-    height: 9,
-    borderRadius: 999,
-    backgroundColor: colors.accent,
+  /** same dimming as a disabled SettingRow, so the bell reads as the screen you are
+      already on rather than as something still worth tapping */
+  inactive: {
+    opacity: 0.45,
   },
 });
