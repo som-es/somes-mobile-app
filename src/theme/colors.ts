@@ -128,7 +128,7 @@ export const colors = {
   voteNone: primary[500],
 
   danger: '#FF4C4C',
-  dangerSurface: 'rgba(255, 141, 141, 0.42)',
+  dangerSurface: '#FECBCE',
   dangerSubtle: '#A65A5A',
 
   transparent: 'transparent',
