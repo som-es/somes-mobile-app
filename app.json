@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "somes",
-    "sdkVersion": "57",
+    "sdkVersion": "57.0.9",
     "slug": "somes-app",
     "version": "1.0.1",
     "orientation": "portrait",
