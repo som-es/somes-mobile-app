@@ -15,6 +15,7 @@ const ICONS: Record<string, { inactive: IoniconName; active: IoniconName }> = {
   index: { inactive: 'home-outline', active: 'home' },
   abstimmungen: { inactive: 'podium-outline', active: 'podium' },
   abgeordnete: { inactive: 'people-outline', active: 'people' },
+  fragen: { inactive: 'chatbubble-outline', active: 'chatbubble' },
   profil: { inactive: 'person-circle-outline', active: 'person-circle' },
 };
 

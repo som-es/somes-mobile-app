@@ -9,6 +9,7 @@ import { NamedVotesCard } from '@/components/delegate/named-votes-card';
 import { PoliticalStanceCard } from '@/components/delegate/political-stance-card';
 import { TopicsCard } from '@/components/delegate/topics-card';
 import { DetailScreen, personUrl } from '@/components/detail/detail-screen';
+import { AskQuestionButton } from '@/components/ui/ask-question-button';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
@@ -43,7 +44,12 @@ export default function AbgeordneteDetailScreen() {
   return (
     <DetailScreen
       sourceUrl={personUrl(id)}
-      action={<FavoriteButton kind="delegate" id={Number(id)} />}>
+      action={
+        <>
+          <AskQuestionButton delegateId={Number(id)} />
+          <FavoriteButton kind="delegate" id={Number(id)} />
+        </>
+      }>
       {delegate.isPending ? (
         <CardSkeleton />
       ) : delegate.isError ? (

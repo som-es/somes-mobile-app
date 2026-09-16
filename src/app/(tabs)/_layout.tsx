@@ -18,6 +18,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="index" options={{ title: t('common:tabs.home') }} />
       <Tabs.Screen name="abstimmungen" options={{ title: t('common:tabs.abstimmungen') }} />
       <Tabs.Screen name="abgeordnete" options={{ title: t('common:tabs.abgeordnete') }} />
+      <Tabs.Screen name="fragen" options={{ title: t('common:tabs.fragen') }} />
       <Tabs.Screen name="profil" options={{ title: t('common:tabs.profil') }} />
     </Tabs>
   );
