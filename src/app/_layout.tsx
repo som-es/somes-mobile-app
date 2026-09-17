@@ -84,6 +84,7 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.screen } }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="notifications" />
+          <Stack.Screen name="impressum" />
           <Stack.Screen name="anmelden" />
           <Stack.Screen name="resolve_token" />
           <Stack.Screen name="favoriten/personen" />

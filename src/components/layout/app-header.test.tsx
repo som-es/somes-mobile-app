@@ -73,3 +73,32 @@ describe('AppHeader, notifications bell', () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 });
+
+describe('AppHeader, info button', () => {
+  it('navigates to the impressum screen from another route', async () => {
+    await render(<AppHeader />);
+
+    const info = screen.getByRole('button', { name: 'Impressum und Kontakt' });
+    expect(info.props.accessibilityState.disabled).toBe(false);
+
+    fireEvent.press(info);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/impressum');
+    // same dedupe requirement as the bell: navigate, not push
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it('goes inert on the impressum screen instead of stacking another copy', async () => {
+    mockPathname = '/impressum';
+    await render(<AppHeader />);
+
+    const info = screen.getByRole('button', { name: 'Impressum und Kontakt' });
+    expect(info.props.accessibilityState.disabled).toBe(true);
+    expect(info.props.accessibilityState.selected).toBe(true);
+
+    fireEvent.press(info);
+
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+});

@@ -26,6 +26,8 @@ export function AppHeader() {
   // the header renders on the notifications screen too, so the bell has to stop
   // offering the screen it is already showing
   const onNotifications = pathname === '/notifications';
+  // same reasoning for the info button and the impressum screen it renders on
+  const onImpressum = pathname === '/impressum';
   const switchCountry = useSwitchCountry();
   const [showCountrySheet, setShowCountrySheet] = useState(false);
 
@@ -43,6 +45,27 @@ export function AppHeader() {
         </Pressable>
 
         <View style={styles.actions}>
+          {/* navigate, not push: same double-open fix as the bell above, so a second
+              tap before the guard re-renders cannot stack a duplicate impressum screen */}
+          <Pressable
+            onPress={() => router.navigate('/impressum')}
+            disabled={onImpressum}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel="Impressum und Kontakt"
+            accessibilityState={{ selected: onImpressum, disabled: onImpressum }}
+            style={({ pressed }) => [
+              styles.info,
+              onImpressum && styles.inactive,
+              pressed && styles.pressed,
+            ]}>
+            <Ionicons
+              name={onImpressum ? 'information-circle' : 'information-circle-outline'}
+              size={22}
+              color={colors.onChrome}
+            />
+          </Pressable>
+
           <Pressable
             onPress={() => setShowCountrySheet(true)}
             hitSlop={12}
@@ -107,6 +130,9 @@ const styles = StyleSheet.create({
   wordmark: {
     includeFontPadding: false,
     transform: [{ translateY: -3 }],
+  },
+  info: {
+    padding: spacing.xs,
   },
   actions: {
     flexDirection: 'row',
