@@ -61,6 +61,9 @@ export default function VoteDetailScreen() {
           // enabled:false leaves isPending stuck true forever, so only treat it as
           // "still loading" while a fetch is actually in flight
           delegatesLoading={delegates.isPending && delegates.fetchStatus === 'fetching'}
+          gp={gp}
+          ityp={ityp}
+          inr={inr}
         />
       )}
     </DetailScreen>
@@ -71,9 +74,12 @@ type DetailProps = {
   voteResult: VoteResult;
   delegates: Map<number, Delegate>;
   delegatesLoading: boolean;
+  gp: string;
+  ityp: string;
+  inr: string;
 };
 
-function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
+function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: DetailProps) {
   const country = useCountry();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
 
@@ -137,7 +143,7 @@ function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
       ) : null}
 
       {voteResult.speeches.length > 0 ? (
-        <SpeechList speeches={voteResult.speeches} delegates={delegates} />
+        <SpeechList speeches={voteResult.speeches} delegates={delegates} gp={gp} ityp={ityp} inr={inr} />
       ) : null}
 
       {documents.length > 0 ? <DocumentList documents={documents} /> : null}
