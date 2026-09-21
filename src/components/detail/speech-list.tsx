@@ -5,6 +5,7 @@ import { minutes } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -32,11 +33,12 @@ export function SpeechList({ speeches, delegates }: Props) {
   return (
     <SectionCard title="Reden">
       <View style={styles.list}>
-        {shown.map(({ id, speech }) => {
+        {shown.map(({ id, speech, ai_summary }) => {
           const delegate = delegates.get(speech.delegate_id);
           const party = delegate?.party;
           // the first link is the one the old single document_url pointed at
           const documentUrl = speech.document_urls?.[0] ?? null;
+          const summaryText = ai_summary?.short_summary ?? speech.about ?? null;
 
           return (
             <Pressable
@@ -64,11 +66,19 @@ export function SpeechList({ speeches, delegates }: Props) {
                   </View>
                 ) : null}
 
-                {speech.about ? (
-                  <Text style={typography.bodyMuted} numberOfLines={2}>
-                    {speech.about}
+                {ai_summary?.short_title ? (
+                  <Text style={typography.rowTitle} numberOfLines={2}>
+                    {ai_summary.short_title}
                   </Text>
                 ) : null}
+
+                {summaryText ? (
+                  <Text style={typography.bodyMuted} numberOfLines={2}>
+                    {summaryText}
+                  </Text>
+                ) : null}
+
+                {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
 
                 {speech.duration_in_seconds ? (
                   <Text style={typography.caption}>{minutes(speech.duration_in_seconds)}</Text>

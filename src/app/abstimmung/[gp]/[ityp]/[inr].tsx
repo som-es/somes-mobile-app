@@ -15,6 +15,7 @@ import { Notice } from '@/components/ui/notice';
 import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -73,6 +74,7 @@ type DetailProps = {
 };
 
 function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
+  const country = useCountry();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
 
   const topics = topicNames(voteResult.eurovoc_topics, ai_summary);
@@ -88,17 +90,21 @@ function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
         title={ai_summary?.short_title ?? initiative.description}
         subtitle={subtitle}
         summary={ai_summary?.short_summary ?? null}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={voteBadges(initiative)}
-        accepted={initiative.accepted === null ? null : initiative.accepted === 'a'}
+        // EU acceptance data isn't ready to surface yet
+        accepted={
+          country === 'eu' || initiative.accepted === null ? null : initiative.accepted === 'a'
+        }
       />
 
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
       {voteResult.votes.length > 0 || voteResult.named_votes ? (
         <SectionCard title="Abstimmung">
-          {voteResult.votes.length > 0 ? (
-            <VoteBreakdown votes={voteResult.votes} />
-          ) : voteResult.named_votes ? (
+          {voteResult.votes.length > 0 ? <VoteBreakdown votes={voteResult.votes} /> : null}
+          {voteResult.votes.length > 0 && voteResult.named_votes ? <Divider /> : null}
+          {voteResult.named_votes ? (
             <NamedVoteBreakdown info={voteResult.named_votes.named_vote_info} />
           ) : null}
 

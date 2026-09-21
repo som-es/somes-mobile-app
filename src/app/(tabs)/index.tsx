@@ -82,7 +82,9 @@ export default function HomeScreen() {
 
         <SectionLink
           label="Weitere Abstimmungen"
-          onPress={() => router.navigate('/abstimmungen')}
+          onPress={() =>
+            router.navigate({ pathname: '/abstimmungen', params: { tab: 'nationalrat' } })
+          }
         />
       </View>
 
@@ -109,7 +111,9 @@ export default function HomeScreen() {
 
           <SectionLink
             label="Weitere Ministerialentwürfe"
-            onPress={() => router.navigate('/abstimmungen')}
+            onPress={() =>
+              router.navigate({ pathname: '/abstimmungen', params: { tab: 'regierung' } })
+            }
           />
         </View>
       )}

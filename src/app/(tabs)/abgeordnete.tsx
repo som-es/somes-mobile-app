@@ -105,6 +105,8 @@ function AbgeordneteScreenContent() {
   });
 
   const { periods } = useFilterSources();
+  // EU delegate data has no reliable birthdate, so age is meaningless there
+  const columns = country === 'eu' ? SORT_COLUMNS.filter((column) => column.key !== 'alter') : SORT_COLUMNS;
 
   const parties = useQuery({
     queryKey: ['parties-per-gp'],
@@ -170,7 +172,7 @@ function AbgeordneteScreenContent() {
 
       <View style={styles.tableHead}>
         <View style={styles.avatarSpacer} />
-        {SORT_COLUMNS.map((column) => (
+        {columns.map((column) => (
           <SortableColumn
             key={column.key}
             label={column.label}

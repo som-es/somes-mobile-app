@@ -59,6 +59,7 @@ function DecreeDetail({ decree }: { decree: Decree }) {
         title={title}
         subtitle={`Verordnung vom ${isoToDotDate(decree.publication_date)}`}
         summary={summary}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
       />
 

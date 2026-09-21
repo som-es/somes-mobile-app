@@ -12,11 +12,21 @@ type Props = {
   title: string;
   subtitle: string;
   summary: string | null;
+  /** whether title/summary came from ai_summary rather than a raw field, so the
+      disclaimer badge only shows when that's actually true */
+  aiGenerated?: boolean;
   badges: string[];
   accepted?: boolean | null;
 };
 
-export function SummaryCard({ title, subtitle, summary, badges, accepted = null }: Props) {
+export function SummaryCard({
+  title,
+  subtitle,
+  summary,
+  aiGenerated = false,
+  badges,
+  accepted = null,
+}: Props) {
   return (
     <Card>
       <View style={styles.titleRow}>
@@ -30,7 +40,10 @@ export function SummaryCard({ title, subtitle, summary, badges, accepted = null 
       {summary ? (
         <>
           <Divider />
-          <Text style={typography.cardHeading}>Zusammenfassung</Text>
+          <View style={styles.summaryHead}>
+            <Text style={typography.cardHeading}>Zusammenfassung</Text>
+            {aiGenerated ? <Badge label="KI-generiert" /> : null}
+          </View>
           <Text style={[typography.bodyMuted, styles.summary]}>{summary}</Text>
         </>
       ) : null}
@@ -53,6 +66,11 @@ const styles = StyleSheet.create({
   titleText: {
     flex: 1,
     gap: spacing.xs,
+  },
+  summaryHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   summary: {
     marginTop: spacing.sm,

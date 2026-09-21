@@ -28,6 +28,7 @@ export type {
   Party,
   PartyStates,
   PlenarDate,
+  PlenarySession,
   PoliticalPosition,
   PoliticalScore,
   PushPlatform,

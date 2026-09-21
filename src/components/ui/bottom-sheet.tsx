@@ -25,6 +25,10 @@ type Props = {
       drag-to-dismiss or the hardware back button — for sheets that stage a
       choice locally and only commit it once the user confirms */
   onApply?: () => void;
+  /** the bottom button always closes the sheet, this only changes its label —
+      "Anwenden" reads wrong on a sheet with nothing to apply, e.g. a pure
+      info display */
+  applyLabel?: string;
   children: ReactNode;
 };
 
@@ -39,7 +43,15 @@ const EASING = Easing.out(Easing.cubic);
 const DISMISS_DISTANCE_RATIO = 0.25;
 const DISMISS_VELOCITY = 0.8;
 
-export function BottomSheet({ visible, title, onClose, onReset, onApply, children }: Props) {
+export function BottomSheet({
+  visible,
+  title,
+  onClose,
+  onReset,
+  onApply,
+  applyLabel = 'Anwenden',
+  children,
+}: Props) {
   const insets = useSafeAreaInsets();
 
   const [height, setHeight] = useState(ASSUMED_HEIGHT);
@@ -129,7 +141,7 @@ export function BottomSheet({ visible, title, onClose, onReset, onApply, childre
             }}
             accessibilityRole="button"
             style={({ pressed }) => [styles.apply, pressed && styles.pressed]}>
-            <Text style={[typography.button, styles.applyLabel]}>Anwenden</Text>
+            <Text style={[typography.button, styles.applyLabel]}>{applyLabel}</Text>
           </Pressable>
         </Animated.View>
       </View>

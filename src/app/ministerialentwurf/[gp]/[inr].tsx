@@ -61,6 +61,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
         title={title}
         subtitle={`Ministerialentwurf vom ${isoToDotDate(draft.raw_data_created_at)}`}
         summary={ai_summary?.short_summary ?? draft.description}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
       />
 

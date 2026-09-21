@@ -69,6 +69,8 @@ export function VoteGenericSheet({
   onChange,
   onClose,
 }: VoteProps) {
+  const country = useCountry();
+
   return (
     <BottomSheet
       visible={visible}
@@ -84,12 +86,15 @@ export function VoteGenericSheet({
           value={filters.gp}
           onChange={(gp) => onChange({ ...filters, gp })}
         />
-        <OptionGroup
-          title="Angenommen"
-          options={ACCEPTED}
-          value={filters.accepted}
-          onChange={(accepted) => onChange({ ...filters, accepted })}
-        />
+        {/* EU acceptance data isn't ready to surface yet */}
+        {country === 'eu' ? null : (
+          <OptionGroup
+            title="Angenommen"
+            options={ACCEPTED}
+            value={filters.accepted}
+            onChange={(accepted) => onChange({ ...filters, accepted })}
+          />
+        )}
         <OptionGroup
           title="Antragstyp"
           options={VOTE_TYPE}
