@@ -40,12 +40,12 @@ export default function AnmeldenScreen() {
   async function finish(accessToken: string) {
     await signIn(accessToken);
 
-    // go back rather than to profil, both ways in re-render signed in anyway
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/profil');
-    }
+    // dismissTo rather than back(): the google flow can race with the
+    // somesmobileapp://resolve_token deep link also landing on the stack (its
+    // own screen replaces itself with /profil first), so a plain back() can
+    // pop that fresh /profil straight back to anmelden. dismissTo always
+    // settles on /profil regardless of how many screens ended up on top
+    router.dismissTo('/profil');
   }
 
   async function withGoogle() {

@@ -45,7 +45,7 @@ export function AccountCard() {
             </Text>
           )}
         </View>
-        <Button label="Abmelden" onPress={signOut} />
+        <Button label="Abmelden" onPress={signOut} style={styles.bigButton} />
       </View>
     </Card>
   );
