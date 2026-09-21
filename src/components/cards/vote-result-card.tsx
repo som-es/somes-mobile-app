@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { voteBadges } from '@/lib/vote-labels';
-import { byPartySize, partyInfavor, partySeats } from '@/lib/votes';
+import { byPartySize, partyInfavor } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import { type VoteResult } from '@/types';
@@ -49,25 +49,18 @@ export function VoteResultCard({ voteResult }: Props) {
               <View key={vote.party} style={styles.vote}>
                 <Text style={typography.partyLabel}>{vote.party}</Text>
                 <VoteMark infavor={partyInfavor(vote)} size={16} />
-                <Text style={typography.partyLabel}>
-                  {vote.infavor_count} von {partySeats(vote)}
-                </Text>
               </View>
             ))
           ) : named_votes ? (
             <>
               <View style={styles.vote}>
                 <VoteMark infavor size={16} />
-                <Text style={typography.partyLabel}>
-                  {named_votes.named_vote_info.pro_count} von{' '}
-                  {named_votes.named_vote_info.given_vote_sum}
-                </Text>
+                <Text style={typography.partyLabel}>{named_votes.named_vote_info.pro_count}</Text>
               </View>
               <View style={styles.vote}>
                 <VoteMark infavor={false} size={16} />
                 <Text style={typography.partyLabel}>
-                  {named_votes.named_vote_info.contra_count} von{' '}
-                  {named_votes.named_vote_info.given_vote_sum}
+                  {named_votes.named_vote_info.contra_count}
                 </Text>
               </View>
             </>

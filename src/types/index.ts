@@ -22,6 +22,7 @@ export type {
   LegisPeriod,
   LegislativeInitiative,
   MailSendInfo,
+  NamedVoteInfo,
   NamedVotes,
   NotificationSettings,
   Party,

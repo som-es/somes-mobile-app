@@ -1,6 +1,7 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { AVATAR, DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
@@ -10,8 +11,13 @@ import { Chip } from '@/components/ui/chip';
 import { FilterPill } from '@/components/ui/filter-pill';
 import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
-import { SegmentedControl } from '@/components/ui/segmented-control';
-import { compareDelegates, SORT_OPTIONS, type SortKey } from '@/lib/delegate-sort';
+import {
+  compareDelegates,
+  SORT_COLUMNS,
+  toggleSort,
+  type Sort,
+  type SortKey,
+} from '@/lib/delegate-sort';
 import { isoToDotDate } from '@/lib/date';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
@@ -24,6 +30,47 @@ import { typography } from '@/theme/typography';
 /** the web asks for 50 at a time, a phone shows far fewer per screen */
 const ENTRIES_PER_PAGE = 25;
 
+function SortableColumn({
+  label,
+  sortKey,
+  sort,
+  onPress,
+  style,
+}: {
+  label: string;
+  sortKey: SortKey;
+  sort: Sort;
+  onPress: (key: SortKey) => void;
+  style: ViewStyle;
+}) {
+  const active = sort?.key === sortKey;
+
+  return (
+    <Pressable
+      onPress={() => onPress(sortKey)}
+      accessibilityRole="button"
+      accessibilityLabel={`Nach ${label} sortieren`}
+      style={[styles.column, style]}>
+      <Text style={typography.tableHead} numberOfLines={1}>
+        {label}
+      </Text>
+      {active ? (
+        <Ionicons
+          name={sort.direction === 'asc' ? 'chevron-up' : 'chevron-down'}
+          size={12}
+          color={colors.textMuted}
+        />
+      ) : null}
+    </Pressable>
+  );
+}
+
+const COLUMN_STYLE: Record<SortKey, ViewStyle> = {
+  name: { flex: 3 },
+  partei: { flex: 2 },
+  alter: { flex: 1 },
+};
+
 export default function AbgeordneteScreen() {
   const country = useCountry();
   return <AbgeordneteScreenContent key={country} />;
@@ -34,7 +81,7 @@ function AbgeordneteScreenContent() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyDelegateFilters(country));
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>('name');
+  const [sort, setSort] = useState<Sort>(null);
 
   const debouncedSearch = useDebounced(search);
 
@@ -121,14 +168,31 @@ function AbgeordneteScreenContent() {
         ))}
       </ScrollView>
 
-      <SegmentedControl options={SORT_OPTIONS} value={sort} onChange={setSort} />
-
       <View style={styles.tableHead}>
         <View style={styles.avatarSpacer} />
-        <Text style={[typography.tableHead, styles.nameCol]}>Name</Text>
-        <Text style={[typography.tableHead, styles.partyCol]}>Partei</Text>
-        <Text style={[typography.tableHead, styles.ageCol]}>Alter</Text>
-        <View style={styles.chevronSpacer} />
+        {SORT_COLUMNS.map((column) => (
+          <SortableColumn
+            key={column.key}
+            label={column.label}
+            sortKey={column.key}
+            sort={sort}
+            onPress={(key) => setSort(toggleSort(sort, key))}
+            style={COLUMN_STYLE[column.key]}
+          />
+        ))}
+        <Pressable
+          onPress={() => setSort(null)}
+          disabled={sort === null}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Sortierung zurücksetzen"
+          style={({ pressed }) => [
+            styles.reset,
+            sort === null && styles.resetInactive,
+            pressed && styles.pressed,
+          ]}>
+          <Ionicons name="refresh-outline" size={16} color={colors.textMuted} />
+        </Pressable>
       </View>
     </>
   );
@@ -183,8 +247,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.card,
   },
   avatarSpacer: { width: AVATAR },
-  chevronSpacer: { width: 18 },
-  nameCol: { flex: 3 },
-  partyCol: { flex: 2 },
-  ageCol: { flex: 1 },
+  column: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  reset: {
+    width: 18,
+    alignItems: 'center',
+  },
+  resetInactive: {
+    opacity: 0.35,
+  },
+  pressed: {
+    opacity: 0.6,
+  },
 });

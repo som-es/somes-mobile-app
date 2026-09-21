@@ -10,7 +10,7 @@ import { Divider, SectionCard } from '@/components/detail/section-card';
 import { SpeechList } from '@/components/detail/speech-list';
 import { SummaryCard } from '@/components/detail/summary-card';
 import { topicNames, TopicList } from '@/components/detail/topic-list';
-import { VoteBreakdown } from '@/components/detail/vote-breakdown';
+import { NamedVoteBreakdown, VoteBreakdown } from '@/components/detail/vote-breakdown';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
@@ -94,9 +94,13 @@ function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
 
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
-      {voteResult.votes.length > 0 ? (
+      {voteResult.votes.length > 0 || voteResult.named_votes ? (
         <SectionCard title="Abstimmung">
-          <VoteBreakdown votes={voteResult.votes} />
+          {voteResult.votes.length > 0 ? (
+            <VoteBreakdown votes={voteResult.votes} />
+          ) : voteResult.named_votes ? (
+            <NamedVoteBreakdown info={voteResult.named_votes.named_vote_info} />
+          ) : null}
 
           {voteResult.issued_by_dels.length > 0 ? (
             <>

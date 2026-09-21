@@ -16,7 +16,6 @@ export function FilterPill({ label, onPress }: Props) {
       onPress={onPress}
       accessibilityRole="button"
       style={({ pressed }) => [styles.pill, pressed && styles.pressed]}>
-      <Ionicons name="filter-outline" size={16} color={colors.textMuted} />
       <Text
         style={[typography.pillLabel, styles.label]}
         numberOfLines={1}
@@ -24,26 +23,24 @@ export function FilterPill({ label, onPress }: Props) {
         minimumFontScale={0.75}>
         {label}
       </Text>
+      <Ionicons name="chevron-down" size={14} color={colors.onAccent} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   pill: {
-    height: 41,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     gap: spacing.xs,
-    backgroundColor: colors.cardRaised,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
+    backgroundColor: colors.accent,
     borderRadius: radius.button,
+    padding: spacing.sm,
     paddingHorizontal: spacing.md,
   },
   label: {
     flexShrink: 1,
-    color: colors.textMuted,
   },
   pressed: {
     opacity: 0.7,
