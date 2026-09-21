@@ -21,7 +21,7 @@ export function SubScreen({ children, refreshing, onRefresh }: Props) {
   return (
     <View style={styles.root}>
       <AppHeader />
-      <Screen refreshing={refreshing} onRefresh={onRefresh}>
+      <Screen refreshing={refreshing} onRefresh={onRefresh} tabBarSpacing={false}>
         <Pressable onPress={() => router.back()} hitSlop={8} style={styles.back}>
           <Ionicons name="arrow-back" size={18} color={colors.text} />
           <Text style={typography.subtitle}>Zurück</Text>

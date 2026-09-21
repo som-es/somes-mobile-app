@@ -12,7 +12,7 @@ import { SummaryCard } from '@/components/detail/summary-card';
 import { topicNames, TopicList } from '@/components/detail/topic-list';
 import { VoteBreakdown } from '@/components/detail/vote-breakdown';
 import { Notice } from '@/components/ui/notice';
-import { CardSkeleton } from '@/components/ui/skeleton';
+import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { voteBadges } from '@/lib/vote-labels';
@@ -54,7 +54,13 @@ export default function VoteDetailScreen() {
       ) : vote.isError ? (
         <Notice message="Abstimmung konnte nicht geladen werden." />
       ) : (
-        <VoteDetail voteResult={vote.data} delegates={delegates.data ?? new Map()} />
+        <VoteDetail
+          voteResult={vote.data}
+          delegates={delegates.data ?? new Map()}
+          // enabled:false leaves isPending stuck true forever, so only treat it as
+          // "still loading" while a fetch is actually in flight
+          delegatesLoading={delegates.isPending && delegates.fetchStatus === 'fetching'}
+        />
       )}
     </DetailScreen>
   );
@@ -63,9 +69,10 @@ export default function VoteDetailScreen() {
 type DetailProps = {
   voteResult: VoteResult;
   delegates: Map<number, Delegate>;
+  delegatesLoading: boolean;
 };
 
-function VoteDetail({ voteResult, delegates }: DetailProps) {
+function VoteDetail({ voteResult, delegates, delegatesLoading }: DetailProps) {
   const { legislative_initiative: initiative, ai_summary } = voteResult;
 
   const topics = topicNames(voteResult.eurovoc_topics, ai_summary);
@@ -96,19 +103,23 @@ function VoteDetail({ voteResult, delegates }: DetailProps) {
               <Divider />
               <Text style={[typography.cardHeading, styles.subHeading]}>Eingebracht von</Text>
               <View style={styles.issuers}>
-                {voteResult.issued_by_dels.map((issuer) => {
-                  const delegate = delegates.get(issuer.delegate_id);
-                  return (
-                    <DelegateRow
-                      key={issuer.delegate_id}
-                      id={issuer.delegate_id}
-                      name={delegate?.name ?? 'Unbekannt'}
-                      party={delegate?.party ?? null}
-                      role={issuer.text}
-                      imageUrl={delegate?.image_url ?? null}
-                    />
-                  );
-                })}
+                {delegatesLoading
+                  ? voteResult.issued_by_dels.map((issuer) => (
+                      <RowSkeleton key={issuer.delegate_id} />
+                    ))
+                  : voteResult.issued_by_dels.map((issuer) => {
+                      const delegate = delegates.get(issuer.delegate_id);
+                      return (
+                        <DelegateRow
+                          key={issuer.delegate_id}
+                          id={issuer.delegate_id}
+                          name={delegate?.name ?? 'Unbekannt'}
+                          party={delegate?.party ?? null}
+                          role={issuer.text}
+                          imageUrl={delegate?.image_url ?? null}
+                        />
+                      );
+                    })}
               </View>
             </>
           ) : null}

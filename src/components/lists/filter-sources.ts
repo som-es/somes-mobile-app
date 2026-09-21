@@ -24,7 +24,10 @@ export function useFilterSources() {
 
   return {
     topics: topics.data?.map((topic) => topic.topic) ?? [],
-    periods: periods.data?.map((period) => period.gp) ?? [],
+    // oldest first, so periodOptions() can read each period's end year off the next one
+    periods: (periods.data ?? [])
+      .slice()
+      .sort((a, b) => a.start_date.localeCompare(b.start_date)),
   };
 }
 

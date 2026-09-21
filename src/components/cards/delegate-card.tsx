@@ -1,7 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
@@ -33,9 +34,9 @@ export function DelegateCard({ delegate }: Props) {
         router.push({ pathname: '/abgeordnete/[id]', params: { id: delegate.id } })
       }>
       <View style={styles.row}>
-        <Image
-          source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
-          style={styles.avatar}
+        <Avatar
+          uri={delegateAvatarUrl(country, delegate.id, delegate.image_url)}
+          size={AVATAR}
           accessibilityLabel={delegate.name}
         />
 
@@ -59,7 +60,7 @@ export function DelegateCard({ delegate }: Props) {
 }
 
 /** the web puts this in place of a blank or ohne klub party */
-function partyLabel(party: string | null): string {
+export function partyLabel(party: string | null): string {
   if (!party || party.toUpperCase() === 'OK') return 'Ohne Klub';
   return party;
 }
@@ -69,12 +70,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-  },
-  avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
-    backgroundColor: colors.card,
   },
   nameCol: { flex: 3 },
   partyCol: { flex: 2 },

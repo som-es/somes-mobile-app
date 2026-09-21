@@ -94,7 +94,7 @@ export default function AnmeldenScreen() {
       <KeyboardAvoidingView
         style={styles.fill}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <Screen>
+        <Screen tabBarSpacing={false}>
           <Pressable onPress={() => router.back()} style={styles.back} hitSlop={8}>
             <Ionicons name="arrow-back" size={18} color={colors.text} />
             <Text style={typography.subtitle}>Zurück</Text>
@@ -104,7 +104,7 @@ export default function AnmeldenScreen() {
             title="Anmelden"
             subtitle={
               onEmailStep
-                ? 'Willkommen zurück. Gib deine E-Mail-Adresse ein.'
+                ? 'Melde dich an oder erstelle mit deiner E-Mail-Adresse ein neues Konto.'
                 : 'Wir haben dir einen Code geschickt.'
             }
           />

@@ -30,7 +30,9 @@ export function AbsencesCard({ absences }: Props) {
 
   return (
     <SectionCard title="Abwesenheiten">
-      <Text style={typography.caption}>Verpasste Plenarsitzungen ({year}):</Text>
+      <Text style={[typography.subtitle, styles.sectionLabel]}>
+        Verpasste Plenarsitzungen ({year}):
+      </Text>
       <Text style={styles.count}>{count}</Text>
 
       {sorted.length === 0 ? (
@@ -86,6 +88,9 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: '700',
     color: colors.textMuted,
+  },
+  sectionLabel: {
+    fontWeight: '600',
   },
   subheading: {
     marginTop: spacing.md,

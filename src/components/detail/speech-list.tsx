@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { minutes } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { Avatar } from '@/components/ui/avatar';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -42,12 +43,11 @@ export function SpeechList({ speeches, delegates }: Props) {
               key={id}
               onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-              <Image
-                source={{
-                  uri: delegateAvatarUrl(country, speech.delegate_id, delegate?.image_url ?? null),
-                }}
-                style={styles.avatar}
+              <Avatar
+                uri={delegateAvatarUrl(country, speech.delegate_id, delegate?.image_url ?? null)}
+                size={AVATAR}
                 accessibilityLabel={delegate?.name}
+                style={styles.avatar}
               />
 
               <View style={styles.text}>
@@ -102,9 +102,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
     backgroundColor: colors.cardRaised,
   },
   text: {

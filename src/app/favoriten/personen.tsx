@@ -1,10 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { OptionGroup } from '@/components/filters/option-group';
 import { SubScreen } from '@/components/layout/sub-screen';
+import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Notice } from '@/components/ui/notice';
 import { ScreenTitle } from '@/components/ui/screen';
@@ -87,11 +88,9 @@ function FavoriteDelegate({
           router.push({ pathname: '/abgeordnete/[id]', params: { id: favo.delegate_id } })
         }
         style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-        <Image
-          source={{
-            uri: delegateAvatarUrl(country, favo.delegate_id, delegate?.image_url ?? null),
-          }}
-          style={styles.avatar}
+        <Avatar
+          uri={delegateAvatarUrl(country, favo.delegate_id, delegate?.image_url ?? null)}
+          size={AVATAR}
           accessibilityLabel={delegate?.name}
         />
         <View style={styles.grow}>
@@ -140,12 +139,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-  },
-  avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
-    backgroundColor: colors.card,
   },
   grow: {
     flex: 1,

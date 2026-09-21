@@ -1,7 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
@@ -31,9 +32,9 @@ export function DelegateRow({ id, name, party, role, imageUrl = null }: Props) {
       elevation="row"
       onPress={() => router.push({ pathname: '/abgeordnete/[id]', params: { id } })}>
       <View style={styles.row}>
-        <Image
-          source={{ uri: delegateAvatarUrl(country, id, imageUrl) }}
-          style={styles.avatar}
+        <Avatar
+          uri={delegateAvatarUrl(country, id, imageUrl)}
+          size={AVATAR}
           accessibilityLabel={name}
         />
 
@@ -64,12 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-  },
-  avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
-    backgroundColor: colors.card,
   },
   text: {
     flex: 1,

@@ -10,6 +10,8 @@ import { Chip } from '@/components/ui/chip';
 import { FilterPill } from '@/components/ui/filter-pill';
 import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
+import { SegmentedControl } from '@/components/ui/segmented-control';
+import { compareDelegates, SORT_OPTIONS, type SortKey } from '@/lib/delegate-sort';
 import { isoToDotDate } from '@/lib/date';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
@@ -32,6 +34,7 @@ function AbgeordneteScreenContent() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyDelegateFilters(country));
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [sort, setSort] = useState<SortKey>('name');
 
   const debouncedSearch = useDebounced(search);
 
@@ -63,7 +66,9 @@ function AbgeordneteScreenContent() {
   });
 
   const counts = delegateFilterCounts(filters);
-  const items = results.data?.pages.flatMap((page) => page.delegates) ?? [];
+  const items = (results.data?.pages.flatMap((page) => page.delegates) ?? [])
+    .slice()
+    .sort(compareDelegates(sort));
   const updatedAt = results.data?.pages[0]?.updated_at;
 
   const chips = partiesFor(parties.data, filters.gp);
@@ -115,6 +120,8 @@ function AbgeordneteScreenContent() {
           />
         ))}
       </ScrollView>
+
+      <SegmentedControl options={SORT_OPTIONS} value={sort} onChange={setSort} />
 
       <View style={styles.tableHead}>
         <View style={styles.avatarSpacer} />
