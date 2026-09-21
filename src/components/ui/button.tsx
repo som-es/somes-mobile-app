@@ -60,7 +60,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.button,
+    padding: spacing.sm,
     paddingHorizontal: spacing.md,
+    height: 'auto',
   },
   sm: {
     height: 31,

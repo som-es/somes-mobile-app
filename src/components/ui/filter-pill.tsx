@@ -34,10 +34,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.xs,
-    height: 41,
     backgroundColor: colors.accent,
-    borderRadius: radius.control,
-    paddingHorizontal: spacing.sm,
+    borderRadius: radius.button,
+    padding: spacing.sm,
+    paddingHorizontal: spacing.md,
   },
   label: {
     flexShrink: 1,

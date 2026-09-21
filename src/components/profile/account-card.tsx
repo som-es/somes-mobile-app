@@ -23,7 +23,7 @@ export function AccountCard() {
             <Text style={typography.cardHeading}>Benutzerinfos</Text>
             <Text style={typography.caption}>Nicht angemeldet</Text>
           </View>
-          <Button label="Anmelden" onPress={() => router.push('/anmelden')} />
+          <Button label="Anmelden" onPress={() => router.push('/anmelden')} style={styles.bigButton} />
         </View>
       </Card>
     );
@@ -53,13 +53,15 @@ export function AccountCard() {
 
 const styles = StyleSheet.create({
   row: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: spacing.md,
   },
   grow: {
-    flex: 1,
     gap: spacing.xs,
+  },
+  bigButton: {
+    height: 'auto'
   },
 });

@@ -201,6 +201,18 @@ export default function ImpressumScreen() {
               Vereinsgesetz 2002
             </Text>
           </Field>
+
+          <View style={styles.divider} />
+
+          <Field label="App Entwickler E-Mail">
+            <Text
+              style={[typography.bodyMuted, styles.link]}
+              onPress={() => Linking.openURL('mailto:julian.raph.burger@gmail.com')}
+              accessibilityRole="link">
+              julian.raph.burger@gmail.com
+            </Text>
+          </Field>
+
         </View>
       </Card>
 
