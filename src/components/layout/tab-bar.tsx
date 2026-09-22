@@ -4,6 +4,7 @@ import { type ComponentProps, useEffect, useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useQuestionsEnabled } from '@/lib/use-questions';
 import { colors } from '@/theme/colors';
 import { ICON_SIZE, spacing, TAB_BAR_HEIGHT, TAB_BUTTON, TAB_GAP } from '@/theme/layout';
 
@@ -76,38 +77,42 @@ function TabButton({ icons, isFocused, label, onPress, onLongPress }: TabButtonP
 
 export function AppTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const questionsEnabled = useQuestionsEnabled();
+  const focusedKey = state.routes[state.index]?.key;
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       <View style={styles.bar}>
-        {state.routes.map((route, index) => {
-          const isFocused = state.index === index;
-          const { options } = descriptors[route.key];
+        {state.routes
+          .filter((route) => route.name !== 'fragen' || questionsEnabled)
+          .map((route) => {
+            const isFocused = route.key === focusedKey;
+            const { options } = descriptors[route.key];
 
-          const onPress = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
-
-          return (
-            <TabButton
-              key={route.key}
-              icons={ICONS[route.name]}
-              isFocused={isFocused}
-              label={options.tabBarAccessibilityLabel ?? options.title}
-              onPress={onPress}
-              onLongPress={() =>
-                navigation.emit({ type: 'tabLongPress', target: route.key })
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
               }
-            />
-          );
-        })}
+            };
+
+            return (
+              <TabButton
+                key={route.key}
+                icons={ICONS[route.name]}
+                isFocused={isFocused}
+                label={options.tabBarAccessibilityLabel ?? options.title}
+                onPress={onPress}
+                onLongPress={() =>
+                  navigation.emit({ type: 'tabLongPress', target: route.key })
+                }
+              />
+            );
+          })}
       </View>
     </View>
   );
