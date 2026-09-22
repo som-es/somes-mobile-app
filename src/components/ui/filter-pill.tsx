@@ -9,9 +9,10 @@ type Props = {
   label: string;
   onPress?: () => void;
   disabled?: boolean;
+  grow: boolean;
 };
 
-export function FilterPill({ label, onPress, disabled = false }: Props) {
+export function FilterPill({ label, onPress, disabled = false, grow = false, }: Props) {
   return (
     <Pressable
       onPress={onPress}
@@ -22,6 +23,7 @@ export function FilterPill({ label, onPress, disabled = false }: Props) {
         styles.pill,
         disabled && styles.disabled,
         pressed && styles.pressed,
+        grow && styles.growStyle,
       ]}>
       <Text
         style={[typography.pillLabel, styles.label]}
@@ -54,5 +56,8 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.45,
+  },
+  growStyle: {
+    flexGrow: 1.0,
   },
 });

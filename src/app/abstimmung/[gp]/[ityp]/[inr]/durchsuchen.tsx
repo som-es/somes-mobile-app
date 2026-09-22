@@ -1,3 +1,4 @@
+import { euCountryName } from '@som-es/somes-ts';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -28,8 +29,10 @@ export default function SearchNamedVotesScreen() {
   const [search, setSearch] = useState('');
   const [parties, setParties] = useState<string[]>([]);
   const [behaviors, setBehaviors] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
   const [partySheetOpen, setPartySheetOpen] = useState(false);
   const [behaviorSheetOpen, setBehaviorSheetOpen] = useState(false);
+  const [countrySheetOpen, setCountrySheetOpen] = useState(false);
 
   // same queryKey as the vote detail screen, so this is instant when it's already
   // cached and only shows the loading state on a cold/deep-linked open
@@ -64,6 +67,17 @@ export default function SearchNamedVotesScreen() {
     ),
   ].sort();
 
+  // country options are the vote's own voters, not the whole chamber
+  const countryOptions = [
+    ...new Set(
+      namedVotes
+        .map((namedVote) => delegates.data?.get(namedVote.delegate_id)?.constituency)
+        .filter((code): code is string => Boolean(code))
+    ),
+  ]
+    .map((code) => euCountryName(code, 'de'))
+    .sort();
+
   const needle = search.trim().toLowerCase();
 
   const filtered = namedVotes.filter((namedVote) => {
@@ -76,6 +90,10 @@ export default function SearchNamedVotesScreen() {
     if (behaviors.length > 0) {
       const label = BEHAVIOR_LABEL.get(votingBehaviorOf(namedVote));
       if (!label || !behaviors.includes(label)) return false;
+    }
+    if (countries.length > 0) {
+      const name = delegate?.constituency ? euCountryName(delegate.constituency, 'de') : undefined;
+      if (!name || !countries.includes(name)) return false;
     }
 
     return true;
@@ -94,14 +112,20 @@ export default function SearchNamedVotesScreen() {
 
       <View style={styles.filters}>
         <FilterPill
+          grow={true}
           label={parties.length > 0 ? `Parteien (${parties.length})` : 'Parteien'}
           onPress={() => setPartySheetOpen(true)}
         />
         <FilterPill
-          label={behaviors.length > 0 ? `Verhalten (${behaviors.length})` : 'Abstimmungsverhalten'}
+          grow={true}
+          label={behaviors.length > 0 ? `Verhalten (${behaviors.length})` : 'Verhalten'}
           onPress={() => setBehaviorSheetOpen(true)}
         />
-        <FilterPill label="Herkunftsland (bald verfügbar)" disabled />
+        <FilterPill
+          grow={true}
+          label={countries.length > 0 ? `Herkunftsland (${countries.length})` : 'Herkunftsland'}
+          onPress={() => setCountrySheetOpen(true)}
+        />
       </View>
     </>
   );
@@ -147,6 +171,15 @@ export default function SearchNamedVotesScreen() {
         onChange={setBehaviors}
         onClose={() => setBehaviorSheetOpen(false)}
       />
+
+      <MultiSelectSheet
+        visible={countrySheetOpen}
+        title="Herkunftsland"
+        values={countryOptions}
+        selected={countries}
+        onChange={setCountries}
+        onClose={() => setCountrySheetOpen(false)}
+      />
     </View>
   );
 }
@@ -164,6 +197,10 @@ const styles = StyleSheet.create({
   filters: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     gap: spacing.sm,
+  },
+  filterButton: {
+    flexGrow: 1.0,
   },
 });
