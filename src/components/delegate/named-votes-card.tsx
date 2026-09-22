@@ -125,6 +125,7 @@ function NamedVoteBody({
       ) : null}
 
       <View style={styles.badges}>
+        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
         {voteBadges(initiative).map((label) => (
           <Badge key={label} label={label} />
         ))}

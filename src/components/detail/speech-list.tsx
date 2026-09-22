@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { minutes } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -13,82 +15,100 @@ import type { Delegate, Speech } from '@/types';
 
 import { SectionCard } from './section-card';
 
-const AVATAR = 40;
+export const SPEECH_AVATAR = 40;
 const PAGE = 3;
 
 type Props = {
   speeches: Speech[];
   delegates: Map<number, Delegate>;
+  gp: string;
+  ityp: string;
+  inr: string;
 };
 
-export function SpeechList({ speeches, delegates }: Props) {
-  const country = useCountry();
-  const [expanded, setExpanded] = useState(false);
-  const { data: partyColors } = usePartyColors();
-
-  const shown = expanded ? speeches : speeches.slice(0, PAGE);
+export function SpeechList({ speeches, delegates, gp, ityp, inr }: Props) {
+  const router = useRouter();
+  const shown = speeches.slice(0, PAGE);
 
   return (
     <SectionCard title="Reden">
       <View style={styles.list}>
-        {shown.map(({ id, speech }) => {
-          const delegate = delegates.get(speech.delegate_id);
-          const party = delegate?.party;
-          // the first link is the one the old single document_url pointed at
-          const documentUrl = speech.document_urls?.[0] ?? null;
-
-          return (
-            <Pressable
-              key={id}
-              onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
-              style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-              <Image
-                source={{
-                  uri: delegateAvatarUrl(country, speech.delegate_id, delegate?.image_url ?? null),
-                }}
-                style={styles.avatar}
-                accessibilityLabel={delegate?.name}
-              />
-
-              <View style={styles.text}>
-                <Text style={typography.rowTitle} numberOfLines={1}>
-                  {delegate?.name ?? 'Unbekannt'}
-                </Text>
-
-                {party ? (
-                  <View style={styles.meta}>
-                    <View
-                      style={[styles.dot, { backgroundColor: partyColors?.get(party) ?? '#ccc' }]}
-                    />
-                    <Text style={typography.caption}>{party}</Text>
-                  </View>
-                ) : null}
-
-                {speech.about ? (
-                  <Text style={typography.bodyMuted} numberOfLines={2}>
-                    {speech.about}
-                  </Text>
-                ) : null}
-
-                {speech.duration_in_seconds ? (
-                  <Text style={typography.caption}>{minutes(speech.duration_in_seconds)}</Text>
-                ) : null}
-              </View>
-
-              {speech.infavor !== null ? <VoteMark infavor={speech.infavor} size={18} /> : null}
-            </Pressable>
-          );
-        })}
+        {shown.map((item) => (
+          <SpeechRow key={item.id} item={item} delegate={delegates.get(item.speech.delegate_id)} />
+        ))}
       </View>
 
       {speeches.length > PAGE ? (
-        <Pressable onPress={() => setExpanded(!expanded)} hitSlop={8} style={styles.more}>
+        <Pressable
+          onPress={() =>
+            router.push({ pathname: '/abstimmung/[gp]/[ityp]/[inr]/reden', params: { gp, ityp, inr } })
+          }
+          hitSlop={8}
+          style={styles.more}>
           <Text style={[typography.subtitle, styles.moreLabel]}>
-            {expanded ? 'Weniger anzeigen' : `Mehr anzeigen (${speeches.length - PAGE})`}
+            Alle Reden anzeigen ({speeches.length})
           </Text>
         </Pressable>
       ) : null}
     </SectionCard>
+  );
+}
+
+/** the row itself, shared between the inline preview here and the full list at
+    abstimmung/[gp]/[ityp]/[inr]/reden so the two never drift apart */
+export function SpeechRow({ item, delegate }: { item: Speech; delegate: Delegate | undefined }) {
+  const country = useCountry();
+  const { data: partyColors } = usePartyColors();
+  const { speech, ai_summary } = item;
+  const party = delegate?.party;
+  // the first link is the one the old single document_url pointed at
+  const documentUrl = speech.document_urls?.[0] ?? null;
+  const summaryText = ai_summary?.short_summary ?? speech.about ?? null;
+
+  return (
+    <Pressable
+      onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}
+      style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+      <Avatar
+        uri={delegateAvatarUrl(country, speech.delegate_id, delegate?.image_url ?? null)}
+        size={SPEECH_AVATAR}
+        accessibilityLabel={delegate?.name}
+        style={styles.avatar}
+      />
+
+      <View style={styles.text}>
+        <Text style={typography.rowTitle} numberOfLines={1}>
+          {delegate?.name ?? 'Unbekannt'}
+        </Text>
+
+        {party ? (
+          <View style={styles.meta}>
+            <View style={[styles.dot, { backgroundColor: partyColors?.get(party) ?? '#ccc' }]} />
+            <Text style={typography.caption}>{party}</Text>
+          </View>
+        ) : null}
+
+        {ai_summary?.short_title ? (
+          <Text style={typography.rowTitle} numberOfLines={2}>
+            {ai_summary.short_title}
+          </Text>
+        ) : null}
+
+        {summaryText ? (
+          <Text style={typography.bodyMuted} numberOfLines={2}>
+            {summaryText}
+          </Text>
+        ) : null}
+
+        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
+
+        {speech.duration_in_seconds ? (
+          <Text style={typography.caption}>{minutes(speech.duration_in_seconds)}</Text>
+        ) : null}
+      </View>
+
+      {speech.infavor !== null ? <VoteMark infavor={speech.infavor} size={18} /> : null}
+    </Pressable>
   );
 }
 
@@ -102,9 +122,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
     backgroundColor: colors.cardRaised,
   },
   text: {

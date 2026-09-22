@@ -91,6 +91,8 @@ export default function RootLayout() {
           <Stack.Screen name="favoriten/abstimmungen" />
           <Stack.Screen name="abgeordnete/[id]" />
           <Stack.Screen name="abstimmung/[gp]/[ityp]/[inr]" />
+          <Stack.Screen name="abstimmung/[gp]/[ityp]/[inr]/reden" />
+          <Stack.Screen name="abstimmung/[gp]/[ityp]/[inr]/durchsuchen" />
           <Stack.Screen name="ministerialentwurf/[gp]/[inr]" />
           <Stack.Screen name="verordnung/[risId]" />
         </Stack>

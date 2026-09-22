@@ -5,7 +5,7 @@ import { byPartySize, partyInfavor, partySeats } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { usePartyColors } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
-import type { Vote } from '@/types';
+import type { NamedVoteInfo, Vote } from '@/types';
 
 type Props = {
   votes: Vote[];
@@ -25,11 +25,36 @@ export function VoteBreakdown({ votes }: Props) {
             style={[styles.dot, { backgroundColor: partyColors?.get(vote.party) ?? '#ccc' }]}
           />
           <Text style={[typography.subtitle, styles.label]} numberOfLines={1}>
-            {vote.party} ({partySeats(vote)} Abgeordnete)
+            {vote.party} ({vote.infavor_count} von {partySeats(vote)})
           </Text>
           <VoteMark infavor={partyInfavor(vote)} size={18} />
         </View>
       ))}
+    </View>
+  );
+}
+
+type NamedProps = {
+  info: NamedVoteInfo;
+};
+
+/** the party-line breakdown above has no equivalent roll-call total anywhere
+    else in the app, this is the only place a named vote's result is shown */
+export function NamedVoteBreakdown({ info }: NamedProps) {
+  return (
+    <View style={styles.list}>
+      <View style={styles.row}>
+        <VoteMark infavor size={18} />
+        <Text style={[typography.subtitle, styles.label]}>
+          {info.pro_count} von {info.given_vote_sum} dafür
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <VoteMark infavor={false} size={18} />
+        <Text style={[typography.subtitle, styles.label]}>
+          {info.contra_count} von {info.given_vote_sum} dagegen
+        </Text>
+      </View>
     </View>
   );
 }

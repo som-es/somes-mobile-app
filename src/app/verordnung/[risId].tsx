@@ -16,6 +16,7 @@ export default function DecreeDetailScreen() {
   const decree = useQuery({
     queryKey: ['decree', risId],
     queryFn: () => somes.decrees.byRisId(risId),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return (
@@ -59,6 +60,7 @@ function DecreeDetail({ decree }: { decree: Decree }) {
         title={title}
         subtitle={`Verordnung vom ${isoToDotDate(decree.publication_date)}`}
         summary={summary}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
       />
 

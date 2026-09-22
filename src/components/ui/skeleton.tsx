@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { primary } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -24,6 +24,42 @@ function usePulse() {
 }
 
 const BARS = ['85%', '100%', '60%'] as const;
+
+const ROW_AVATAR = 48;
+
+/** stands in for a DelegateRow while its name/party lookup is still loading, so
+    a row never has to fall back to a placeholder name just because data hasn't
+    arrived yet */
+export function RowSkeleton() {
+  const opacity = usePulse();
+
+  return (
+    <Card variant="outlined" elevation="row">
+      <Animated.View style={[styles.row, { opacity }]}>
+        <View style={styles.avatar} />
+        <View style={styles.rowBars}>
+          <View style={[styles.bar, { width: '70%' }]} />
+          <View style={[styles.bar, styles.barSmall, { width: '40%' }]} />
+        </View>
+      </Animated.View>
+    </Card>
+  );
+}
+
+type SkeletonBarProps = {
+  width: number | `${number}%`;
+  height?: number;
+  style?: StyleProp<ViewStyle>;
+};
+
+/** a single pulsing bar, for loading states inside a card that's already
+    rendered (a settings row, an account line) - RowSkeleton/CardSkeleton
+    both bring their own Card chrome, which would double up in that spot */
+export function SkeletonBar({ width, height = 12, style }: SkeletonBarProps) {
+  const opacity = usePulse();
+
+  return <Animated.View style={[styles.bar, { width, height, opacity }, style]} />;
+}
 
 export function CardSkeleton() {
   const opacity = usePulse();
@@ -62,5 +98,23 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: radius.badge,
     backgroundColor: primary[100],
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  avatar: {
+    width: ROW_AVATAR,
+    height: ROW_AVATAR,
+    borderRadius: 999,
+    backgroundColor: primary[100],
+  },
+  rowBars: {
+    flex: 1,
+    gap: spacing.sm,
+  },
+  barSmall: {
+    height: 10,
   },
 });

@@ -7,6 +7,7 @@ import { SelectedTopicsSheet } from '@/components/profile/selected-topics-sheet'
 import { TopicAccordion } from '@/components/profile/topic-accordion';
 import { Card } from '@/components/ui/card';
 import { SearchField } from '@/components/ui/search-field';
+import { SkeletonBar } from '@/components/ui/skeleton';
 import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
 import { colors } from '@/theme/colors';
@@ -147,7 +148,11 @@ export function InterestsCard() {
       />
 
       {loading ? (
-        <Text style={typography.caption}>Themen werden geladen</Text>
+        <View style={styles.groups}>
+          <SkeletonBar width="100%" height={20} />
+          <SkeletonBar width="100%" height={20} />
+          <SkeletonBar width="60%" height={20} />
+        </View>
       ) : needle ? (
         <View style={styles.results}>
           {results.length === 0 ? (

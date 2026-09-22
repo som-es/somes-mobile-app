@@ -9,6 +9,7 @@ import { Notice } from '@/components/ui/notice';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { SectionLink } from '@/components/ui/section-link';
 import { CardSkeleton } from '@/components/ui/skeleton';
+import { requestAbstimmungenTab } from '@/lib/abstimmungen-tab';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
@@ -50,14 +51,18 @@ export default function HomeScreen() {
 
   return (
     <Screen refreshing={refreshing} onRefresh={onRefresh}>
-      <NextSessionCard
-        date={session.data?.date_and_time ?? null}
-        title={
-          country === 'eu'
-            ? 'Nächste Plenarsitzung des Europäischen Parlaments'
-            : 'Nächste Nationalratssitzung'
-        }
-      />
+      {session.isPending ? (
+        <CardSkeleton />
+      ) : (
+        <NextSessionCard
+          date={session.data?.date_and_time ?? null}
+          title={
+            country === 'eu'
+              ? 'Nächste Plenarsitzung des Europäischen Parlaments'
+              : 'Nächste Nationalratssitzung'
+          }
+        />
+      )}
 
       <View style={styles.section}>
         <ScreenTitle
@@ -82,7 +87,10 @@ export default function HomeScreen() {
 
         <SectionLink
           label="Weitere Abstimmungen"
-          onPress={() => router.navigate('/abstimmungen')}
+          onPress={() => {
+            requestAbstimmungenTab('nationalrat');
+            router.navigate('/abstimmungen');
+          }}
         />
       </View>
 
@@ -109,7 +117,10 @@ export default function HomeScreen() {
 
           <SectionLink
             label="Weitere Ministerialentwürfe"
-            onPress={() => router.navigate('/abstimmungen')}
+            onPress={() => {
+              requestAbstimmungenTab('regierung');
+              router.navigate('/abstimmungen');
+            }}
           />
         </View>
       )}

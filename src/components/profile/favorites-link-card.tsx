@@ -4,6 +4,7 @@ import type { Href } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui/card';
+import { SkeletonBar } from '@/components/ui/skeleton';
 import { useFavoriteDelegates, useFavoriteVotes } from '@/lib/favorites';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -53,13 +54,11 @@ function LinkCard({
   const router = useRouter();
   const hasAny = (count ?? 0) > 0;
 
-  const subtitle = isPending
-    ? 'Wird geladen'
-    : isError
-      ? 'Konnten nicht geladen werden'
-      : hasAny
-        ? `${count} gespeichert`
-        : empty;
+  const subtitle = isError
+    ? 'Konnten nicht geladen werden'
+    : hasAny
+      ? `${count} gespeichert`
+      : empty;
 
   return (
     <Card
@@ -69,7 +68,7 @@ function LinkCard({
       <View style={styles.row}>
         <View style={styles.grow}>
           <Text style={typography.cardHeading}>{title}</Text>
-          <Text style={typography.caption}>{subtitle}</Text>
+          {isPending ? <SkeletonBar width={120} /> : <Text style={typography.caption}>{subtitle}</Text>}
         </View>
         {hasAny ? (
           <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />

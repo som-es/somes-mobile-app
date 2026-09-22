@@ -11,11 +11,20 @@ type ScreenProps = {
   scroll?: boolean;
   refreshing?: boolean;
   onRefresh?: () => void;
+  /** false for screens reached outside the (tabs) navigator, which never has a
+      floating tab bar to clear */
+  tabBarSpacing?: boolean;
 };
 
-export function Screen({ children, scroll = true, refreshing, onRefresh }: ScreenProps) {
+export function Screen({
+  children,
+  scroll = true,
+  refreshing,
+  onRefresh,
+  tabBarSpacing = true,
+}: ScreenProps) {
   const insets = useSafeAreaInsets();
-  const paddingBottom = TAB_BAR_HEIGHT + insets.bottom + spacing.xl;
+  const paddingBottom = (tabBarSpacing ? TAB_BAR_HEIGHT : 0) + insets.bottom + spacing.xl;
 
   if (!scroll) {
     return <View style={[styles.screen, { paddingBottom }]}>{children}</View>;

@@ -8,14 +8,23 @@ import { typography } from '@/theme/typography';
 type Props = {
   label: string;
   onPress?: () => void;
+  disabled?: boolean;
+  grow: boolean;
 };
 
-export function FilterPill({ label, onPress }: Props) {
+export function FilterPill({ label, onPress, disabled = false, grow = false, }: Props) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
-      style={({ pressed }) => [styles.pill, pressed && styles.pressed]}>
+      accessibilityState={{ disabled }}
+      style={({ pressed }) => [
+        styles.pill,
+        disabled && styles.disabled,
+        pressed && styles.pressed,
+        grow && styles.growStyle,
+      ]}>
       <Text
         style={[typography.pillLabel, styles.label]}
         numberOfLines={1}
@@ -34,15 +43,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.xs,
-    height: 41,
     backgroundColor: colors.accent,
-    borderRadius: radius.control,
-    paddingHorizontal: spacing.sm,
+    borderRadius: radius.button,
+    padding: spacing.sm,
+    paddingHorizontal: spacing.md,
   },
   label: {
     flexShrink: 1,
   },
   pressed: {
     opacity: 0.7,
+  },
+  disabled: {
+    opacity: 0.45,
+  },
+  growStyle: {
+    flexGrow: 1.0,
   },
 });

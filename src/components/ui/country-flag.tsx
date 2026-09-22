@@ -15,12 +15,13 @@ type Props = {
   /** flag is the rectangular banner, map is the country silhouette wearing it */
   variant?: 'flag' | 'map';
   size?: number;
+  color: string;
 };
 
-export function CountryFlag({ country, variant = 'flag', size = 24 }: Props) {
+export function CountryFlag({ country, variant = 'flag', size = 24, color = "#000" }: Props) {
   if (variant === 'map') {
     const Icon = MAP_FLAG[country];
-    return <Icon width={size} height={size} />;
+    return <Icon width={size} height={size} color={color} />;
   }
 
   const Icon = FLAG[country];

@@ -32,7 +32,7 @@ export function DetailScreen({
   return (
     <View style={styles.root}>
       <AppHeader />
-      <Screen>
+      <Screen tabBarSpacing={false}>
         <View style={styles.topRow}>
           <Pressable onPress={() => router.back()} hitSlop={8} style={styles.back}>
             <Ionicons name="arrow-back" size={18} color={colors.text} />

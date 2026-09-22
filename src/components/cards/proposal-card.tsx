@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { isoToDotDate } from '@/lib/date';
@@ -35,9 +36,9 @@ export function ProposalCard({ proposal }: Props) {
       }>
       <View style={styles.titleRow}>
         {delegate ? (
-          <Image
-            source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
-            style={styles.avatar}
+          <Avatar
+            uri={delegateAvatarUrl(country, delegate.id, delegate.image_url)}
+            size={AVATAR}
             accessibilityLabel={delegate.name}
           />
         ) : null}
@@ -53,7 +54,8 @@ export function ProposalCard({ proposal }: Props) {
       ) : null}
 
       <View style={styles.badges}>
-        {draft.ressort ? <Badge label={draft.ressort} /> : null}
+        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
+        {draft.ressort ? <Badge label={draft.ressort_shortform ?? draft.ressort} /> : null}
         <Badge label={isoToDotDate(draft.raw_data_created_at)} />
         <Badge label={draft.gp} />
       </View>
@@ -66,11 +68,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-  },
-  avatar: {
-    width: AVATAR,
-    height: AVATAR,
-    borderRadius: 999,
   },
   title: {
     flex: 1,

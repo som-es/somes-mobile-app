@@ -68,10 +68,10 @@ export const typography = StyleSheet.create({
     lineHeight: 16,
   },
   badge: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
     color: colors.onBadge,
-    lineHeight: 16,
+    lineHeight: 17,
   },
   chip: {
     fontSize: 12,

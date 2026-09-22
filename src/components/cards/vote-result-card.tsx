@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
+import { useCountry } from '@/lib/use-country';
 import { voteBadges } from '@/lib/vote-labels';
 import { byPartySize, partyInfavor } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
@@ -16,10 +17,14 @@ type Props = {
 
 export function VoteResultCard({ voteResult }: Props) {
   const router = useRouter();
+  const country = useCountry();
   const { legislative_initiative: initiative, ai_summary, named_votes } = voteResult;
 
   const title = ai_summary?.short_title ?? initiative.description;
-  const accepted = initiative.accepted;
+  // whether the vote has concluded at all, independent of the country check below
+  const hasResult = initiative.accepted !== null;
+  // EU acceptance data isn't ready to surface yet, the breakdown below still is
+  const showAcceptedMark = country !== 'eu' && hasResult;
   // slice first, votes belongs to the react-query cache
   const votes = voteResult.votes.slice().sort(byPartySize);
 
@@ -33,7 +38,7 @@ export function VoteResultCard({ voteResult }: Props) {
       }>
       <View style={styles.titleRow}>
         <Text style={[typography.cardTitle, styles.title]}>{title}</Text>
-        {accepted !== null ? <VoteMark infavor={accepted === 'a'} size={24} /> : null}
+        {showAcceptedMark ? <VoteMark infavor={initiative.accepted === 'a'} size={24} /> : null}
       </View>
 
       {ai_summary?.short_summary ? (
@@ -42,16 +47,18 @@ export function VoteResultCard({ voteResult }: Props) {
         </Text>
       ) : null}
 
-      {accepted !== null ? (
+      {hasResult ? (
         <View style={styles.votes}>
-          {votes.length > 0 ? (
-            votes.map((vote) => (
-              <View key={vote.party} style={styles.vote}>
-                <Text style={typography.partyLabel}>{vote.party}</Text>
-                <VoteMark infavor={partyInfavor(vote)} size={16} />
-              </View>
-            ))
-          ) : named_votes ? (
+          {votes.length > 0
+            ? votes.map((vote) => (
+                <View key={vote.party} style={styles.vote}>
+                  <Text style={typography.partyLabel}>{vote.party}</Text>
+                  <VoteMark infavor={partyInfavor(vote)} size={16} />
+                </View>
+              ))
+            : null}
+
+          {named_votes ? (
             <>
               <View style={styles.vote}>
                 <VoteMark infavor size={16} />
@@ -69,6 +76,7 @@ export function VoteResultCard({ voteResult }: Props) {
       ) : null}
 
       <View style={styles.badges}>
+        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
         {voteBadges(initiative).map((label) => (
           <Badge key={label} label={label} />
         ))}

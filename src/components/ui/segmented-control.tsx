@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
     height: 38,
     backgroundColor: colors.sessionCard,
     borderRadius: radius.track,
-    paddingVertical: spacing.xs,
-    paddingHorizontal: 2,
+    padding: spacing.xs,
   },
   segment: {
     flex: 1,

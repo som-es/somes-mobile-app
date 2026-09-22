@@ -22,6 +22,7 @@ export default function ProposalDetailScreen() {
   const proposal = useQuery({
     queryKey: ['gov-proposal', gp, inr],
     queryFn: () => somes.govProposals.byPath(gp, inr),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return (
@@ -50,7 +51,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
   const title = ai_summary?.short_title ?? draft.title.split('|')[0].trim();
 
   const badges = [
-    ...(draft.ressort ? [draft.ressort] : []),
+    ...(draft.ressort ? [draft.ressort_shortform ?? draft.ressort] : []),
     isoToDotDate(draft.raw_data_created_at),
     draft.gp,
   ];
@@ -61,6 +62,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
         title={title}
         subtitle={`Ministerialentwurf vom ${isoToDotDate(draft.raw_data_created_at)}`}
         summary={ai_summary?.short_summary ?? draft.description}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
       />
 

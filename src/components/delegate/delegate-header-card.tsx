@@ -1,5 +1,6 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { age } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
@@ -36,10 +37,11 @@ export function DelegateHeaderCard({ delegate }: Props) {
   return (
     <Card>
       <View style={styles.head}>
-        <Image
-          source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
-          style={styles.portrait}
+        <Avatar
+          uri={delegateAvatarUrl(country, delegate.id, delegate.image_url)}
+          size={PORTRAIT}
           accessibilityLabel={delegate.name}
+          style={styles.portrait}
         />
 
         <Text style={styles.name}>
@@ -89,9 +91,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   portrait: {
-    width: PORTRAIT,
-    height: PORTRAIT,
-    borderRadius: 999,
     backgroundColor: colors.cardRaised,
   },
   party: {

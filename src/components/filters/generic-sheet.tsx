@@ -5,6 +5,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import type { DelegateFilters, ProposalFilters, VoteFilters } from '@/lib/filter-query';
 import { useCountry } from '@/lib/use-country';
 import { spacing } from '@/theme/layout';
+import type { LegisPeriod } from '@/types';
 
 /** copied from the web, the labels are ui strings */
 const ACCEPTED = [
@@ -51,7 +52,7 @@ const MIND_PREVIOUS_PARTY = [
 ] as const;
 
 type PeriodProps = {
-  periods: string[];
+  periods: LegisPeriod[];
 };
 
 type VoteProps = PeriodProps & {
@@ -68,6 +69,8 @@ export function VoteGenericSheet({
   onChange,
   onClose,
 }: VoteProps) {
+  const country = useCountry();
+
   return (
     <BottomSheet
       visible={visible}
@@ -83,12 +86,15 @@ export function VoteGenericSheet({
           value={filters.gp}
           onChange={(gp) => onChange({ ...filters, gp })}
         />
-        <OptionGroup
-          title="Angenommen"
-          options={ACCEPTED}
-          value={filters.accepted}
-          onChange={(accepted) => onChange({ ...filters, accepted })}
-        />
+        {/* EU acceptance data isn't ready to surface yet */}
+        {country === 'eu' ? null : (
+          <OptionGroup
+            title="Angenommen"
+            options={ACCEPTED}
+            value={filters.accepted}
+            onChange={(accepted) => onChange({ ...filters, accepted })}
+          />
+        )}
         <OptionGroup
           title="Antragstyp"
           options={VOTE_TYPE}
@@ -207,9 +213,20 @@ export function DelegateGenericSheet({
   );
 }
 
-/** null is alle, which leaves out the gp parameter */
-function periodOptions(periods: string[]) {
-  return [{ label: 'Alle', value: null as string | null }, ...periods.map((gp) => ({ label: gp, value: gp }))];
+/** null is alle, which leaves out the gp parameter. periods arrives oldest first,
+    so each period's end year is just the next period's start year minus one */
+export function periodOptions(periods: LegisPeriod[]) {
+  return [
+    { label: 'Alle', value: null as string | null },
+    ...periods.map((period, index) => {
+      const startYear = new Date(period.start_date).getFullYear();
+      const next = periods[index + 1];
+      const label = next
+        ? `${period.gp} (${startYear}–${new Date(next.start_date).getFullYear() - 1})`
+        : `${period.gp} (seit ${startYear})`;
+      return { label, value: period.gp };
+    }),
+  ];
 }
 
 const styles = StyleSheet.create({

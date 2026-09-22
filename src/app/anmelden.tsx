@@ -40,12 +40,12 @@ export default function AnmeldenScreen() {
   async function finish(accessToken: string) {
     await signIn(accessToken);
 
-    // go back rather than to profil, both ways in re-render signed in anyway
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/profil');
-    }
+    // dismissTo rather than back(): the google flow can race with the
+    // somesmobileapp://resolve_token deep link also landing on the stack (its
+    // own screen replaces itself with /profil first), so a plain back() can
+    // pop that fresh /profil straight back to anmelden. dismissTo always
+    // settles on /profil regardless of how many screens ended up on top
+    router.dismissTo('/profil');
   }
 
   async function withGoogle() {
@@ -94,7 +94,7 @@ export default function AnmeldenScreen() {
       <KeyboardAvoidingView
         style={styles.fill}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <Screen>
+        <Screen tabBarSpacing={false}>
           <Pressable onPress={() => router.back()} style={styles.back} hitSlop={8}>
             <Ionicons name="arrow-back" size={18} color={colors.text} />
             <Text style={typography.subtitle}>Zurück</Text>
@@ -104,7 +104,7 @@ export default function AnmeldenScreen() {
             title="Anmelden"
             subtitle={
               onEmailStep
-                ? 'Willkommen zurück. Gib deine E-Mail-Adresse ein.'
+                ? 'Melde dich an oder erstelle mit deiner E-Mail-Adresse ein neues Konto.'
                 : 'Wir haben dir einen Code geschickt.'
             }
           />

@@ -45,6 +45,16 @@ export function AppHeader() {
         </Pressable>
 
         <View style={styles.actions}>
+
+          <Pressable
+            onPress={() => setShowCountrySheet(true)}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={`Region wechseln, aktuell ${COUNTRY_LABEL[country]}`}
+            style={({ pressed }) => [styles.flag, pressed && styles.pressed]}>
+            <CountryFlag country={country} size={28} variant='map' color='#fff' />
+          </Pressable>
+
           {/* navigate, not push: same double-open fix as the bell above, so a second
               tap before the guard re-renders cannot stack a duplicate impressum screen */}
           <Pressable
@@ -64,15 +74,6 @@ export function AppHeader() {
               size={22}
               color={colors.onChrome}
             />
-          </Pressable>
-
-          <Pressable
-            onPress={() => setShowCountrySheet(true)}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel={`Region wechseln, aktuell ${COUNTRY_LABEL[country]}`}
-            style={({ pressed }) => [styles.flag, pressed && styles.pressed]}>
-            <CountryFlag country={country} size={22} />
           </Pressable>
 
           {/* navigate, not push: a NAVIGATE action reuses the route when it is already

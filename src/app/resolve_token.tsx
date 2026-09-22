@@ -17,7 +17,11 @@ export default function ResolveTokenScreen() {
 
     (async () => {
       if (token) await signIn(token);
-      if (!cancelled) router.replace('/profil');
+      // dismissTo rather than replace(): this deep link can land on top of an
+      // still-open /anmelden screen (the auth session there resolves separately
+      // and calls dismissTo too), so anything less than dismissing back to
+      // /profil can leave /anmelden underneath for a stray back() to return to
+      if (!cancelled) router.dismissTo('/profil');
     })();
 
     return () => {

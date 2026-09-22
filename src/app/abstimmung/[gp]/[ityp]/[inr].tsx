@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { DelegateRow } from '@/components/detail/delegate-row';
@@ -7,14 +7,16 @@ import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { DocumentList, pdfDocuments } from '@/components/detail/document-list';
 import { Divider, SectionCard } from '@/components/detail/section-card';
+import { SectionLink } from '@/components/ui/section-link';
 import { SpeechList } from '@/components/detail/speech-list';
 import { SummaryCard } from '@/components/detail/summary-card';
 import { topicNames, TopicList } from '@/components/detail/topic-list';
-import { VoteBreakdown } from '@/components/detail/vote-breakdown';
+import { NamedVoteBreakdown, VoteBreakdown } from '@/components/detail/vote-breakdown';
 import { Notice } from '@/components/ui/notice';
-import { CardSkeleton } from '@/components/ui/skeleton';
+import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -54,7 +56,16 @@ export default function VoteDetailScreen() {
       ) : vote.isError ? (
         <Notice message="Abstimmung konnte nicht geladen werden." />
       ) : (
-        <VoteDetail voteResult={vote.data} delegates={delegates.data ?? new Map()} />
+        <VoteDetail
+          voteResult={vote.data}
+          delegates={delegates.data ?? new Map()}
+          // enabled:false leaves isPending stuck true forever, so only treat it as
+          // "still loading" while a fetch is actually in flight
+          delegatesLoading={delegates.isPending && delegates.fetchStatus === 'fetching'}
+          gp={gp}
+          ityp={ityp}
+          inr={inr}
+        />
       )}
     </DetailScreen>
   );
@@ -63,9 +74,15 @@ export default function VoteDetailScreen() {
 type DetailProps = {
   voteResult: VoteResult;
   delegates: Map<number, Delegate>;
+  delegatesLoading: boolean;
+  gp: string;
+  ityp: string;
+  inr: string;
 };
 
-function VoteDetail({ voteResult, delegates }: DetailProps) {
+function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: DetailProps) {
+  const router = useRouter();
+  const country = useCountry();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
 
   const topics = topicNames(voteResult.eurovoc_topics, ai_summary);
@@ -81,34 +98,60 @@ function VoteDetail({ voteResult, delegates }: DetailProps) {
         title={ai_summary?.short_title ?? initiative.description}
         subtitle={subtitle}
         summary={ai_summary?.short_summary ?? null}
+        aiGenerated={ai_summary?.short_summary != null}
         badges={voteBadges(initiative)}
-        accepted={initiative.accepted === null ? null : initiative.accepted === 'a'}
+        // EU acceptance data isn't ready to surface yet
+        accepted={
+          country === 'eu' || initiative.accepted === null ? null : initiative.accepted === 'a'
+        }
       />
 
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
-      {voteResult.votes.length > 0 ? (
-        <SectionCard title="Abstimmung">
-          <VoteBreakdown votes={voteResult.votes} />
+      {voteResult.votes.length > 0 || voteResult.named_votes ? (
+        <SectionCard
+          title="Abstimmung"
+          action={
+            country === 'eu' && voteResult.named_votes ? (
+              <SectionLink
+                label="Durchsuchen"
+                onPress={() =>
+                  router.push({
+                    pathname: '/abstimmung/[gp]/[ityp]/[inr]/durchsuchen',
+                    params: { gp, ityp, inr },
+                  })
+                }
+              />
+            ) : undefined
+          }>
+          {voteResult.votes.length > 0 ? <VoteBreakdown votes={voteResult.votes} /> : null}
+          {voteResult.votes.length > 0 && voteResult.named_votes ? <Divider /> : null}
+          {voteResult.named_votes ? (
+            <NamedVoteBreakdown info={voteResult.named_votes.named_vote_info} />
+          ) : null}
 
           {voteResult.issued_by_dels.length > 0 ? (
             <>
               <Divider />
               <Text style={[typography.cardHeading, styles.subHeading]}>Eingebracht von</Text>
               <View style={styles.issuers}>
-                {voteResult.issued_by_dels.map((issuer) => {
-                  const delegate = delegates.get(issuer.delegate_id);
-                  return (
-                    <DelegateRow
-                      key={issuer.delegate_id}
-                      id={issuer.delegate_id}
-                      name={delegate?.name ?? 'Unbekannt'}
-                      party={delegate?.party ?? null}
-                      role={issuer.text}
-                      imageUrl={delegate?.image_url ?? null}
-                    />
-                  );
-                })}
+                {delegatesLoading
+                  ? voteResult.issued_by_dels.map((issuer) => (
+                      <RowSkeleton key={issuer.delegate_id} />
+                    ))
+                  : voteResult.issued_by_dels.map((issuer) => {
+                      const delegate = delegates.get(issuer.delegate_id);
+                      return (
+                        <DelegateRow
+                          key={issuer.delegate_id}
+                          id={issuer.delegate_id}
+                          name={delegate?.name ?? 'Unbekannt'}
+                          party={delegate?.party ?? null}
+                          role={issuer.text}
+                          imageUrl={delegate?.image_url ?? null}
+                        />
+                      );
+                    })}
               </View>
             </>
           ) : null}
@@ -116,7 +159,7 @@ function VoteDetail({ voteResult, delegates }: DetailProps) {
       ) : null}
 
       {voteResult.speeches.length > 0 ? (
-        <SpeechList speeches={voteResult.speeches} delegates={delegates} />
+        <SpeechList speeches={voteResult.speeches} delegates={delegates} gp={gp} ityp={ityp} inr={inr} />
       ) : null}
 
       {documents.length > 0 ? <DocumentList documents={documents} /> : null}

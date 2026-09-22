@@ -20,17 +20,20 @@ export default function AbgeordneteDetailScreen() {
   const delegate = useQuery({
     queryKey: ['delegate', id],
     queryFn: () => somes.delegates.byId(Number(id)),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   const info = useQuery({
     queryKey: ['delegate-info', id],
     queryFn: () => somes.delegates.extended(Number(id)),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   // speeches_per_page is 0 based, unlike every other paginated endpoint
   const speeches = useQuery({
     queryKey: ['delegate-speeches', id],
     queryFn: () => somes.delegates.speeches(Number(id), 0),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return (
@@ -47,6 +50,7 @@ export default function AbgeordneteDetailScreen() {
           info={info.data}
           speeches={speeches.data}
           infoPending={info.isPending}
+          speechesPending={speeches.isPending}
         />
       )}
     </DetailScreen>
@@ -58,11 +62,13 @@ function DelegateDetail({
   info,
   speeches,
   infoPending,
+  speechesPending,
 }: {
   delegate: Delegate;
   info: GeneralDelegateInfo | undefined;
   speeches: SpeechesWithMaxPage | undefined;
   infoPending: boolean;
+  speechesPending: boolean;
 }) {
   return (
     <>
@@ -84,6 +90,8 @@ function DelegateDetail({
           <TopicsCard interests={info.interests} />
         </>
       ) : null}
+
+      {speechesPending ? <CardSkeleton /> : null}
 
       {speeches ? (
         <DelegateSpeechesCard speeches={speeches.speeches} total={speeches.entry_count} />
