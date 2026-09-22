@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { QuestionCard } from '@/components/cards/question-card';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
@@ -18,6 +19,7 @@ import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
 import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
+import { useLocale } from '@/lib/use-locale';
 import { colors, shadows } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -29,10 +31,16 @@ const ENTRIES_PER_PAGE = 16;
 
 type QuickFilter = 'latest_questions' | 'latest_answers' | 'unanswered' | 'mine';
 
-const QUICK_FILTERS: { value: QuickFilter; label: string }[] = [
-  { value: 'latest_questions', label: 'Neuste Fragen' },
-  { value: 'latest_answers', label: 'Neuste Antworten' },
-  { value: 'unanswered', label: 'Unbeantwortet' },
+const QUICK_FILTER_KEYS: Record<Exclude<QuickFilter, 'mine'>, string> = {
+  latest_questions: 'list.quickFilters.latestQuestions',
+  latest_answers: 'list.quickFilters.latestAnswers',
+  unanswered: 'list.quickFilters.unanswered',
+};
+
+const QUICK_FILTER_VALUES: Exclude<QuickFilter, 'mine'>[] = [
+  'latest_questions',
+  'latest_answers',
+  'unanswered',
 ];
 
 function latestAnswerAt(question: PublicDelegateQuestion): number {
@@ -43,6 +51,8 @@ function latestAnswerAt(question: PublicDelegateQuestion): number {
 }
 
 export default function FragenScreen() {
+  const { t } = useTranslation('questions');
+  const locale = useLocale();
   const router = useRouter();
   const country = useCountry();
   const { isAuthenticated } = useAuth();
@@ -106,39 +116,40 @@ export default function FragenScreen() {
   const header = (
     <>
       <ScreenTitle
-        title="Fragen an Abgeordnete"
-        subtitle={updatedAt ? `Aktualisiert am ${isoToDotDate(updatedAt)}` : undefined}
+        title={t('list.title')}
+        subtitle={updatedAt ? t('list.updatedAt', { date: isoToDotDate(updatedAt, locale) }) : undefined}
         centered
       />
 
       {country !== 'at' ? (
-        <Text style={typography.caption}>
-          Fragen an Abgeordnete sind für das EU-Parlament derzeit nicht möglich.
-        </Text>
+        <Text style={typography.caption}>{t('notAvailableForEu')}</Text>
       ) : null}
 
       <View style={styles.searchRow}>
         <View style={styles.searchField}>
           <SearchField value={search} onChangeText={setSearch} />
         </View>
-        <FilterPill label={withCount('Themen', selectedTopics.length)} onPress={() => setSheetOpen(true)} />
+        <FilterPill
+          label={withCount(t('list.topicsFilter'), selectedTopics.length)}
+          onPress={() => setSheetOpen(true)}
+        />
       </View>
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chips}>
-        {QUICK_FILTERS.map((filter) => (
+        {QUICK_FILTER_VALUES.map((filter) => (
           <Chip
-            key={filter.value}
-            label={filter.label}
-            selected={quickFilter === filter.value}
-            onPress={() => setQuickFilter(filter.value)}
+            key={filter}
+            label={t(QUICK_FILTER_KEYS[filter])}
+            selected={quickFilter === filter}
+            onPress={() => setQuickFilter(filter)}
           />
         ))}
         {isAuthenticated ? (
           <Chip
-            label="Meine Fragen"
+            label={t('list.mine')}
             selected={quickFilter === 'mine'}
             onPress={() => setQuickFilter('mine')}
           />
@@ -150,13 +161,13 @@ export default function FragenScreen() {
   const topicSheet = (
     <MultiSelectSheet
       visible={sheetOpen}
-      title="Themen"
+      title={t('topicsSheet.title')}
       values={[...topicIdByLabel.keys()]}
       selected={selectedTopics}
       onChange={setSelectedTopics}
       onClose={() => setSheetOpen(false)}
       searchable
-      searchPlaceholder="Thema suchen..."
+      searchPlaceholder={t('topicsSheet.searchPlaceholder')}
     />
   );
 
@@ -167,7 +178,7 @@ export default function FragenScreen() {
       <Pressable
         onPress={() => router.push(isAuthenticated ? '/frage/neu' : '/anmelden')}
         accessibilityRole="button"
-        accessibilityLabel="Frage stellen"
+        accessibilityLabel={t('askButton')}
         style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}>
         <Ionicons name="add" size={28} color={colors.onAccent} />
       </Pressable>
@@ -180,8 +191,8 @@ export default function FragenScreen() {
           {header}
           <ComingSoon
             icon="chatbubbles-outline"
-            title="Meine Fragen"
-            description="Der Server kann deine eigenen Fragen noch nicht anzeigen. Das kommt bald."
+            title={t('list.comingSoon.title')}
+            description={t('list.comingSoon.description')}
           />
         </Screen>
 
@@ -200,8 +211,8 @@ export default function FragenScreen() {
         renderItem={(question) => <QuestionCard question={question} />}
         isPending={results.isPending}
         isError={results.isError}
-        errorMessage="Fragen konnten nicht geladen werden."
-        emptyMessage="Keine Fragen gefunden"
+        errorMessage={t('list.error')}
+        emptyMessage={t('list.empty')}
         onEndReached={() => {
           if (results.hasNextPage && !results.isFetchingNextPage) results.fetchNextPage();
         }}
