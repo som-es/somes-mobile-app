@@ -6,7 +6,7 @@
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@som-es/somes-ts": "github:som-es/somes-ts#e163763",
+    "@som-es/somes-ts": "git+https://github.com/som-es/somes-ts.git",
     "@tanstack/react-query": "^5.101.4",
     "expo": "^57.0.9",
     "expo-constants": "~57.0.17",
@@ -64,7 +64,7 @@
   "private": true,
   "allowScripts": {
     "unrs-resolver@1.12.2": true,
-    "github:som-es/somes-ts#e163763b5e2a64c3277ded47bd6232340be2a17a": true,
+    "github:som-es/somes-ts#de2c8e5679c5b040993f584101359fadab10add3": true,
     "@parcel/watcher@2.6.0": true
   }
 }
