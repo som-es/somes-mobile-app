@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { isoToDotDate } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { GovProposalDelegate } from '@/types';
@@ -18,6 +20,8 @@ type Props = {
 };
 
 export function ProposalCard({ proposal }: Props) {
+  const { t } = useTranslation();
+  const locale = useLocale();
   const router = useRouter();
   const country = useCountry();
   const { ministrial_proposal: draft, ai_summary } = proposal.gov_proposal;
@@ -54,9 +58,9 @@ export function ProposalCard({ proposal }: Props) {
       ) : null}
 
       <View style={styles.badges}>
-        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
+        {ai_summary?.short_summary ? <Badge label={t('detail.aiSummaryBadge')} /> : null}
         {draft.ressort ? <Badge label={draft.ressort_shortform ?? draft.ressort} /> : null}
-        <Badge label={isoToDotDate(draft.raw_data_created_at)} />
+        <Badge label={isoToDotDate(draft.raw_data_created_at, locale)} />
         <Badge label={draft.gp} />
       </View>
     </Card>

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
-import { CATEGORIES, LOAD_ERROR } from '@/components/notifications/categories';
+import { useCategories, useLoadError } from '@/components/notifications/categories';
 import { Card } from '@/components/ui/card';
 import { SettingRow } from '@/components/ui/setting-row';
 import { SkeletonBar } from '@/components/ui/skeleton';
@@ -16,6 +17,9 @@ type Props = {
 };
 
 export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
+  const { t } = useTranslation('notifications');
+  const categories = useCategories();
+  const loadError = useLoadError();
   const { enabled, deviceStatus, deviceError, isPending } = usePushEnabled();
   const settings = usePushSettings();
   const update = useUpdatePushSettings();
@@ -33,16 +37,16 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
 
   return (
     <Card style={styles.card}>
-      <Text style={typography.cardHeading}>Push-Benachrichtigungen</Text>
+      <Text style={typography.cardHeading}>{t('push.heading')}</Text>
 
       <View style={styles.master}>
         <SettingRow
-          label="Auf diesem Gerät"
+          label={t('push.deviceLabel')}
           description={
             unsupported
-              ? 'Push funktioniert nur auf einem echten Gerät, nicht im Emulator.'
+              ? t('push.unsupported')
               : failed
-                ? 'Dieses Gerät konnte sich nicht für Push registrieren. Tippe erneut, um es noch einmal zu versuchen.'
+                ? t('push.failed')
                 : undefined
           }
           value={enabled}
@@ -60,14 +64,11 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
           device — somes-api stores them whether or not a token is registered, so they
           stay editable with the switch above off, they just have nowhere to arrive */}
       {!enabled ? (
-        <Text style={typography.caption}>
-          Diese Auswahl gilt für alle deine Geräte. Damit auf diesem Gerät etwas ankommt,
-          muss der Schalter oben eingeschaltet sein.
-        </Text>
+        <Text style={typography.caption}>{t('push.deviceOnlyNotice')}</Text>
       ) : null}
 
       {settings.isError ? (
-        <Text style={typography.bodyMuted}>{LOAD_ERROR}</Text>
+        <Text style={typography.bodyMuted}>{loadError}</Text>
       ) : settings.isPending ? (
         <View style={styles.rows}>
           <SkeletonBar width="100%" height={44} />
@@ -76,7 +77,7 @@ export function PushSettingsCard({ onToggleMaster, masterPending }: Props) {
         </View>
       ) : (
         <View style={styles.rows}>
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <SettingRow
               key={category.key}
               label={category.label}

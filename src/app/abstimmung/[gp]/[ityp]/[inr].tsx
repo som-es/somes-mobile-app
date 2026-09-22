@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { DelegateRow } from '@/components/detail/delegate-row';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
@@ -17,12 +18,14 @@ import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { Delegate, VoteResult } from '@/types';
 
 export default function VoteDetailScreen() {
+  const { t } = useTranslation('votes');
   const { gp, ityp, inr } = useLocalSearchParams<{ gp: string; ityp: string; inr: string }>();
 
   const vote = useQuery({
@@ -54,7 +57,7 @@ export default function VoteDetailScreen() {
           <CardSkeleton />
         </>
       ) : vote.isError ? (
-        <Notice message="Abstimmung konnte nicht geladen werden." />
+        <Notice message={t('detail.loadError')} />
       ) : (
         <VoteDetail
           voteResult={vote.data}
@@ -81,6 +84,8 @@ type DetailProps = {
 };
 
 function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: DetailProps) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const router = useRouter();
   const country = useCountry();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
@@ -90,7 +95,9 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
 
   // the web prefixes the date line for roll call votes and falls back to the plenary date
   const dateSource = initiative.vote_date ?? initiative.nr_plenary_activity_date;
-  const subtitle = `${initiative.voted_by_name ? 'Namentlich abgestimmt' : 'Abstimmung'} am: ${isoToDotDate(dateSource)}`;
+  const subtitle = initiative.voted_by_name
+    ? t('detail.namedVoteSubtitle', { date: isoToDotDate(dateSource, locale) })
+    : t('detail.voteSubtitle', { date: isoToDotDate(dateSource, locale) });
 
   return (
     <>
@@ -99,7 +106,7 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
         subtitle={subtitle}
         summary={ai_summary?.short_summary ?? null}
         aiGenerated={ai_summary?.short_summary != null}
-        badges={voteBadges(initiative)}
+        badges={voteBadges(t, locale, initiative)}
         // EU acceptance data isn't ready to surface yet
         accepted={
           country === 'eu' || initiative.accepted === null ? null : initiative.accepted === 'a'
@@ -110,11 +117,11 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
 
       {voteResult.votes.length > 0 || voteResult.named_votes ? (
         <SectionCard
-          title="Abstimmung"
+          title={t('detail.votingHeading')}
           action={
             country === 'eu' && voteResult.named_votes ? (
               <SectionLink
-                label="Durchsuchen"
+                label={t('detail.search')}
                 onPress={() =>
                   router.push({
                     pathname: '/abstimmung/[gp]/[ityp]/[inr]/durchsuchen',
@@ -133,7 +140,7 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
           {voteResult.issued_by_dels.length > 0 ? (
             <>
               <Divider />
-              <Text style={[typography.cardHeading, styles.subHeading]}>Eingebracht von</Text>
+              <Text style={[typography.cardHeading, styles.subHeading]}>{t('detail.broughtBy')}</Text>
               <View style={styles.issuers}>
                 {delegatesLoading
                   ? voteResult.issued_by_dels.map((issuer) => (
@@ -145,7 +152,7 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
                         <DelegateRow
                           key={issuer.delegate_id}
                           id={issuer.delegate_id}
-                          name={delegate?.name ?? 'Unbekannt'}
+                          name={delegate?.name ?? t('common:detail.unknownDelegate')}
                           party={delegate?.party ?? null}
                           role={issuer.text}
                           imageUrl={delegate?.image_url ?? null}

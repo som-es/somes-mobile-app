@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -36,15 +37,17 @@ export function OpinionCard({ infavor, onPress, children }: CardProps) {
 }
 
 export function OpinionLegend() {
+  const { t } = useTranslation('delegates');
+
   return (
     <View style={styles.legend}>
       <View style={styles.legendItem}>
         <View style={[styles.legendDot, { backgroundColor: colors.voteYes }]} />
-        <Text style={typography.caption}>Pro</Text>
+        <Text style={typography.caption}>{t('opinion.for')}</Text>
       </View>
       <View style={styles.legendItem}>
         <View style={[styles.legendDot, { backgroundColor: colors.voteNo }]} />
-        <Text style={typography.caption}>Contra</Text>
+        <Text style={typography.caption}>{t('opinion.against')}</Text>
       </View>
     </View>
   );

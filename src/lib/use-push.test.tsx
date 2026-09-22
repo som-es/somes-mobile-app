@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
 
+import '@/test/i18n';
 import { PushSettingsCard } from '@/components/notifications/push-settings-card';
 import { getExpoPushToken, type PushTokenResult } from '@/lib/push';
 import { somes } from '@/lib/somes';
@@ -179,7 +180,7 @@ describe('PushSettingsCard, master switch', () => {
   /** re-queried on every check, the row re-renders as the two queries resolve and the
       node captured before that is a stale copy */
   function masterDisabled() {
-    return screen.getByRole('switch', { name: 'Auf diesem Gerät' }).props
+    return screen.getByRole('switch', { name: 'On this device' }).props
       .accessibilityState.disabled;
   }
 
@@ -195,7 +196,7 @@ describe('PushSettingsCard, master switch', () => {
     // row is disabled for being pending — so wait on the text, not on disabled
     await waitFor(() => expect(screen.getByText(FCM_MESSAGE)).toBeTruthy());
     expect(masterDisabled()).toBe(false);
-    expect(screen.queryByText(/nur auf einem echten Gerät/)).toBeNull();
+    expect(screen.queryByText(/only works on a real device/)).toBeNull();
 
     await flushPendingQueryEffects();
   });
@@ -205,7 +206,7 @@ describe('PushSettingsCard, master switch', () => {
 
     await renderCard();
 
-    await waitFor(() => expect(screen.getByText(/nur auf einem echten Gerät/)).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(/only works on a real device/)).toBeTruthy());
     expect(masterDisabled()).toBe(true);
 
     await flushPendingQueryEffects();

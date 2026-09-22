@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -11,8 +12,10 @@ type Props = {
 };
 
 export function TopicList({ topics }: Props) {
+  const { t } = useTranslation();
+
   return (
-    <SectionCard title="Themen">
+    <SectionCard title={t('common:detail.topics')}>
       <View style={styles.list}>
         {topics.map((topic) => (
           <View key={topic} style={styles.row}>

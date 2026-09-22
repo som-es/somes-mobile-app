@@ -1,0 +1,79 @@
+{
+  "list": {
+    "titleAt": "Abgeordnete des Nationalrats",
+    "titleEu": "Mitglieder des Europäischen Parlaments",
+    "updatedAt": "Aktualisiert am {{date}}",
+    "filter": "Filter",
+    "all": "Alle",
+    "sortByLabel": "Nach {{label}} sortieren",
+    "resetSort": "Sortierung zurücksetzen",
+    "error": "Abgeordnete konnten nicht geladen werden.",
+    "empty": "Keine Abgeordneten gefunden",
+    "columns": {
+      "name": "Name",
+      "partei": "Partei",
+      "alter": "Alter"
+    }
+  },
+  "card": {
+    "withoutClub": "Ohne Klub"
+  },
+  "detail": {
+    "error": "Abgeordnete:r konnte nicht geladen werden."
+  },
+  "header": {
+    "copyrightFallbackAt": "Parlamentsdirektion",
+    "copyrightFallbackEu": "Europäisches Parlament"
+  },
+  "absences": {
+    "title": "Abwesenheiten",
+    "sittingAt": "Nationalratssitzung",
+    "sittingEu": "Plenarsitzung",
+    "missedSessions": "Verpasste Plenarsitzungen ({{year}}):",
+    "none": "Keine Abwesenheiten",
+    "lastAbsent": "Zuletzt abwesend",
+    "showAll": "Alle Abwesenheiten anzeigen ({{count}})",
+    "totalCount_one": "{{count}} Abwesenheit insgesamt",
+    "totalCount_other": "{{count}} Abwesenheiten insgesamt",
+    "absent": "Abwesend",
+    "present": "Anwesend",
+    "openSource": "Quellennachweis öffnen →",
+    "close": "Schließen"
+  },
+  "speeches": {
+    "title": "Letzte Reden",
+    "noTopic": "Ohne Tagesordnungspunkt",
+    "totalCount_one": "{{count}} Rede insgesamt",
+    "totalCount_other": "{{count}} Reden insgesamt",
+    "showLess": "Weniger anzeigen",
+    "showMore": "Mehr anzeigen ({{count}})"
+  },
+  "namedVotes": {
+    "title": "Letzte namentliche Abstimmungen",
+    "totalCount_one": "{{count}} Abstimmung insgesamt",
+    "totalCount_other": "{{count}} Abstimmungen insgesamt",
+    "loading": "Wird geladen…",
+    "error": "Abstimmung konnte nicht geladen werden.",
+    "absent": "Abwesend",
+    "noVote": "Keine Stimme",
+    "more": "Weitere Abstimmungen ({{count}})",
+    "aiSummaryBadge": "KI-Zusammenfassung"
+  },
+  "opinion": {
+    "for": "Pro",
+    "against": "Contra"
+  },
+  "stance": {
+    "title": "Politische Haltung & Richtung",
+    "authoritarian": "AUTORITÄR",
+    "libertarian": "LIBERTÄR",
+    "socialist": "SOZIALISTISCH",
+    "capitalist": "KAPITALISTISCH",
+    "left": "Links",
+    "right": "Rechts"
+  },
+  "topics": {
+    "title": "Themen",
+    "more": "Weitere Themen"
+  }
+}

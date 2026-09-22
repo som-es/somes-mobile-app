@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { MailSettingsCard } from '@/components/notifications/mail-settings-card';
 import { PushSettingsCard } from '@/components/notifications/push-settings-card';
@@ -21,6 +22,7 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 export default function NotificationsScreen() {
+  const { t } = useTranslation('notifications');
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
@@ -49,14 +51,11 @@ export default function NotificationsScreen() {
   if (!isAuthenticated) {
     return (
       <SubScreen>
-        <ScreenTitle title="Benachrichtigungen" />
+        <ScreenTitle title={t('title')} />
         <Card style={styles.card}>
-          <Text style={typography.cardHeading}>Melde dich an</Text>
-          <Text style={typography.bodyMuted}>
-            Benachrichtigungen richten sich nach deinen Favoriten und Interessen. Dafür
-            brauchst du ein Konto.
-          </Text>
-          <Button label="Anmelden" onPress={() => router.push('/anmelden')} size="lg" />
+          <Text style={typography.cardHeading}>{t('signIn.heading')}</Text>
+          <Text style={typography.bodyMuted}>{t('signIn.body')}</Text>
+          <Button label={t('signIn.cta')} onPress={() => router.push('/anmelden')} size="lg" />
         </Card>
       </SubScreen>
     );
@@ -64,20 +63,14 @@ export default function NotificationsScreen() {
 
   return (
     <SubScreen onRefresh={refresh}>
-      <ScreenTitle
-        title="Benachrichtigungen"
-        subtitle="Wähle, worüber wir dich informieren dürfen"
-      />
+      <ScreenTitle title={t('title')} subtitle={t('subtitle')} />
 
       {failure?.status === 'denied' ? (
         <Card style={styles.card}>
-          <Text style={typography.cardHeading}>Berechtigung fehlt</Text>
-          <Text style={typography.bodyMuted}>
-            Benachrichtigungen sind für somes in den Systemeinstellungen deaktiviert. Ohne
-            sie kann dieses Gerät keine Push-Nachrichten empfangen.
-          </Text>
+          <Text style={typography.cardHeading}>{t('permissionMissing.heading')}</Text>
+          <Text style={typography.bodyMuted}>{t('permissionMissing.body')}</Text>
           <Button
-            label="Einstellungen öffnen"
+            label={t('permissionMissing.openSettings')}
             onPress={() => Linking.openSettings()}
             variant="ghost"
             size="lg"
@@ -87,12 +80,8 @@ export default function NotificationsScreen() {
 
       {failure?.status === 'error' ? (
         <Card style={styles.card}>
-          <Text style={typography.cardHeading}>Push konnte nicht aktiviert werden</Text>
-          <Text style={typography.bodyMuted}>
-            Die Berechtigung steht, aber dieses Gerät konnte sich nicht für Push
-            registrieren. Das liegt an der App, nicht an deinen Einstellungen. Bitte
-            versuche es später erneut.
-          </Text>
+          <Text style={typography.cardHeading}>{t('activationFailed.heading')}</Text>
+          <Text style={typography.bodyMuted}>{t('activationFailed.body')}</Text>
         </Card>
       ) : null}
 

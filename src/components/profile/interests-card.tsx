@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { SelectedTopicsSheet } from '@/components/profile/selected-topics-sheet';
 import { TopicAccordion } from '@/components/profile/topic-accordion';
@@ -10,8 +11,10 @@ import { SearchField } from '@/components/ui/search-field';
 import { SkeletonBar } from '@/components/ui/skeleton';
 import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
+import { topicGroupLabel } from '@/theme/topic-group-labels';
 import { OTHER_GROUP, topicGroup } from '@/theme/topic-groups';
 import { typography } from '@/theme/typography';
 import type { UniqueTopic } from '@/types';
@@ -23,6 +26,9 @@ const STALE = 1000 * 60 * 60 * 24;
 const MAX_RESULTS = 10;
 
 export function InterestsCard() {
+  const { t } = useTranslation('profile');
+  const locale = useLocale();
+  const collationLocale = locale === 'de-AT' ? 'de' : 'en';
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
@@ -41,8 +47,11 @@ export function InterestsCard() {
   });
 
   const selected = useMemo(
-    () => (selection.data ?? []).slice().sort((a, b) => a.topic.localeCompare(b.topic, 'de')),
-    [selection.data]
+    () =>
+      (selection.data ?? [])
+        .slice()
+        .sort((a, b) => a.topic.localeCompare(b.topic, collationLocale)),
+    [selection.data, collationLocale]
   );
   const selectedIds = useMemo(() => new Set(selected.map((topic) => topic.id)), [selected]);
 
@@ -92,14 +101,14 @@ export function InterestsCard() {
     return Array.from(byGroup.entries())
       .map(([title, entries]) => ({
         title,
-        topics: entries.slice().sort((a, b) => a.topic.localeCompare(b.topic, 'de')),
+        topics: entries.slice().sort((a, b) => a.topic.localeCompare(b.topic, collationLocale)),
       }))
       .sort((a, b) => {
         if (a.title === OTHER_GROUP) return 1;
         if (b.title === OTHER_GROUP) return -1;
-        return a.title.localeCompare(b.title, 'de');
+        return a.title.localeCompare(b.title, collationLocale);
       });
-  }, [topics.data]);
+  }, [topics.data, collationLocale]);
 
   const needle = search.trim().toLowerCase();
   const results = useMemo(() => {
@@ -119,31 +128,28 @@ export function InterestsCard() {
   return (
     <Card style={styles.card}>
       <View style={styles.heading}>
-        <Text style={[typography.cardHeading, styles.grow]}>Wähle deine Interessen</Text>
+        <Text style={[typography.cardHeading, styles.grow]}>{t('interests.heading')}</Text>
         {selected.length > 0 ? (
           <Pressable
             onPress={() => setShowSelected(true)}
             hitSlop={8}
             accessibilityRole="button"
-            accessibilityLabel={`${selected.length} ausgewählte Interessen anzeigen`}
+            accessibilityLabel={t('interests.showSelectedA11y', { count: selected.length })}
             style={({ pressed }) => [styles.count, pressed && styles.pressed]}>
             <Text style={[typography.caption, styles.countLabel]}>
-              {selected.length} ausgewählt
+              {t('interests.selectedCount', { count: selected.length })}
             </Text>
             <Ionicons name="chevron-forward" size={13} color={colors.accent} />
           </Pressable>
         ) : null}
       </View>
 
-      <Text style={typography.caption}>
-        Danach richten sich deine E-Mail-Benachrichtigungen zu neuen Abstimmungen,
-        Ministerialentwürfen und Anträgen.
-      </Text>
+      <Text style={typography.caption}>{t('interests.description')}</Text>
 
       <SearchField
         value={search}
         onChangeText={setSearch}
-        placeholder="Themen suchen..."
+        placeholder={t('interests.searchPlaceholder')}
         filled
       />
 
@@ -156,7 +162,7 @@ export function InterestsCard() {
       ) : needle ? (
         <View style={styles.results}>
           {results.length === 0 ? (
-            <Text style={typography.bodyMuted}>Keine Themen gefunden</Text>
+            <Text style={typography.bodyMuted}>{t('interests.noResults')}</Text>
           ) : (
             <>
               {results.slice(0, MAX_RESULTS).map((topic) => {
@@ -181,7 +187,7 @@ export function InterestsCard() {
               })}
               {results.length > MAX_RESULTS ? (
                 <Text style={typography.caption}>
-                  … und {results.length - MAX_RESULTS} weitere. Suche genauer.
+                  {t('interests.moreResults', { count: results.length - MAX_RESULTS })}
                 </Text>
               ) : null}
             </>
@@ -192,7 +198,7 @@ export function InterestsCard() {
           {groups.map((group) => (
             <TopicAccordion
               key={group.title}
-              title={group.title}
+              title={topicGroupLabel(t, group.title)}
               topics={group.topics}
               selectedIds={selectedIds}
               onToggle={toggleOne}

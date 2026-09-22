@@ -3,6 +3,7 @@ import { usePathname, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 import { SomesMark } from '@/assets/somes-mark';
 import { CountrySheet } from '@/components/layout/country-sheet';
@@ -11,14 +12,9 @@ import { useCountry, useSwitchCountry } from '@/lib/use-country';
 import { colors, shadows } from '@/theme/colors';
 import { HEADER_HEIGHT, radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-import type { Country } from '@/types';
-
-const COUNTRY_LABEL: Record<Country, string> = {
-  at: 'Österreich',
-  eu: 'Europäische Union',
-};
 
 export function AppHeader() {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const pathname = usePathname();
@@ -38,7 +34,7 @@ export function AppHeader() {
           onPress={() => router.navigate('/')}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="somes — zur Startseite"
+          accessibilityLabel={t('common:appHeader.home')}
           style={({ pressed }) => [styles.logo, pressed && styles.pressed]}>
           <SomesMark size={34} color={colors.onChrome} />
           <Text style={[typography.logo, styles.wordmark]}>somes</Text>
@@ -50,7 +46,9 @@ export function AppHeader() {
             onPress={() => setShowCountrySheet(true)}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel={`Region wechseln, aktuell ${COUNTRY_LABEL[country]}`}
+            accessibilityLabel={t('common:appHeader.regionSwitch', {
+              region: t(`common:country.${country}.title`),
+            })}
             style={({ pressed }) => [styles.flag, pressed && styles.pressed]}>
             <CountryFlag country={country} size={28} variant='map' color='#fff' />
           </Pressable>
@@ -62,7 +60,7 @@ export function AppHeader() {
             disabled={onImpressum}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel="Impressum und Kontakt"
+            accessibilityLabel={t('common:appHeader.impressum')}
             accessibilityState={{ selected: onImpressum, disabled: onImpressum }}
             style={({ pressed }) => [
               styles.info,
@@ -84,7 +82,7 @@ export function AppHeader() {
             disabled={onNotifications}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel="Benachrichtigungen"
+            accessibilityLabel={t('common:appHeader.notifications')}
             accessibilityState={{ selected: onNotifications, disabled: onNotifications }}
             style={({ pressed }) => [
               styles.bell,

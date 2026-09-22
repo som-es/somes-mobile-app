@@ -1,0 +1,64 @@
+{
+  "accountCard": {
+    "heading": "Benutzerinfos",
+    "notSignedIn": "Nicht angemeldet",
+    "signIn": "Anmelden",
+    "anonymised": "anonymisiert ...{{hash}}...",
+    "signOut": "Abmelden"
+  },
+  "dangerZone": {
+    "deleteFailedTitle": "Account konnte nicht gelöscht werden",
+    "deleteFailedMessage": "Bitte versuche es später erneut. Dein Account ist unverändert.",
+    "confirmTitle": "Account löschen?",
+    "confirmMessage": "Deine Interessen, Favoriten und Benachrichtigungen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "confirmDelete": "Löschen",
+    "heading": "Gefahrenbereich",
+    "subtitle": "Diese Aktion kann nicht rückgängig gemacht werden",
+    "deleteButton": "Account löschen"
+  },
+  "screenTitle": {
+    "title": "Benutzerprofil",
+    "subtitle": "Verwalte deine Einstellungen und Präferenzen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "caption": "Push und E-Mail einstellen"
+  },
+  "guestBlurb": {
+    "title": "Mit einem Konto",
+    "benefits": {
+      "interests": "Themen wählen, die dich interessieren",
+      "favorites": "Abgeordnete und Abstimmungen merken",
+      "sync": "Deine Auswahl auf allen Geräten behalten"
+    },
+    "noAccountNote": "Alle Abstimmungen, Ministerialentwürfe und Abgeordneten kannst du auch ohne Konto ansehen."
+  },
+  "favoritesLinks": {
+    "loadError": "Konnten nicht geladen werden",
+    "savedCount_one": "{{count}} gespeichert",
+    "savedCount_other": "{{count}} gespeichert"
+  },
+  "interests": {
+    "heading": "Wähle deine Interessen",
+    "showSelectedA11y": "{{count}} ausgewählte Interessen anzeigen",
+    "selectedCount_one": "{{count}} ausgewählt",
+    "selectedCount_other": "{{count}} ausgewählt",
+    "description": "Danach richten sich deine E-Mail-Benachrichtigungen zu neuen Abstimmungen, Ministerialentwürfen und Anträgen.",
+    "searchPlaceholder": "Themen suchen...",
+    "noResults": "Keine Themen gefunden",
+    "moreResults": "… und {{count}} weitere. Suche genauer."
+  },
+  "topicAccordion": {
+    "toggleAllA11y": "Alle Themen in {{title}} {{action}}",
+    "deselectAll": "abwählen",
+    "selectAll": "auswählen"
+  },
+  "topicChip": {
+    "removeA11y": "{{label}} entfernen"
+  },
+  "selectedTopicsSheet": {
+    "title": "Deine Interessen",
+    "empty": "Noch keine Interessen ausgewählt.",
+    "hint": "Zum Entfernen antippen."
+  }
+}

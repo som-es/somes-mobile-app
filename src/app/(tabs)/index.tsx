@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { ProposalCard } from '@/components/cards/proposal-card';
 import { VoteResultCard } from '@/components/cards/vote-result-card';
@@ -13,14 +14,17 @@ import { requestAbstimmungenTab } from '@/lib/abstimmungen-tab';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { spacing } from '@/theme/layout';
 
 const LATEST_COUNT = 3;
 const PROPOSAL_DAYS = 30;
 
 export default function HomeScreen() {
+  const { t } = useTranslation('home');
   const router = useRouter();
   const country = useCountry();
+  const locale = useLocale();
 
   const session = useQuery({
     queryKey: ['next-plenar-date'],
@@ -56,27 +60,23 @@ export default function HomeScreen() {
       ) : (
         <NextSessionCard
           date={session.data?.date_and_time ?? null}
-          title={
-            country === 'eu'
-              ? 'Nächste Plenarsitzung des Europäischen Parlaments'
-              : 'Nächste Nationalratssitzung'
-          }
+          title={country === 'eu' ? t('session.titleEu') : t('session.titleAt')}
         />
       )}
 
       <View style={styles.section}>
         <ScreenTitle
-          title="Letzte Abstimmungen"
-          subtitle={voteDate ? `Abgestimmt am ${isoToDotDate(voteDate)}` : undefined}
+          title={t('votes.title')}
+          subtitle={voteDate ? t('votes.votedOn', { date: isoToDotDate(voteDate, locale) }) : undefined}
           section
         />
 
         {votes.isPending ? (
           <Skeletons />
         ) : votes.isError ? (
-          <Notice message="Abstimmungen konnten nicht geladen werden." />
+          <Notice message={t('votes.error')} />
         ) : votes.data.length === 0 ? (
-          <Notice message="Keine." />
+          <Notice message={t('votes.empty')} />
         ) : (
           votes.data
             .slice(0, LATEST_COUNT)
@@ -86,7 +86,7 @@ export default function HomeScreen() {
         )}
 
         <SectionLink
-          label="Weitere Abstimmungen"
+          label={t('votes.more')}
           onPress={() => {
             requestAbstimmungenTab('nationalrat');
             router.navigate('/abstimmungen');
@@ -96,14 +96,14 @@ export default function HomeScreen() {
 
       {country === 'at' && (
         <View style={styles.section}>
-          <ScreenTitle title="Ministerialentwürfe" subtitle="Der letzten 30 Tage" section />
+          <ScreenTitle title={t('proposals.title')} subtitle={t('proposals.subtitle')} section />
 
           {proposals.isPending ? (
             <Skeletons />
           ) : proposals.isError ? (
-            <Notice message="Ministerialentwürfe konnten nicht geladen werden." />
+            <Notice message={t('proposals.error')} />
           ) : proposals.data.length === 0 ? (
-            <Notice message="Keine." />
+            <Notice message={t('proposals.empty')} />
           ) : (
             proposals.data
               .slice(0, LATEST_COUNT)
@@ -116,7 +116,7 @@ export default function HomeScreen() {
           )}
 
           <SectionLink
-            label="Weitere Ministerialentwürfe"
+            label={t('proposals.more')}
             onPress={() => {
               requestAbstimmungenTab('regierung');
               router.navigate('/abstimmungen');

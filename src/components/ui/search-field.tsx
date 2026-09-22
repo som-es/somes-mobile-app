@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, TextInput, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -12,19 +13,16 @@ type Props = {
   filled?: boolean;
 };
 
-export function SearchField({
-  value,
-  onChangeText,
-  placeholder = 'Suche...',
-  filled = false,
-}: Props) {
+export function SearchField({ value, onChangeText, placeholder, filled = false }: Props) {
+  const { t } = useTranslation();
+
   return (
     <View style={[styles.field, filled && styles.filled]}>
       <Ionicons name="search" size={16} color={colors.textMuted} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('common:search.placeholder')}
         placeholderTextColor={colors.textPlaceholder}
         style={[styles.input, typography.subtitle, styles.inputColor]}
         returnKeyType="search"

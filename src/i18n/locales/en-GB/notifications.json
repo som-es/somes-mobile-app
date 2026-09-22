@@ -1,0 +1,68 @@
+{
+  "title": "Notifications",
+  "subtitle": "Choose what we're allowed to tell you about",
+  "signIn": {
+    "heading": "Sign in",
+    "body": "Notifications follow your favourites and interests. That takes an account.",
+    "cta": "Sign in"
+  },
+  "permissionMissing": {
+    "heading": "Permission missing",
+    "body": "Notifications are disabled for somes in your system settings. Without it, this device can't receive push messages.",
+    "openSettings": "Open settings"
+  },
+  "activationFailed": {
+    "heading": "Push couldn't be turned on",
+    "body": "Permission is granted, but this device couldn't register for push. That's on the app, not your settings. Please try again later."
+  },
+  "loadError": "Settings couldn't be loaded. Pull down the page to try again.",
+  "categories": {
+    "send_new_vote_results": {
+      "label": "New vote results",
+      "description": "Every new result, regardless of your favourites."
+    },
+    "send_new_vote_result_by_favo": {
+      "label": "Favourited votes",
+      "description": "Only results for votes in your favourites."
+    },
+    "send_new_delegate_activity": {
+      "label": "Favourited MPs' activity",
+      "description": "Speeches, questions and votes from your favourites."
+    },
+    "send_new_ministrial_prop": {
+      "label": "New ministerial drafts",
+      "description": "Every new draft, regardless of your interests."
+    },
+    "send_new_ministrial_prop_by_favo": {
+      "label": "Ministerial drafts matching your interests",
+      "description": "Only drafts that match your interests."
+    },
+    "send_new_decree": {
+      "label": "New decrees",
+      "description": "Every new decree, regardless of your interests."
+    },
+    "send_new_decree_by_favo": {
+      "label": "Decrees matching your interests",
+      "description": "Only decrees that match your interests."
+    },
+    "send_new_proposal": {
+      "label": "New motions",
+      "description": "Every new motion, regardless of your interests."
+    },
+    "send_new_proposal_by_favo": {
+      "label": "Motions matching your interests",
+      "description": "Only motions that match your interests."
+    }
+  },
+  "mail": {
+    "heading": "Email notifications",
+    "caption": "These emails go to your account's address, regardless of this device."
+  },
+  "push": {
+    "heading": "Push notifications",
+    "deviceLabel": "On this device",
+    "unsupported": "Push only works on a real device, not in the simulator.",
+    "failed": "This device couldn't register for push. Tap again to retry.",
+    "deviceOnlyNotice": "This selection applies to all your devices. For anything to arrive on this device, the switch above has to be turned on."
+  }
+}

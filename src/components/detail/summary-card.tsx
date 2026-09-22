@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -27,6 +28,8 @@ export function SummaryCard({
   badges,
   accepted = null,
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <Card>
       <View style={styles.titleRow}>
@@ -41,8 +44,8 @@ export function SummaryCard({
         <>
           <Divider />
           <View style={styles.summaryHead}>
-            <Text style={typography.cardHeading}>Zusammenfassung</Text>
-            {aiGenerated ? <Badge label="KI-generiert" /> : null}
+            <Text style={typography.cardHeading}>{t('common:detail.summaryHeading')}</Text>
+            {aiGenerated ? <Badge label={t('common:detail.aiGeneratedBadge')} /> : null}
           </View>
           <Text style={[typography.bodyMuted, styles.summary]}>{summary}</Text>
         </>

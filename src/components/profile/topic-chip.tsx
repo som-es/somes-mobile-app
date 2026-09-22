@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -12,12 +13,16 @@ type Props = {
 };
 
 export function TopicChip({ label, selected, onPress, removable = false }: Props) {
+  const { t } = useTranslation('profile');
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="checkbox"
       accessibilityState={{ checked: selected }}
-      accessibilityLabel={selected && removable ? `${label} entfernen` : label}
+      accessibilityLabel={
+        selected && removable ? t('topicChip.removeA11y', { label }) : label
+      }
       style={({ pressed }) => [
         styles.chip,
         selected ? styles.selected : styles.unselected,

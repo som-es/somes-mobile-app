@@ -2,6 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { OpinionCard, OpinionLegend } from '@/components/delegate/opinion';
 import { SectionCard } from '@/components/detail/section-card';
@@ -10,6 +11,7 @@ import { SectionLink } from '@/components/ui/section-link';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useLocale } from '@/lib/use-locale';
 import { voteBadges } from '@/lib/vote-labels';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -23,6 +25,7 @@ type Props = {
 
 /** every row needs its own vote_result_by_id, a named vote carries no title */
 export function NamedVotesCard({ namedVotes }: Props) {
+  const { t } = useTranslation('delegates');
   const router = useRouter();
   const [visible, setVisible] = useState(PREVIEW);
   const shown = namedVotes.slice(0, visible);
@@ -38,9 +41,9 @@ export function NamedVotesCard({ namedVotes }: Props) {
   if (namedVotes.length === 0) return null;
 
   return (
-    <SectionCard title="Letzte namentliche Abstimmungen" action={<OpinionLegend />}>
+    <SectionCard title={t('namedVotes.title')} action={<OpinionLegend />}>
       <Text style={[typography.caption, styles.total]}>
-        {namedVotes.length} {namedVotes.length === 1 ? 'Abstimmung' : 'Abstimmungen'} insgesamt
+        {t('namedVotes.totalCount', { count: namedVotes.length })}
       </Text>
 
       <View style={styles.list}>
@@ -66,9 +69,9 @@ export function NamedVotesCard({ namedVotes }: Props) {
                   : undefined
               }>
               {result.isPending ? (
-                <Text style={typography.caption}>Wird geladen…</Text>
+                <Text style={typography.caption}>{t('namedVotes.loading')}</Text>
               ) : result.isError || !result.data ? (
-                <Text style={typography.bodyMuted}>Abstimmung konnte nicht geladen werden.</Text>
+                <Text style={typography.bodyMuted}>{t('namedVotes.error')}</Text>
               ) : (
                 <NamedVoteBody voteResult={result.data} namedVote={namedVote} />
               )}
@@ -80,7 +83,7 @@ export function NamedVotesCard({ namedVotes }: Props) {
       {remaining > 0 ? (
         <View style={styles.more}>
           <SectionLink
-            label={`Weitere Abstimmungen (${remaining})`}
+            label={t('namedVotes.more', { count: remaining })}
             onPress={() => setVisible(visible + PREVIEW)}
           />
         </View>
@@ -96,6 +99,8 @@ function NamedVoteBody({
   voteResult: VoteResult;
   namedVote: NamedVote;
 }) {
+  const { t } = useTranslation('delegates');
+  const locale = useLocale();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
   const { infavor } = namedVote;
 
@@ -109,13 +114,13 @@ function NamedVoteBody({
           <VoteMark infavor={infavor} size={18} />
         ) : (
           <Text style={typography.caption}>
-            {namedVote.was_absent ? 'Abwesend' : 'Keine Stimme'}
+            {namedVote.was_absent ? t('namedVotes.absent') : t('namedVotes.noVote')}
           </Text>
         )}
       </View>
 
       <Text style={typography.caption}>
-        {isoToDotDate(initiative.nr_plenary_activity_date)}
+        {isoToDotDate(initiative.nr_plenary_activity_date, locale)}
       </Text>
 
       {ai_summary?.short_summary ? (
@@ -125,8 +130,8 @@ function NamedVoteBody({
       ) : null}
 
       <View style={styles.badges}>
-        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
-        {voteBadges(initiative).map((label) => (
+        {ai_summary?.short_summary ? <Badge label={t('namedVotes.aiSummaryBadge')} /> : null}
+        {voteBadges(t, locale, initiative).map((label) => (
           <Badge key={label} label={label} />
         ))}
       </View>

@@ -1,0 +1,23 @@
+{
+  "session": {
+    "titleEu": "Nächste Plenarsitzung des Europäischen Parlaments",
+    "titleAt": "Nächste Nationalratssitzung",
+    "dateUnknown": "Termin noch nicht bekannt",
+    "date": "am {{date}}",
+    "dateWithRelative": "am {{date}} ({{relative}})"
+  },
+  "votes": {
+    "title": "Letzte Abstimmungen",
+    "votedOn": "Abgestimmt am {{date}}",
+    "error": "Abstimmungen konnten nicht geladen werden.",
+    "empty": "Keine.",
+    "more": "Weitere Abstimmungen"
+  },
+  "proposals": {
+    "title": "Ministerialentwürfe",
+    "subtitle": "Der letzten 30 Tage",
+    "error": "Ministerialentwürfe konnten nicht geladen werden.",
+    "empty": "Keine.",
+    "more": "Weitere Ministerialentwürfe"
+  }
+}

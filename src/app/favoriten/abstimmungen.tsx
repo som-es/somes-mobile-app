@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQueries } from '@tanstack/react-query';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { SubScreen } from '@/components/layout/sub-screen';
@@ -15,6 +16,7 @@ import { typography } from '@/theme/typography';
 import type { VoteResult } from '@/types';
 
 export default function FavoriteVotesScreen() {
+  const { t } = useTranslation('favorites');
   const favorites = useFavoriteVotes();
   const entries = favorites.data ?? [];
 
@@ -27,7 +29,7 @@ export default function FavoriteVotesScreen() {
 
   return (
     <SubScreen refreshing={favorites.isRefetching} onRefresh={() => favorites.refetch()}>
-      <ScreenTitle title="Favorisierte Abstimmungen" />
+      <ScreenTitle title={t('votes.title')} />
 
       {favorites.isPending ? (
         <>
@@ -35,9 +37,9 @@ export default function FavoriteVotesScreen() {
           <CardSkeleton />
         </>
       ) : favorites.isError ? (
-        <Notice message="Favoriten konnten nicht geladen werden." />
+        <Notice message={t('loadError')} />
       ) : entries.length === 0 ? (
-        <Notice message="Keine favorisierten Abstimmungen vorhanden." />
+        <Notice message={t('votes.empty')} />
       ) : (
         entries.map((favo, index) => (
           <FavoriteVote
@@ -52,6 +54,7 @@ export default function FavoriteVotesScreen() {
 }
 
 function FavoriteVote({ id, voteResult }: { id: number; voteResult: VoteResult | undefined }) {
+  const { t } = useTranslation('favorites');
   const { toggle, isPending } = useFavorite('vote', id);
 
   return (
@@ -65,7 +68,7 @@ function FavoriteVote({ id, voteResult }: { id: number; voteResult: VoteResult |
         accessibilityRole="button"
         style={({ pressed }) => [styles.remove, pressed && styles.pressed]}>
         <Ionicons name="heart-dislike-outline" size={16} color={colors.danger} />
-        <Text style={[typography.caption, styles.removeLabel]}>Aus Favoriten entfernen</Text>
+        <Text style={[typography.caption, styles.removeLabel]}>{t('remove')}</Text>
       </Pressable>
     </View>
   );

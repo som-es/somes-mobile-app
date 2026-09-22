@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { AppHeader } from '@/components/layout/app-header';
 import { Screen } from '@/components/ui/screen';
@@ -21,12 +22,8 @@ type Props = {
   children: ReactNode;
 };
 
-export function DetailScreen({
-  sourceUrl,
-  sourceLabel = 'Auf parlament.gv.at öffnen',
-  action,
-  children,
-}: Props) {
+export function DetailScreen({ sourceUrl, sourceLabel, action, children }: Props) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -36,7 +33,7 @@ export function DetailScreen({
         <View style={styles.topRow}>
           <Pressable onPress={() => router.back()} hitSlop={8} style={styles.back}>
             <Ionicons name="arrow-back" size={18} color={colors.text} />
-            <Text style={typography.subtitle}>Zurück</Text>
+            <Text style={typography.subtitle}>{t('common:detail.back')}</Text>
           </Pressable>
 
           <View style={styles.actions}>
@@ -46,7 +43,7 @@ export function DetailScreen({
                 onPress={() => Linking.openURL(sourceUrl)}
                 hitSlop={8}
                 accessibilityRole="link"
-                accessibilityLabel={sourceLabel}>
+                accessibilityLabel={sourceLabel ?? t('common:detail.openOnParliament')}>
                 <Ionicons name="open-outline" size={20} color={colors.textMuted} />
               </Pressable>
             ) : null}

@@ -1,0 +1,68 @@
+{
+  "title": "Benachrichtigungen",
+  "subtitle": "Wähle, worüber wir dich informieren dürfen",
+  "signIn": {
+    "heading": "Melde dich an",
+    "body": "Benachrichtigungen richten sich nach deinen Favoriten und Interessen. Dafür brauchst du ein Konto.",
+    "cta": "Anmelden"
+  },
+  "permissionMissing": {
+    "heading": "Berechtigung fehlt",
+    "body": "Benachrichtigungen sind für somes in den Systemeinstellungen deaktiviert. Ohne sie kann dieses Gerät keine Push-Nachrichten empfangen.",
+    "openSettings": "Einstellungen öffnen"
+  },
+  "activationFailed": {
+    "heading": "Push konnte nicht aktiviert werden",
+    "body": "Die Berechtigung steht, aber dieses Gerät konnte sich nicht für Push registrieren. Das liegt an der App, nicht an deinen Einstellungen. Bitte versuche es später erneut."
+  },
+  "loadError": "Einstellungen konnten nicht geladen werden. Zieh die Seite nach unten, um es erneut zu versuchen.",
+  "categories": {
+    "send_new_vote_results": {
+      "label": "Neue Abstimmungsergebnisse",
+      "description": "Jedes neue Ergebnis, unabhängig von deinen Favoriten."
+    },
+    "send_new_vote_result_by_favo": {
+      "label": "Favorisierte Abstimmungen",
+      "description": "Nur Ergebnisse zu Abstimmungen in deinen Favoriten."
+    },
+    "send_new_delegate_activity": {
+      "label": "Aktivität favorisierter Abgeordneter",
+      "description": "Reden, Anfragen und Abstimmungen deiner Favoriten."
+    },
+    "send_new_ministrial_prop": {
+      "label": "Neue Ministerialentwürfe",
+      "description": "Jeder neue Entwurf, unabhängig von deinen Interessen."
+    },
+    "send_new_ministrial_prop_by_favo": {
+      "label": "Ministerialentwürfe zu deinen Interessen",
+      "description": "Nur Entwürfe, die zu deinen Interessen passen."
+    },
+    "send_new_decree": {
+      "label": "Neue Verordnungen",
+      "description": "Jede neue Verordnung, unabhängig von deinen Interessen."
+    },
+    "send_new_decree_by_favo": {
+      "label": "Verordnungen zu deinen Interessen",
+      "description": "Nur Verordnungen, die zu deinen Interessen passen."
+    },
+    "send_new_proposal": {
+      "label": "Neue Anträge",
+      "description": "Jeder neue Antrag, unabhängig von deinen Interessen."
+    },
+    "send_new_proposal_by_favo": {
+      "label": "Anträge zu deinen Interessen",
+      "description": "Nur Anträge, die zu deinen Interessen passen."
+    }
+  },
+  "mail": {
+    "heading": "E-Mail-Benachrichtigungen",
+    "caption": "Diese E-Mails gehen an die Adresse deines Kontos, unabhängig von diesem Gerät."
+  },
+  "push": {
+    "heading": "Push-Benachrichtigungen",
+    "deviceLabel": "Auf diesem Gerät",
+    "unsupported": "Push funktioniert nur auf einem echten Gerät, nicht im Emulator.",
+    "failed": "Dieses Gerät konnte sich nicht für Push registrieren. Tippe erneut, um es noch einmal zu versuchen.",
+    "deviceOnlyNotice": "Diese Auswahl gilt für alle deine Geräte. Damit auf diesem Gerät etwas ankommt, muss der Schalter oben eingeschaltet sein."
+  }
+}

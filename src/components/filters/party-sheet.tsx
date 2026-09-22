@@ -1,4 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { colors } from '@/theme/colors';
@@ -17,13 +18,14 @@ type Props = {
 
 type Stance = 'pro' | 'egal' | 'contra';
 
-const STANCES: { value: Stance; label: string }[] = [
-  { value: 'pro', label: 'Pro' },
-  { value: 'egal', label: 'Egal' },
-  { value: 'contra', label: 'Contra' },
-];
-
 export function PartySheet({ visible, parties, selected, onChange, onClose }: Props) {
+  const { t } = useTranslation('filters');
+  const STANCES: { value: Stance; label: string }[] = [
+    { value: 'pro', label: t('stance.pro') },
+    { value: 'egal', label: t('stance.any') },
+    { value: 'contra', label: t('stance.contra') },
+  ];
+
   function stanceOf(party: string): Stance {
     const match = selected.find((entry) => entry.party === party);
     if (!match) return 'egal';
@@ -38,7 +40,7 @@ export function PartySheet({ visible, parties, selected, onChange, onClose }: Pr
   return (
     <BottomSheet
       visible={visible}
-      title="Parteien"
+      title={t('votes:filters.parties')}
       onClose={onClose}
       onReset={selected.length > 0 ? () => onChange([]) : undefined}>
       <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>

@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
 import { radius, spacing } from '@/theme/layout';
 import { topicColor } from '@/theme/topic-colors';
+import { topicGroupLabel } from '@/theme/topic-group-labels';
 import { typography } from '@/theme/typography';
 import type { InterestShare } from '@/types';
 
@@ -15,6 +17,8 @@ type Props = {
 };
 
 export function TopicsCard({ interests }: Props) {
+  const { t } = useTranslation('delegates');
+
   if (interests.length === 0) return null;
 
   const sorted = interests.slice().sort((a, b) => b.occurences - a.occurences);
@@ -24,20 +28,25 @@ export function TopicsCard({ interests }: Props) {
   const [lead, ...rest] = tiles;
 
   return (
-    <SectionCard title="Themen">
+    <SectionCard title={t('topics.title')}>
       <View style={styles.grid}>
-        <Tile label={lead.topic} count={lead.occurences} color={topicColor(lead.topic)} wide />
+        <Tile
+          label={topicGroupLabel(t, lead.topic)}
+          count={lead.occurences}
+          color={topicColor(lead.topic)}
+          wide
+        />
         {rest.map((interest) => (
           <Tile
             key={interest.topic}
-            label={interest.topic}
+            label={topicGroupLabel(t, interest.topic)}
             count={interest.occurences}
             color={topicColor(interest.topic)}
           />
         ))}
         {overflow.length > 0 ? (
           <Tile
-            label="Weitere Themen"
+            label={t('topics.more')}
             count={overflow.reduce((sum, interest) => sum + interest.occurences, 0)}
             color={MUTED_TILE}
           />

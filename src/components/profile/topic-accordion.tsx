@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { TopicChip } from '@/components/profile/topic-chip';
 import { colors } from '@/theme/colors';
@@ -18,6 +19,7 @@ type Props = {
 
 /** the select all box is tri state and must not also expand the row */
 export function TopicAccordion({ title, topics, selectedIds, onToggle, onToggleAll }: Props) {
+  const { t } = useTranslation('profile');
   const [open, setOpen] = useState(false);
 
   const selectedCount = topics.filter((topic) => selectedIds.has(topic.id)).length;
@@ -36,7 +38,10 @@ export function TopicAccordion({ title, topics, selectedIds, onToggle, onToggleA
           hitSlop={10}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: all }}
-          accessibilityLabel={`Alle Themen in ${title} ${all ? 'abwählen' : 'auswählen'}`}
+          accessibilityLabel={t('topicAccordion.toggleAllA11y', {
+            title,
+            action: all ? t('topicAccordion.deselectAll') : t('topicAccordion.selectAll'),
+          })}
           style={[styles.box, (all || some) && styles.boxActive]}>
           {all ? <Ionicons name="checkmark" size={13} color={colors.onAccent} /> : null}
           {some ? <View style={styles.dash} /> : null}
