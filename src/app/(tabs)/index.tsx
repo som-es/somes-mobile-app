@@ -51,14 +51,18 @@ export default function HomeScreen() {
 
   return (
     <Screen refreshing={refreshing} onRefresh={onRefresh}>
-      <NextSessionCard
-        date={session.data?.date_and_time ?? null}
-        title={
-          country === 'eu'
-            ? 'Nächste Plenarsitzung des Europäischen Parlaments'
-            : 'Nächste Nationalratssitzung'
-        }
-      />
+      {session.isPending ? (
+        <CardSkeleton />
+      ) : (
+        <NextSessionCard
+          date={session.data?.date_and_time ?? null}
+          title={
+            country === 'eu'
+              ? 'Nächste Plenarsitzung des Europäischen Parlaments'
+              : 'Nächste Nationalratssitzung'
+          }
+        />
+      )}
 
       <View style={styles.section}>
         <ScreenTitle

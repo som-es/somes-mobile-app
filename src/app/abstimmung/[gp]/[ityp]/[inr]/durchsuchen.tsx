@@ -2,7 +2,7 @@ import { euCountryName } from '@som-es/somes-ts';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { NamedVoteRow } from '@/components/detail/named-vote-row';
@@ -56,48 +56,59 @@ export default function SearchNamedVotesScreen() {
   // "still loading" while a fetch is actually in flight
   const delegatesLoading = delegates.isPending && delegates.fetchStatus === 'fetching';
 
-  const namedVotes = vote.data?.named_votes?.named_votes ?? [];
+  const namedVotes = useMemo(() => vote.data?.named_votes?.named_votes ?? [], [vote.data]);
 
   // party options are the vote's own voters, not the whole chamber
-  const partyOptions = [
-    ...new Set(
-      namedVotes
-        .map((namedVote) => delegates.data?.get(namedVote.delegate_id)?.party)
-        .filter((party): party is string => Boolean(party))
-    ),
-  ].sort();
+  const partyOptions = useMemo(
+    () => [
+      ...new Set(
+        namedVotes
+          .map((namedVote) => delegates.data?.get(namedVote.delegate_id)?.party)
+          .filter((party): party is string => Boolean(party))
+      ),
+    ].sort(),
+    [namedVotes, delegates.data]
+  );
 
   // country options are the vote's own voters, not the whole chamber
-  const countryOptions = [
-    ...new Set(
-      namedVotes
-        .map((namedVote) => delegates.data?.get(namedVote.delegate_id)?.constituency)
-        .filter((code): code is string => Boolean(code))
-    ),
-  ]
-    .map((code) => euCountryName(code, 'de'))
-    .sort();
+  const countryOptions = useMemo(
+    () =>
+      [
+        ...new Set(
+          namedVotes
+            .map((namedVote) => delegates.data?.get(namedVote.delegate_id)?.constituency)
+            .filter((code): code is string => Boolean(code))
+        ),
+      ]
+        .map((code) => euCountryName(code, 'de'))
+        .sort(),
+    [namedVotes, delegates.data]
+  );
 
   const needle = search.trim().toLowerCase();
 
-  const filtered = namedVotes.filter((namedVote) => {
-    const delegate = delegates.data?.get(namedVote.delegate_id);
+  const filtered = useMemo(
+    () =>
+      namedVotes.filter((namedVote) => {
+        const delegate = delegates.data?.get(namedVote.delegate_id);
 
-    if (needle && !(delegate?.name ?? '').toLowerCase().includes(needle)) return false;
-    if (parties.length > 0 && (!delegate?.party || !parties.includes(delegate.party))) {
-      return false;
-    }
-    if (behaviors.length > 0) {
-      const label = BEHAVIOR_LABEL.get(votingBehaviorOf(namedVote));
-      if (!label || !behaviors.includes(label)) return false;
-    }
-    if (countries.length > 0) {
-      const name = delegate?.constituency ? euCountryName(delegate.constituency, 'de') : undefined;
-      if (!name || !countries.includes(name)) return false;
-    }
+        if (needle && !(delegate?.name ?? '').toLowerCase().includes(needle)) return false;
+        if (parties.length > 0 && (!delegate?.party || !parties.includes(delegate.party))) {
+          return false;
+        }
+        if (behaviors.length > 0) {
+          const label = BEHAVIOR_LABEL.get(votingBehaviorOf(namedVote));
+          if (!label || !behaviors.includes(label)) return false;
+        }
+        if (countries.length > 0) {
+          const name = delegate?.constituency ? euCountryName(delegate.constituency, 'de') : undefined;
+          if (!name || !countries.includes(name)) return false;
+        }
 
-    return true;
-  });
+        return true;
+      }),
+    [namedVotes, delegates.data, needle, parties, behaviors, countries]
+  );
 
   const header = (
     <>

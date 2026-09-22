@@ -9,7 +9,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Notice } from '@/components/ui/notice';
 import { ScreenTitle } from '@/components/ui/screen';
-import { CardSkeleton } from '@/components/ui/skeleton';
+import { CardSkeleton, SkeletonBar } from '@/components/ui/skeleton';
 import { useFavorite, useFavoriteDelegates, useUpdateFavoriteInterval } from '@/lib/favorites';
 import { delegateAvatarUrl, somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
@@ -94,9 +94,13 @@ function FavoriteDelegate({
           accessibilityLabel={delegate?.name}
         />
         <View style={styles.grow}>
-          <Text style={typography.rowTitle} numberOfLines={1}>
-            {delegate?.name ?? 'Wird geladen…'}
-          </Text>
+          {delegate ? (
+            <Text style={typography.rowTitle} numberOfLines={1}>
+              {delegate.name}
+            </Text>
+          ) : (
+            <SkeletonBar width={140} height={16} />
+          )}
           {party ? (
             <View style={styles.meta}>
               <View style={[styles.dot, { backgroundColor: partyColor }]} />

@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import { useCallback, type ReactElement, type ReactNode } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -37,12 +37,16 @@ export function ResultList<T>({
   onRefresh,
 }: Props<T>) {
   const insets = useSafeAreaInsets();
+  const renderFlatListItem = useCallback(
+    ({ item }: { item: T }) => renderItem(item),
+    [renderItem]
+  );
 
   return (
     <FlatList
       data={isPending || isError ? [] : items}
       keyExtractor={keyExtractor}
-      renderItem={({ item }) => renderItem(item)}
+      renderItem={renderFlatListItem}
       style={styles.list}
       contentContainerStyle={[
         styles.content,

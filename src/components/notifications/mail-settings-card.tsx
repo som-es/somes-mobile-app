@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { CATEGORIES, LOAD_ERROR, mailKey } from '@/components/notifications/categories';
 import { Card } from '@/components/ui/card';
 import { SettingRow } from '@/components/ui/setting-row';
+import { SkeletonBar } from '@/components/ui/skeleton';
 import { useMailSettings, useUpdateMailSettings } from '@/lib/use-push';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -26,6 +27,12 @@ export function MailSettingsCard() {
 
       {settings.isError ? (
         <Text style={typography.bodyMuted}>{LOAD_ERROR}</Text>
+      ) : settings.isPending ? (
+        <View style={styles.rows}>
+          <SkeletonBar width="100%" height={44} />
+          <SkeletonBar width="100%" height={44} />
+          <SkeletonBar width="100%" height={44} />
+        </View>
       ) : (
         <View style={styles.rows}>
           {CATEGORIES.map((category) => {

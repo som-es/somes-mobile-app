@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Image, StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { colors } from '@/theme/colors';
 
@@ -32,6 +33,8 @@ export function Avatar({ uri, size, accessibilityLabel, style }: Props) {
           style={{ width: size, height: size }}
           accessibilityLabel={accessibilityLabel}
           onError={() => setFailed(true)}
+          cachePolicy="memory-disk"
+          transition={150}
         />
       )}
     </View>

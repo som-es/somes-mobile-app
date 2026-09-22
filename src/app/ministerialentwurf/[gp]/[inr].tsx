@@ -22,6 +22,7 @@ export default function ProposalDetailScreen() {
   const proposal = useQuery({
     queryKey: ['gov-proposal', gp, inr],
     queryFn: () => somes.govProposals.byPath(gp, inr),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return (

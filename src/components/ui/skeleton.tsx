@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { primary } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -44,6 +44,21 @@ export function RowSkeleton() {
       </Animated.View>
     </Card>
   );
+}
+
+type SkeletonBarProps = {
+  width: number | `${number}%`;
+  height?: number;
+  style?: StyleProp<ViewStyle>;
+};
+
+/** a single pulsing bar, for loading states inside a card that's already
+    rendered (a settings row, an account line) - RowSkeleton/CardSkeleton
+    both bring their own Card chrome, which would double up in that spot */
+export function SkeletonBar({ width, height = 12, style }: SkeletonBarProps) {
+  const opacity = usePulse();
+
+  return <Animated.View style={[styles.bar, { width, height, opacity }, style]} />;
 }
 
 export function CardSkeleton() {

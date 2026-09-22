@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { AVATAR, DelegateCard } from '@/components/cards/delegate-card';
@@ -115,12 +115,16 @@ function AbgeordneteScreenContent() {
   });
 
   const counts = delegateFilterCounts(filters);
-  const items = (results.data?.pages.flatMap((page) => page.delegates) ?? [])
-    .slice()
-    .sort(compareDelegates(sort));
+  const items = useMemo(
+    () =>
+      (results.data?.pages.flatMap((page) => page.delegates) ?? [])
+        .slice()
+        .sort(compareDelegates(sort)),
+    [results.data, sort]
+  );
   const updatedAt = results.data?.pages[0]?.updated_at;
 
-  const chips = partiesFor(parties.data, filters.gp);
+  const chips = useMemo(() => partiesFor(parties.data, filters.gp), [parties.data, filters.gp]);
   const anyParty = filters.parties.length > 0;
 
   const toggleParty = (name: string) =>
