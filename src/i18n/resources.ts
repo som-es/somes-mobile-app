@@ -7,6 +7,7 @@ import deATHome from './locales/de-AT/home.json';
 import deATImpressum from './locales/de-AT/impressum.json';
 import deATNotifications from './locales/de-AT/notifications.json';
 import deATProfile from './locales/de-AT/profile.json';
+import deATQuestions from './locales/de-AT/questions.json';
 import deATVotes from './locales/de-AT/votes.json';
 import enGBAuth from './locales/en-GB/auth.json';
 import enGBCommon from './locales/en-GB/common.json';
@@ -17,6 +18,7 @@ import enGBHome from './locales/en-GB/home.json';
 import enGBImpressum from './locales/en-GB/impressum.json';
 import enGBNotifications from './locales/en-GB/notifications.json';
 import enGBProfile from './locales/en-GB/profile.json';
+import enGBQuestions from './locales/en-GB/questions.json';
 import enGBVotes from './locales/en-GB/votes.json';
 
 export const resources = {
@@ -31,6 +33,7 @@ export const resources = {
     notifications: deATNotifications,
     filters: deATFilters,
     impressum: deATImpressum,
+    questions: deATQuestions,
   },
   'en-GB': {
     common: enGBCommon,
@@ -43,6 +46,7 @@ export const resources = {
     notifications: enGBNotifications,
     filters: enGBFilters,
     impressum: enGBImpressum,
+    questions: enGBQuestions,
   },
 } as const;
 

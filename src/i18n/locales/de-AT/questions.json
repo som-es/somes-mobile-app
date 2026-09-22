@@ -1,0 +1,71 @@
+{
+  "askButton": "Frage stellen",
+  "notAvailableForEu": "Fragen an Abgeordnete sind für das EU-Parlament derzeit nicht möglich.",
+  "topicsSheet": {
+    "title": "Themen",
+    "searchPlaceholder": "Thema suchen..."
+  },
+  "list": {
+    "title": "Fragen an Abgeordnete",
+    "updatedAt": "Aktualisiert am {{date}}",
+    "quickFilters": {
+      "latestQuestions": "Neuste Fragen",
+      "latestAnswers": "Neuste Antworten",
+      "unanswered": "Unbeantwortet"
+    },
+    "mine": "Meine Fragen",
+    "topicsFilter": "Themen",
+    "error": "Fragen konnten nicht geladen werden.",
+    "empty": "Keine Fragen gefunden",
+    "comingSoon": {
+      "title": "Meine Fragen",
+      "description": "Der Server kann deine eigenen Fragen noch nicht anzeigen. Das kommt bald."
+    }
+  },
+  "detail": {
+    "loadError": "Diese Frage konnte nicht geladen werden.",
+    "askedBy": "Bürger:in · {{date}}",
+    "askedLabel": "Gefragt",
+    "answersHeading": "Antworten",
+    "noAnswers": "Diese Frage wurde noch nicht beantwortet."
+  },
+  "card": {
+    "answerLabel": "Antwort",
+    "noAnswerYet": "Noch keine Antwort",
+    "readMore": "Weiterlesen"
+  },
+  "compose": {
+    "signedOut": {
+      "heading": "Melde dich an",
+      "body": "Um einer:m Abgeordneten eine Frage zu stellen, brauchst du ein Konto.",
+      "signIn": "Anmelden"
+    },
+    "picker": {
+      "subtitle": "Wähle zuerst die Person aus, die du fragen möchtest.",
+      "searchPlaceholder": "Abgeordnete:n suchen...",
+      "error": "Abgeordnete konnten nicht geladen werden.",
+      "empty": "Keine Abgeordneten gefunden."
+    },
+    "success": {
+      "title": "Frage eingereicht",
+      "message": "Deine Frage wurde eingereicht und wird geprüft, bevor sie veröffentlicht wird.",
+      "backToOverview": "Zur Übersicht"
+    },
+    "form": {
+      "viaClub": "Geht an den Klub der {{recipientName}}",
+      "direct": "Geht direkt an {{recipientName}}",
+      "subjectLabel": "Betreff",
+      "subjectPlaceholder": "Worum geht es?",
+      "bodyLabel": "Deine Frage",
+      "bodyPlaceholder": "Formuliere deine Frage...",
+      "topicsSelect": "Themen auswählen",
+      "submit": "Frage einreichen"
+    },
+    "errors": {
+      "unavailable": "Fragen sind für dieses Parlament derzeit nicht möglich.",
+      "reauth": "Bitte melde dich erneut an.",
+      "submitFailed": "Deine Frage konnte nicht gesendet werden.",
+      "network": "Keine Verbindung zum Server."
+    }
+  }
+}

@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -11,12 +12,14 @@ import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { delegateAvatarUrl, somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { Delegate, PublicDelegateQuestion } from '@/types';
 
 export default function FrageDetailScreen() {
+  const { t } = useTranslation('questions');
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const question = useQuery({
@@ -35,7 +38,7 @@ export default function FrageDetailScreen() {
       {question.isPending ? (
         <CardSkeleton />
       ) : question.isError ? (
-        <Notice message="Diese Frage konnte nicht geladen werden." />
+        <Notice message={t('detail.loadError')} />
       ) : (
         <QuestionDetail question={question.data} delegate={delegate.data} />
       )}
@@ -50,6 +53,8 @@ function QuestionDetail({
   question: PublicDelegateQuestion;
   delegate: Delegate | undefined;
 }) {
+  const { t } = useTranslation('questions');
+  const locale = useLocale();
   const country = useCountry();
 
   return (
@@ -57,7 +62,7 @@ function QuestionDetail({
       <View style={styles.metaRow}>
         <Ionicons name="person-circle-outline" size={18} color={colors.textMuted} />
         <Text style={typography.subtitle}>
-          Bürger:in · {isoToDotDate(question.created_at_date)}
+          {t('detail.askedBy', { date: isoToDotDate(question.created_at_date, locale) })}
         </Text>
       </View>
 
@@ -80,7 +85,7 @@ function QuestionDetail({
             accessibilityLabel={delegate.name}
           />
           <View>
-            <Text style={typography.caption}>Gefragt</Text>
+            <Text style={typography.caption}>{t('detail.askedLabel')}</Text>
             <Text style={typography.cardTitle}>
               {delegate.name} · {delegate.party}
             </Text>
@@ -88,14 +93,14 @@ function QuestionDetail({
         </View>
       ) : null}
 
-      <Text style={[typography.sectionTitle, styles.answersTitle]}>Antworten</Text>
+      <Text style={[typography.sectionTitle, styles.answersTitle]}>{t('detail.answersHeading')}</Text>
 
       {question.answers.length === 0 ? (
-        <Notice message="Diese Frage wurde noch nicht beantwortet." />
+        <Notice message={t('detail.noAnswers')} />
       ) : (
         question.answers.map((answer, index) => (
           <Card key={index}>
-            <Text style={typography.caption}>{isoToDotDate(answer.received_at)}</Text>
+            <Text style={typography.caption}>{isoToDotDate(answer.received_at, locale)}</Text>
             <Text style={[typography.body, styles.answerBody]}>{answer.body}</Text>
           </Card>
         ))
