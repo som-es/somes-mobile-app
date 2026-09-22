@@ -49,6 +49,10 @@ export type { FullSpeech as Speech } from '@som-es/somes-ts';
 /** the delegate side named vote, the one nested in a vote result is NamedVotes */
 export type { DelegateNamedVote as NamedVote } from '@som-es/somes-ts';
 
+/** one MEP's ballot on a roll-call vote, nested in NamedVotes.named_votes —
+    upstream names this NamedVote too, distinct from DelegateNamedVote above */
+export type { NamedVote as RollCallVote } from '@som-es/somes-ts';
+
 /** a party filter row, the search endpoints take these as bracketed parameters */
 export interface PartyVote {
   party: string;

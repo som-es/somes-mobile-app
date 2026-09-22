@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { DelegateRow } from '@/components/detail/delegate-row';
@@ -7,6 +7,7 @@ import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { DocumentList, pdfDocuments } from '@/components/detail/document-list';
 import { Divider, SectionCard } from '@/components/detail/section-card';
+import { SectionLink } from '@/components/ui/section-link';
 import { SpeechList } from '@/components/detail/speech-list';
 import { SummaryCard } from '@/components/detail/summary-card';
 import { topicNames, TopicList } from '@/components/detail/topic-list';
@@ -80,6 +81,7 @@ type DetailProps = {
 };
 
 function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: DetailProps) {
+  const router = useRouter();
   const country = useCountry();
   const { legislative_initiative: initiative, ai_summary } = voteResult;
 
@@ -107,7 +109,21 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
       {voteResult.votes.length > 0 || voteResult.named_votes ? (
-        <SectionCard title="Abstimmung">
+        <SectionCard
+          title="Abstimmung"
+          action={
+            country === 'eu' && voteResult.named_votes ? (
+              <SectionLink
+                label="Durchsuchen"
+                onPress={() =>
+                  router.push({
+                    pathname: '/abstimmung/[gp]/[ityp]/[inr]/durchsuchen',
+                    params: { gp, ityp, inr },
+                  })
+                }
+              />
+            ) : undefined
+          }>
           {voteResult.votes.length > 0 ? <VoteBreakdown votes={voteResult.votes} /> : null}
           {voteResult.votes.length > 0 && voteResult.named_votes ? <Divider /> : null}
           {voteResult.named_votes ? (
