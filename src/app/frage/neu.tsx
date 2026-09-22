@@ -2,9 +2,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { ApiError } from '@som-es/somes-ts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
+import { withCount } from '@/components/lists/filter-sources';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
 import { SubScreen } from '@/components/layout/sub-screen';
 import { Button } from '@/components/ui/button';
@@ -27,6 +30,7 @@ const SUBJECT_MAX = 255;
 const BODY_MAX = 10000;
 
 export default function FrageNeuScreen() {
+  const { t } = useTranslation('questions');
   const router = useRouter();
   const country = useCountry();
   const { isAuthenticated } = useAuth();
@@ -44,13 +48,15 @@ export default function FrageNeuScreen() {
   if (!isAuthenticated) {
     return (
       <SubScreen>
-        <ScreenTitle title="Frage stellen" />
+        <ScreenTitle title={t('askButton')} />
         <Card style={styles.card}>
-          <Text style={typography.cardHeading}>Melde dich an</Text>
-          <Text style={typography.bodyMuted}>
-            Um einer:m Abgeordneten eine Frage zu stellen, brauchst du ein Konto.
-          </Text>
-          <Button label="Anmelden" onPress={() => router.push('/anmelden')} size="lg" />
+          <Text style={typography.cardHeading}>{t('compose.signedOut.heading')}</Text>
+          <Text style={typography.bodyMuted}>{t('compose.signedOut.body')}</Text>
+          <Button
+            label={t('compose.signedOut.signIn')}
+            onPress={() => router.push('/anmelden')}
+            size="lg"
+          />
         </Card>
       </SubScreen>
     );
@@ -59,8 +65,8 @@ export default function FrageNeuScreen() {
   if (country !== 'at') {
     return (
       <SubScreen>
-        <ScreenTitle title="Frage stellen" />
-        <Notice message="Fragen an Abgeordnete sind für das EU-Parlament derzeit nicht möglich." />
+        <ScreenTitle title={t('askButton')} />
+        <Notice message={t('notAvailableForEu')} />
       </SubScreen>
     );
   }
@@ -73,6 +79,7 @@ export default function FrageNeuScreen() {
 }
 
 function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
+  const { t } = useTranslation('questions');
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounced(search);
   const country = useCountry();
@@ -90,16 +97,17 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
 
   return (
     <SubScreen>
-      <ScreenTitle
-        title="Frage stellen"
-        subtitle="Wähle zuerst die Person aus, die du fragen möchtest."
+      <ScreenTitle title={t('askButton')} subtitle={t('compose.picker.subtitle')} />
+      <SearchField
+        value={search}
+        onChangeText={setSearch}
+        placeholder={t('compose.picker.searchPlaceholder')}
       />
-      <SearchField value={search} onChangeText={setSearch} placeholder="Abgeordnete:n suchen..." />
 
       {results.isPending ? null : results.isError ? (
-        <Notice message="Abgeordnete konnten nicht geladen werden." />
+        <Notice message={t('compose.picker.error')} />
       ) : results.data.delegates.length === 0 ? (
-        <Notice message="Keine Abgeordneten gefunden." />
+        <Notice message={t('compose.picker.empty')} />
       ) : (
         <View style={styles.pickerList}>
           {results.data.delegates.map((delegate) => (
@@ -125,6 +133,7 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
 }
 
 function ComposeQuestion({ delegate }: { delegate: Delegate }) {
+  const { t } = useTranslation('questions');
   const router = useRouter();
   const country = useCountry();
 
@@ -165,9 +174,13 @@ function ComposeQuestion({ delegate }: { delegate: Delegate }) {
   if (ask.isSuccess) {
     return (
       <SubScreen>
-        <ScreenTitle title="Frage eingereicht" />
-        <Notice message="Deine Frage wurde eingereicht und wird geprüft, bevor sie veröffentlicht wird." />
-        <Button label="Zur Übersicht" onPress={() => router.replace('/(tabs)/fragen')} size="lg" />
+        <ScreenTitle title={t('compose.success.title')} />
+        <Notice message={t('compose.success.message')} />
+        <Button
+          label={t('compose.success.backToOverview')}
+          onPress={() => router.replace('/(tabs)/fragen')}
+          size="lg"
+        />
       </SubScreen>
     );
   }
@@ -176,7 +189,7 @@ function ComposeQuestion({ delegate }: { delegate: Delegate }) {
 
   return (
     <SubScreen>
-      <ScreenTitle title="Frage stellen" />
+      <ScreenTitle title={t('askButton')} />
 
       <View style={styles.recipientRow}>
         <Image
@@ -189,67 +202,75 @@ function ComposeQuestion({ delegate }: { delegate: Delegate }) {
           {recipient.data ? (
             <Text style={typography.caption}>
               {recipient.data.delivery === 'party'
-                ? `Geht an den Klub der ${recipient.data.recipient_name}`
-                : `Geht direkt an ${recipient.data.recipient_name}`}
+                ? t('compose.form.viaClub', { recipientName: recipient.data.recipient_name })
+                : t('compose.form.direct', { recipientName: recipient.data.recipient_name })}
             </Text>
           ) : null}
         </View>
       </View>
 
       <TextField
-        label="Betreff"
+        label={t('compose.form.subjectLabel')}
         value={subject}
         onChangeText={setSubject}
         maxLength={SUBJECT_MAX}
-        placeholder="Worum geht es?"
+        placeholder={t('compose.form.subjectPlaceholder')}
       />
 
       <TextField
-        label="Deine Frage"
+        label={t('compose.form.bodyLabel')}
         value={body}
         onChangeText={setBody}
         maxLength={BODY_MAX}
-        placeholder="Formuliere deine Frage..."
+        placeholder={t('compose.form.bodyPlaceholder')}
         multiline
         style={styles.bodyField}
       />
 
       <FilterPill
         label={
-          selectedTopics.length > 0 ? `Themen (${selectedTopics.length})` : 'Themen auswählen'
+          selectedTopics.length > 0
+            ? withCount(t('topicsSheet.title'), selectedTopics.length)
+            : t('compose.form.topicsSelect')
         }
         onPress={() => setTopicSheetOpen(true)}
       />
 
-      {ask.isError ? <Notice message={messageFor(ask.error)} /> : null}
+      {ask.isError ? <Notice message={messageFor(ask.error, t)} /> : null}
 
-      <Button label="Frage einreichen" onPress={() => ask.mutate()} disabled={!canSubmit} loading={ask.isPending} size="lg" />
+      <Button
+        label={t('compose.form.submit')}
+        onPress={() => ask.mutate()}
+        disabled={!canSubmit}
+        loading={ask.isPending}
+        size="lg"
+      />
 
       <MultiSelectSheet
         visible={topicSheetOpen}
-        title="Themen"
+        title={t('topicsSheet.title')}
         values={[...topicIdByLabel.keys()]}
         selected={selectedTopics}
         onChange={setSelectedTopics}
         onClose={() => setTopicSheetOpen(false)}
         searchable
-        searchPlaceholder="Thema suchen..."
+        searchPlaceholder={t('topicsSheet.searchPlaceholder')}
       />
     </SubScreen>
   );
 }
 
-function messageFor(error: unknown): string {
+function messageFor(error: unknown, t: TFunction): string {
   if (error instanceof ApiError) {
     if (error.status === 503) {
-      return 'Fragen sind für dieses Parlament derzeit nicht möglich.';
+      return t('compose.errors.unavailable');
     }
     if (isAuthError(error)) {
-      return 'Bitte melde dich erneut an.';
+      return t('compose.errors.reauth');
     }
-    return 'Deine Frage konnte nicht gesendet werden.';
+    return t('compose.errors.submitFailed');
   }
-  return 'Keine Verbindung zum Server.';
+  return t('compose.errors.network');
 }
 
 const styles = StyleSheet.create({

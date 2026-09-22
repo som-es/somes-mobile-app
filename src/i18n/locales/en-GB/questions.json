@@ -1,0 +1,71 @@
+{
+  "askButton": "Ask a question",
+  "notAvailableForEu": "Questions to MPs are not currently possible for the European Parliament.",
+  "topicsSheet": {
+    "title": "Topics",
+    "searchPlaceholder": "Search topic..."
+  },
+  "list": {
+    "title": "Questions to MPs",
+    "updatedAt": "Updated on {{date}}",
+    "quickFilters": {
+      "latestQuestions": "Newest questions",
+      "latestAnswers": "Newest answers",
+      "unanswered": "Unanswered"
+    },
+    "mine": "My questions",
+    "topicsFilter": "Topics",
+    "error": "Questions could not be loaded.",
+    "empty": "No questions found",
+    "comingSoon": {
+      "title": "My questions",
+      "description": "The server can't show your own questions yet. That's coming soon."
+    }
+  },
+  "detail": {
+    "loadError": "This question could not be loaded.",
+    "askedBy": "Citizen · {{date}}",
+    "askedLabel": "Asked",
+    "answersHeading": "Answers",
+    "noAnswers": "This question hasn't been answered yet."
+  },
+  "card": {
+    "answerLabel": "Answer",
+    "noAnswerYet": "No answer yet",
+    "readMore": "Read more"
+  },
+  "compose": {
+    "signedOut": {
+      "heading": "Sign in",
+      "body": "You need an account to ask an MP a question.",
+      "signIn": "Sign in"
+    },
+    "picker": {
+      "subtitle": "First choose the person you'd like to ask.",
+      "searchPlaceholder": "Search MPs...",
+      "error": "MPs could not be loaded.",
+      "empty": "No MPs found."
+    },
+    "success": {
+      "title": "Question submitted",
+      "message": "Your question has been submitted and will be reviewed before it's published.",
+      "backToOverview": "Back to overview"
+    },
+    "form": {
+      "viaClub": "Goes to the parliamentary group of {{recipientName}}",
+      "direct": "Goes directly to {{recipientName}}",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "What's it about?",
+      "bodyLabel": "Your question",
+      "bodyPlaceholder": "Write your question...",
+      "topicsSelect": "Select topics",
+      "submit": "Submit question"
+    },
+    "errors": {
+      "unavailable": "Questions are not currently possible for this parliament.",
+      "reauth": "Please sign in again.",
+      "submitFailed": "Your question could not be sent.",
+      "network": "No connection to the server."
+    }
+  }
+}
