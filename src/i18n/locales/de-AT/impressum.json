@@ -1,0 +1,76 @@
+{
+  "screenTitle": {
+    "title": "Impressum",
+    "subtitle": "Angaben nach § 5 E-Commerce Gesetz und Offenlegung nach § 25 Mediengesetz."
+  },
+  "mediaOwner": {
+    "heading": "Medieninhaber & Herausgeber",
+    "orgName": "somes - Verein für Demokratie und politische Transparenz",
+    "zvr": "ZVR-Zahl",
+    "seat": "Vereinssitz",
+    "email": "E-Mail",
+    "website": "Website",
+    "authority": "Zuständige Behörde",
+    "authorityValue": "Bezirkshauptmannschaft Tulln an der Donau",
+    "applicableLaw": "Anwendbare Vorschriften",
+    "applicableLawValue": "Vereinsgesetz 2002",
+    "appDevEmail": "App Entwickler E-Mail"
+  },
+  "board": {
+    "heading": "Vorstand",
+    "subheading": "Vertretungsbefugte Organe des Vereins",
+    "role": {
+      "obperson": "Obperson",
+      "kassier": "Kassier"
+    }
+  },
+  "purpose": {
+    "heading": "Grundlegende Richtung & Vereinszweck",
+    "blattlinieLabel": "Blattlinie",
+    "blattlinieText": "Information über die Aktivitäten des Vereins sowie Förderung der politischen Bildung, Demokratie und Transparenz entsprechend dem nachstehenden Vereinszweck.",
+    "items": [
+      "Der Zweck des Vereins ist die Förderung einer gerechten, demokratischen und transparenten Gesellschaft im Einklang mit den Grundwerten und Prinzipien des Vereins. Somes setzt sich ein für die Wahrung von Frieden, Menschenrechten und Demokratie, die Förderung von Transparenz und Partizipation auf allen Ebenen sowie die Schaffung eines freien Zugangs zu Informationen und die Überwindung gesellschaftlicher Polarisierung. Der Verein fördert politische Bildung, internationalen Austausch und den Aufbau eines globalen Netzwerks, um soziale und kulturelle Barrieren zu überwinden.",
+      "Die Tätigkeit des Vereins ist nicht auf Gewinn gerichtet.",
+      "Der Verein verfolgt nach seinen Statuten ausschließlich und unmittelbar gemeinnützige und mildtätige Zwecke im Sinne der geltenden abgabenrechtlichen Bestimmungen (§§ 34 bis 47 der Bundesabgabenordnung – BAO). Allfällige nicht im Sinne der §§ 34 ff BAO begünstigte Zwecke sind den begünstigten Zwecken völlig untergeordnet und werden höchstens im Ausmaß von 10% der Gesamtressourcen verfolgt."
+    ],
+    "meansHeading": "Ideelle und materielle Mittel zur Erreichung des Zwecks",
+    "meansIntro": "Der Zweck des Vereins soll durch folgende Tätigkeiten erreicht werden:",
+    "means": [
+      { "lead": "Politische Bildung und Aufklärung:", "text": "Der Verein fördert die politische Bildung und das kritische Denken. Dazu werden Workshops, Seminare und Veranstaltungen zu Themen wie Demokratie, Menschenrechten und gesellschaftlicher Teilhabe durchgeführt. Zudem erfolgt die Verbreitung von Wissen durch Publikationen, Studien und Analysen." },
+      { "lead": "Förderung von Transparenz und Partizipation:", "text": "Der Verein setzt Initiativen zur Förderung der politischen Transparenz und Partizipation auf lokaler, nationaler und internationaler Ebene um. Dabei werden Plattformen geschaffen, die Bürgerinnen und Bürgern den Zugang zu Informationen und Mitbestimmung erleichtern." },
+      { "lead": "Aufbau und Betrieb der Online-Plattform „somes“:", "text": "Der Verein entwickelt und pflegt eine Online-Plattform zur Förderung von politischer Transparenz, demokratischer Partizipation und des offenen Dialogs. Dabei werden Tools und Ressourcen bereitgestellt, die den Austausch von Ideen, die Organisation von Initiativen und die weltweite Vernetzung von Menschen erleichtern. Zudem wird die Plattform unter besonderer Berücksichtigung des Datenschutzes und der Barrierefreiheit für alle Nutzer gestaltet." },
+      { "lead": "Überwindung gesellschaftlicher Spaltung:", "text": "Der Verein führt Dialogforen durch, um soziale Blasen und gesellschaftliche Polarisierung zu verringern. Dabei wird der Austausch unterschiedlicher Perspektiven gefördert, um Verständnis und gesellschaftlichen Zusammenhalt zu stärken." },
+      { "lead": "Internationale Zusammenarbeit und Netzwerkarbeit:", "text": "Der Verein baut ein globales Netzwerk zur Förderung von Frieden und internationalem Zusammenhalt auf und pflegt dieses aktiv. Dabei werden Projekte unterstützt, die den interkulturellen Dialog und die Zusammenarbeit zwischen Nationen fördern." },
+      { "lead": "Einsatz für ein freies Internet:", "text": "Der Verein fördert den freien Zugang zu unabhängigen und qualitativ hochwertigen Informationen. Zudem setzt er sich für Open-Source, Datenschutz, Medienkompetenz und die kritische Auseinandersetzung mit Desinformationen ein." },
+      { "lead": "Investigative Aufklärungsarbeit:", "text": "Der Verein führt investigative Recherchen durch, um gesellschaftliche Missstände aufzudecken. Dabei werden Analysen und Daten veröffentlicht, die zur Förderung fundierter öffentlicher Diskussionen beitragen." },
+      { "lead": "Beratung und Unterstützung:", "text": "Der Verein berät staatliche Institutionen, Unternehmen und andere Organisationen in Übereinstimmung mit seinen Grundwerten. Zudem unterstützt er Projekte und Initiativen, die den Zielen des Vereins dienen." },
+      { "lead": "Organisation von und Beteiligung an gesellschaftlichen Initiativen:", "text": "Der Verein plant und unterstützt Volksbegehren, Demonstrationen und Veranstaltungen im Einklang mit seinen Werten. Darüber hinaus fördert er den Austausch zwischen Mitgliedern und Partnerorganisationen." }
+    ],
+    "extraMeans": "Sofern dies dem Vereinszweck dient, ist der Verein weiters berechtigt, sich an Kapitalgesellschaften zu beteiligen, sich Erfüllungsgehilfen gemäß § 40 Abs. 1 BAO zu bedienen oder selbst als Erfüllungsgehilfe tätig zu werden, Geldmittel gemäß § 40a Z 1 BAO weiterzuleiten, entgeltliche Lieferungen gemäß § 40a Z 2 BAO ohne Gewinnerzielungsabsicht zu erbringen sowie Geldmittel gemäß § 40b BAO für Preise und Stipendien zur Verfügung zu stellen."
+  },
+  "disclaimer": {
+    "heading": "Haftungsausschluss (Disclaimer)",
+    "section1": {
+      "title": "1. Unabhängigkeit der Plattform",
+      "body": "<b>somes</b> ist ein unabhängiges, zivilgesellschaftliches Projekt (entstanden aus einer HTL-Diplomarbeit) und steht in <b>keiner offiziellen Verbindung</b> zur Republik Österreich, der Parlamentsdirektion, Regierungsorganen oder politischen Parteien. Weder die Betreiber und Entwickler dieser Website, noch die Mitglieder des Vereinvorstands, sind Mitglied bei einer politischen Partei oder stehen einer nahe."
+    },
+    "section2": {
+      "title": "2. Herkunft und Richtigkeit der Daten",
+      "para1": "Die auf dieser Plattform dargestellten Informationen basieren auf öffentlich zugänglichen Daten (Open Data), primär bereitgestellt durch das österreichische Parlament (parlament.gv.at) und dem Rechtsinformationssytem des Bundes (www.ris.bka.gv.at). Die Erfassung, Aggregation und Aufbereitung dieser Daten erfolgt vollständig automatisiert und wird freiwillig, kostenlos, ohne Werbung und ohne Tracking zur Verfügung gestellt.",
+      "noWarranty": "Wir bemühen uns um höchste Sorgfalt, übernehmen jedoch <b>keinerlei Gewähr und Haftung</b> (auch nicht bei leichter Fahrlässigkeit):",
+      "liability": [
+        "für die Richtigkeit, Vollständigkeit, Aktualität und technische Verfügbarkeit der bereitgestellten Daten;",
+        "für Fehler, die durch automatisierte Verarbeitungsprozesse (z.B. Parsing-Fehler) oder durch Fehlinterpretationen der Originaldaten entstehen;",
+        "für Handlungen oder Entscheidungen, die auf Basis der auf somes bereitgestellten Informationen getroffen werden."
+      ],
+      "note": "Im Zweifelsfall gelten immer die offiziellen Dokumente und Publikationen der Parlamentsdirektion. Die Nutzung dieser Webseite erfolgt auf eigene Gefahr."
+    },
+    "section3": {
+      "title": "3. Haftung für Links",
+      "text": "Unsere Plattform enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung wurden die Seiten auf mögliche Rechtsverletzungen geprüft; rechtswidrige Inhalte waren nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen."
+    }
+  },
+  "footer": {
+    "text": "Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten: <link>http://ec.europa.eu/odr</link>. Sie können allfällige Beschwerden auch an die oben angegebene E-Mail-Adresse richten."
+  }
+}

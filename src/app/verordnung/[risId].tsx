@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import { DetailScreen } from '@/components/detail/detail-screen';
 import { DocumentList, pdfDocuments } from '@/components/detail/document-list';
@@ -8,9 +9,11 @@ import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useLocale } from '@/lib/use-locale';
 import type { Decree } from '@/types';
 
 export default function DecreeDetailScreen() {
+  const { t } = useTranslation('votes');
   const { risId } = useLocalSearchParams<{ risId: string }>();
 
   const decree = useQuery({
@@ -24,14 +27,14 @@ export default function DecreeDetailScreen() {
     // so unlike the other detail screens the source cannot come from the route
     <DetailScreen
       sourceUrl={decree.data?.document_url ?? undefined}
-      sourceLabel="Auf ris.bka.gv.at öffnen">
+      sourceLabel={t('decree.sourceLabel')}>
       {decree.isPending ? (
         <>
           <CardSkeleton />
           <CardSkeleton />
         </>
       ) : decree.isError ? (
-        <Notice message="Verordnung konnte nicht geladen werden." />
+        <Notice message={t('decree.loadError')} />
       ) : (
         <DecreeDetail decree={decree.data} />
       )}
@@ -40,6 +43,8 @@ export default function DecreeDetailScreen() {
 }
 
 function DecreeDetail({ decree }: { decree: Decree }) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const { ai_summary } = decree;
 
   const documents = pdfDocuments(decree.documents);
@@ -50,7 +55,7 @@ function DecreeDetail({ decree }: { decree: Decree }) {
 
   const badges = [
     ...(decree.ministrial_issuer ? [decree.ministrial_issuer] : []),
-    isoToDotDate(decree.publication_date),
+    isoToDotDate(decree.publication_date, locale),
     ...(decree.gp ? [decree.gp] : []),
   ];
 
@@ -58,7 +63,7 @@ function DecreeDetail({ decree }: { decree: Decree }) {
     <>
       <SummaryCard
         title={title}
-        subtitle={`Verordnung vom ${isoToDotDate(decree.publication_date)}`}
+        subtitle={t('decree.subtitle', { date: isoToDotDate(decree.publication_date, locale) })}
         summary={summary}
         aiGenerated={ai_summary?.short_summary != null}
         badges={badges}

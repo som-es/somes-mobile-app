@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import '@/test/i18n';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { useFavorite } from '@/lib/favorites';
 import { useAuth } from '@/lib/use-auth';
@@ -47,7 +48,7 @@ describe('FavoriteButton, signed out', () => {
 
     await render(<FavoriteButton kind="delegate" id={42} />);
 
-    const button = screen.getByRole('button', { name: 'Anmelden, um zu favorisieren' });
+    const button = screen.getByRole('button', { name: 'Sign in to add favourites' });
     fireEvent.press(button);
 
     expect(mockPush).toHaveBeenCalledWith('/anmelden');
@@ -56,14 +57,14 @@ describe('FavoriteButton, signed out', () => {
 });
 
 describe('FavoriteButton, signed in', () => {
-  it('toggles and reads as "hinzufügen" when not yet a favorite', async () => {
+  it('toggles and reads as "add" when not yet a favorite', async () => {
     mockAuth(true);
     const toggle = jest.fn();
     mockFavorite({ isFavorite: false, toggle });
 
     await render(<FavoriteButton kind="delegate" id={42} />);
 
-    const button = screen.getByRole('button', { name: 'Zu Favoriten hinzufügen' });
+    const button = screen.getByRole('button', { name: 'Add to favourites' });
     expect(button.props.accessibilityState.selected).toBe(false);
 
     fireEvent.press(button);
@@ -72,13 +73,13 @@ describe('FavoriteButton, signed in', () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it('reads as "entfernen" and marks itself selected when already a favorite', async () => {
+  it('reads as "remove" and marks itself selected when already a favorite', async () => {
     mockAuth(true);
     mockFavorite({ isFavorite: true });
 
     await render(<FavoriteButton kind="delegate" id={42} />);
 
-    const button = screen.getByRole('button', { name: 'Aus Favoriten entfernen' });
+    const button = screen.getByRole('button', { name: 'Remove from favourites' });
     expect(button.props.accessibilityState.selected).toBe(true);
   });
 

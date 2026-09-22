@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
-import { BEHAVIOR_LABEL, votingBehaviorOf } from '@/lib/named-vote-behavior';
+import { behaviorLabel, votingBehaviorOf } from '@/lib/named-vote-behavior';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { spacing } from '@/theme/layout';
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export function NamedVoteRow({ vote, delegate }: Props) {
+  const { t } = useTranslation();
   const router = useRouter();
   const country = useCountry();
   const partyColor = usePartyColor(delegate?.party);
@@ -41,7 +43,7 @@ export function NamedVoteRow({ vote, delegate }: Props) {
 
         <View style={styles.text}>
           <Text style={typography.rowTitle} numberOfLines={1}>
-            {delegate?.name ?? `Abgeordnete:r #${vote.delegate_id}`}
+            {delegate?.name ?? t('common:detail.unknownDelegateNumbered', { id: vote.delegate_id })}
           </Text>
           {delegate?.party ? (
             <View style={styles.meta}>
@@ -54,7 +56,7 @@ export function NamedVoteRow({ vote, delegate }: Props) {
         {behavior === 'infavor' || behavior === 'against' ? (
           <VoteMark infavor={behavior === 'infavor'} size={18} />
         ) : (
-          <Text style={typography.caption}>{BEHAVIOR_LABEL.get(behavior)}</Text>
+          <Text style={typography.caption}>{behaviorLabel(t, behavior)}</Text>
         )}
       </View>
     </Card>

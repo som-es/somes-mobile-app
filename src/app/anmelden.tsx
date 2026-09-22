@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ApiError } from '@som-es/somes-ts';
 import { useRouter } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -11,6 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
@@ -27,6 +29,7 @@ import { typography } from '@/theme/typography';
 type Step = 'email' | 'otp';
 
 export default function AnmeldenScreen() {
+  const { t } = useTranslation('auth');
   const router = useRouter();
   const { signIn } = useSession();
 
@@ -57,7 +60,7 @@ export default function AnmeldenScreen() {
     if (result.status === 'success') {
       await finish(result.accessToken);
     } else if (result.status === 'error') {
-      setError('Anmeldung mit Google fehlgeschlagen.');
+      setError(t('errors.google'));
     }
     // cancelled is the user backing out, not an error worth showing
   }
@@ -76,7 +79,7 @@ export default function AnmeldenScreen() {
       }
       accessToken = await somes.auth.login(email.trim(), otp);
     } catch (error) {
-      setError(messageFor(error));
+      setError(messageFor(error, t));
       return;
     } finally {
       setPending(false);
@@ -97,28 +100,24 @@ export default function AnmeldenScreen() {
         <Screen tabBarSpacing={false}>
           <Pressable onPress={() => router.back()} style={styles.back} hitSlop={8}>
             <Ionicons name="arrow-back" size={18} color={colors.text} />
-            <Text style={typography.subtitle}>Zurück</Text>
+            <Text style={typography.subtitle}>{t('common:actions.back')}</Text>
           </Pressable>
 
           <ScreenTitle
-            title="Anmelden"
-            subtitle={
-              onEmailStep
-                ? 'Melde dich an oder erstelle mit deiner E-Mail-Adresse ein neues Konto.'
-                : 'Wir haben dir einen Code geschickt.'
-            }
+            title={t('signIn.title')}
+            subtitle={onEmailStep ? t('signIn.subtitleEmail') : t('signIn.subtitleOtp')}
           />
 
           <Card variant="outlined" style={styles.form}>
             {onEmailStep ? (
               <>
                 <TextField
-                  label="E-Mail"
+                  label={t('signIn.emailLabel')}
                   value={email}
                   onChangeText={setEmail}
                   onSubmitEditing={submit}
                   error={error}
-                  placeholder="dergertrud@gmail.com"
+                  placeholder={t('signIn.emailPlaceholder')}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -127,24 +126,19 @@ export default function AnmeldenScreen() {
                   returnKeyType="send"
                   editable={!pending}
                 />
-                <Text style={typography.caption}>
-                  Du brauchst kein Passwort. Wir senden dir ein einmaliges Passwort per E-Mail.
-                  Hast du noch kein Konto, wird es dabei angelegt.
-                </Text>
+                <Text style={typography.caption}>{t('signIn.emailHint')}</Text>
               </>
             ) : (
               <>
-                <Text style={typography.body}>
-                  An deine E-Mail-Adresse wurde ein One-Time Passwort gesendet.
-                </Text>
+                <Text style={typography.body}>{t('signIn.otpSentNotice')}</Text>
                 <TextField
-                  label="One-Time Passwort (OTP)"
+                  label={t('signIn.otpLabel')}
                   value={otp}
                   onChangeText={setOtp}
                   onSubmitEditing={submit}
                   error={error}
                   hint={email}
-                  placeholder="MAS DS5 4DA"
+                  placeholder={t('signIn.otpPlaceholder')}
                   autoCapitalize="characters"
                   autoCorrect={false}
                   autoComplete="one-time-code"
@@ -152,15 +146,12 @@ export default function AnmeldenScreen() {
                   returnKeyType="send"
                   editable={!pending}
                 />
-                <Text style={typography.caption}>
-                  Keine E-Mail erhalten? Sieh im Spam-Ordner nach. Manche Anbieter filtern sie
-                  aus — dann hilft eine andere Adresse.
-                </Text>
+                <Text style={typography.caption}>{t('signIn.otpHint')}</Text>
               </>
             )}
 
             <Button
-              label={onEmailStep ? 'Code anfordern' : 'Anmelden'}
+              label={onEmailStep ? t('signIn.requestCode') : t('signIn.submit')}
               onPress={submit}
               size="lg"
               loading={pending}
@@ -171,7 +162,7 @@ export default function AnmeldenScreen() {
               <>
                 <View style={styles.divider}>
                   <View style={styles.rule} />
-                  <Text style={typography.caption}>ODER</Text>
+                  <Text style={typography.caption}>{t('signIn.or')}</Text>
                   <View style={styles.rule} />
                 </View>
 
@@ -190,7 +181,7 @@ export default function AnmeldenScreen() {
                     <>
                       <Ionicons name="logo-google" size={18} color={colors.textTitle} />
                       <Text style={[typography.button, styles.googleLabel]}>
-                        Mit Google anmelden
+                        {t('signIn.googleSignIn')}
                       </Text>
                     </>
                   )}
@@ -205,7 +196,7 @@ export default function AnmeldenScreen() {
                 }}
                 hitSlop={8}
                 accessibilityRole="button">
-                <Text style={[typography.subtitle, styles.link]}>E-Mail ändern</Text>
+                <Text style={[typography.subtitle, styles.link]}>{t('signIn.changeEmail')}</Text>
               </Pressable>
             )}
           </Card>
@@ -215,24 +206,24 @@ export default function AnmeldenScreen() {
   );
 }
 
-function messageFor(error: unknown): string {
+function messageFor(error: unknown, t: TFunction): string {
   if (error instanceof ApiError) {
     if (error.field === 'WrongOtp') {
-      return 'Fehlerhaftes One-Time Passwort.';
+      return t('errors.wrongOtp');
     }
 
     const flags = signUpFlags(error);
-    if (flags?.missing_email) return 'E-Mail-Adresse fehlt.';
-    if (flags?.invalid_email) return 'Fehlerhafte E-Mail-Adresse.';
+    if (flags?.missing_email) return t('errors.missingEmail');
+    if (flags?.invalid_email) return t('errors.invalidEmail');
 
     if (isRateLimited(error)) {
-      return 'Zu viele Versuche. Bitte warte einen Moment.';
+      return t('errors.rateLimited');
     }
-    return 'Ein serverseitiger Fehler ist aufgetreten. Es kann nicht fortgefahren werden.';
+    return t('errors.server');
   }
 
   // anything that never reached the server, fetch throws rather than resolving
-  return 'Keine Verbindung zum Server.';
+  return t('errors.network');
 }
 
 const styles = StyleSheet.create({

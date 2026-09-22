@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import type { Href } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Card } from '@/components/ui/card';
 import { SkeletonBar } from '@/components/ui/skeleton';
@@ -11,26 +12,27 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 export function FavoritesLinkCards() {
+  const { t } = useTranslation(['profile', 'favorites']);
   const delegates = useFavoriteDelegates();
   const votes = useFavoriteVotes();
 
   return (
     <>
       <LinkCard
-        title="Favorisierte Personen"
+        title={t('favorites:delegates.title')}
         href="/favoriten/personen"
         count={delegates.data?.length}
         isPending={delegates.isPending}
         isError={delegates.isError}
-        empty="Keine favorisierten Personen vorhanden"
+        empty={t('favorites:delegates.empty')}
       />
       <LinkCard
-        title="Favorisierte Abstimmungen"
+        title={t('favorites:votes.title')}
         href="/favoriten/abstimmungen"
         count={votes.data?.length}
         isPending={votes.isPending}
         isError={votes.isError}
-        empty="Keine favorisierten Abstimmungen vorhanden"
+        empty={t('favorites:votes.empty')}
       />
     </>
   );
@@ -51,13 +53,14 @@ function LinkCard({
   isError: boolean;
   empty: string;
 }) {
+  const { t } = useTranslation('profile');
   const router = useRouter();
   const hasAny = (count ?? 0) > 0;
 
   const subtitle = isError
-    ? 'Konnten nicht geladen werden'
+    ? t('favoritesLinks.loadError')
     : hasAny
-      ? `${count} gespeichert`
+      ? t('favoritesLinks.savedCount', { count })
       : empty;
 
   return (

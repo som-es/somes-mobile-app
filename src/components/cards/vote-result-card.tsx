@@ -1,10 +1,12 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { voteBadges } from '@/lib/vote-labels';
 import { byPartySize, partyInfavor } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
@@ -16,6 +18,8 @@ type Props = {
 };
 
 export function VoteResultCard({ voteResult }: Props) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const router = useRouter();
   const country = useCountry();
   const { legislative_initiative: initiative, ai_summary, named_votes } = voteResult;
@@ -76,8 +80,8 @@ export function VoteResultCard({ voteResult }: Props) {
       ) : null}
 
       <View style={styles.badges}>
-        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
-        {voteBadges(initiative).map((label) => (
+        {ai_summary?.short_summary ? <Badge label={t('common:detail.aiSummaryBadge')} /> : null}
+        {voteBadges(t, locale, initiative).map((label) => (
           <Badge key={label} label={label} />
         ))}
       </View>

@@ -4,25 +4,30 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { NamedVoteRow } from '@/components/detail/named-vote-row';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
 import { AppHeader } from '@/components/layout/app-header';
+import { withCount } from '@/components/lists/filter-sources';
 import { ResultList } from '@/components/lists/result-list';
 import { FilterPill } from '@/components/ui/filter-pill';
 import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { RowSkeleton } from '@/components/ui/skeleton';
-import { BEHAVIOR_LABEL, VOTING_BEHAVIOR_OPTIONS, votingBehaviorOf } from '@/lib/named-vote-behavior';
+import { behaviorLabel, VOTING_BEHAVIOR_VALUES, votingBehaviorOf } from '@/lib/named-vote-behavior';
 import { somes } from '@/lib/somes';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { RollCallVote } from '@/types';
 
-const BEHAVIOR_VALUES = VOTING_BEHAVIOR_OPTIONS.map((option) => option.label);
-
 export default function SearchNamedVotesScreen() {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
+  const countryLocale = locale === 'de-AT' ? 'de' : 'en';
+  const behaviorValues = VOTING_BEHAVIOR_VALUES.map((value) => behaviorLabel(t, value));
   const { gp, ityp, inr } = useLocalSearchParams<{ gp: string; ityp: string; inr: string }>();
   const router = useRouter();
 
@@ -80,9 +85,9 @@ export default function SearchNamedVotesScreen() {
             .filter((code): code is string => Boolean(code))
         ),
       ]
-        .map((code) => euCountryName(code, 'de'))
+        .map((code) => euCountryName(code, countryLocale))
         .sort(),
-    [namedVotes, delegates.data]
+    [namedVotes, delegates.data, countryLocale]
   );
 
   const needle = search.trim().toLowerCase();
@@ -97,44 +102,50 @@ export default function SearchNamedVotesScreen() {
           return false;
         }
         if (behaviors.length > 0) {
-          const label = BEHAVIOR_LABEL.get(votingBehaviorOf(namedVote));
-          if (!label || !behaviors.includes(label)) return false;
+          const label = behaviorLabel(t, votingBehaviorOf(namedVote));
+          if (!behaviors.includes(label)) return false;
         }
         if (countries.length > 0) {
-          const name = delegate?.constituency ? euCountryName(delegate.constituency, 'de') : undefined;
+          const name = delegate?.constituency
+            ? euCountryName(delegate.constituency, countryLocale)
+            : undefined;
           if (!name || !countries.includes(name)) return false;
         }
 
         return true;
       }),
-    [namedVotes, delegates.data, needle, parties, behaviors, countries]
+    [namedVotes, delegates.data, needle, parties, behaviors, countries, t, countryLocale]
   );
 
   const header = (
     <>
       <Pressable onPress={() => router.back()} style={styles.back} hitSlop={8}>
         <Ionicons name="arrow-back" size={18} color={colors.text} />
-        <Text style={typography.subtitle}>Zurück</Text>
+        <Text style={typography.subtitle}>{t('common:detail.back')}</Text>
       </Pressable>
 
-      <ScreenTitle title="Durchsuchen" centered />
+      <ScreenTitle title={t('detail.search')} centered />
 
-      <SearchField value={search} onChangeText={setSearch} placeholder="Name suchen..." />
+      <SearchField
+        value={search}
+        onChangeText={setSearch}
+        placeholder={t('search.namePlaceholder')}
+      />
 
       <View style={styles.filters}>
         <FilterPill
           grow={true}
-          label={parties.length > 0 ? `Parteien (${parties.length})` : 'Parteien'}
+          label={withCount(t('filters.parties'), parties.length)}
           onPress={() => setPartySheetOpen(true)}
         />
         <FilterPill
           grow={true}
-          label={behaviors.length > 0 ? `Verhalten (${behaviors.length})` : 'Verhalten'}
+          label={withCount(t('filters.behavior'), behaviors.length)}
           onPress={() => setBehaviorSheetOpen(true)}
         />
         <FilterPill
           grow={true}
-          label={countries.length > 0 ? `Herkunftsland (${countries.length})` : 'Herkunftsland'}
+          label={withCount(t('filters.countryOfOrigin'), countries.length)}
           onPress={() => setCountrySheetOpen(true)}
         />
       </View>
@@ -157,8 +168,8 @@ export default function SearchNamedVotesScreen() {
         }
         isPending={vote.isPending}
         isError={vote.isError}
-        errorMessage="Abstimmungen konnten nicht geladen werden."
-        emptyMessage="Keine Abgeordneten gefunden"
+        errorMessage={t('votesList.error')}
+        emptyMessage={t('delegates:list.empty')}
         onEndReached={() => {}}
         isFetchingNextPage={false}
         refreshing={vote.isRefetching}
@@ -167,7 +178,7 @@ export default function SearchNamedVotesScreen() {
 
       <MultiSelectSheet
         visible={partySheetOpen}
-        title="Parteien"
+        title={t('filters.parties')}
         values={partyOptions}
         selected={parties}
         onChange={setParties}
@@ -176,8 +187,8 @@ export default function SearchNamedVotesScreen() {
 
       <MultiSelectSheet
         visible={behaviorSheetOpen}
-        title="Abstimmungsverhalten"
-        values={BEHAVIOR_VALUES}
+        title={t('filters.votingBehavior')}
+        values={behaviorValues}
         selected={behaviors}
         onChange={setBehaviors}
         onClose={() => setBehaviorSheetOpen(false)}
@@ -185,7 +196,7 @@ export default function SearchNamedVotesScreen() {
 
       <MultiSelectSheet
         visible={countrySheetOpen}
-        title="Herkunftsland"
+        title={t('filters.countryOfOrigin')}
         values={countryOptions}
         selected={countries}
         onChange={setCountries}

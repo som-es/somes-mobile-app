@@ -1,0 +1,76 @@
+{
+  "screenTitle": {
+    "title": "Legal Notice",
+    "subtitle": "Details pursuant to §5 of the Austrian E-Commerce Act and disclosure pursuant to §25 of the Austrian Media Act."
+  },
+  "mediaOwner": {
+    "heading": "Media Owner & Publisher",
+    "orgName": "somes - Association for Democracy and Political Transparency",
+    "zvr": "Register Number (ZVR)",
+    "seat": "Registered Seat",
+    "email": "Email",
+    "website": "Website",
+    "authority": "Competent Authority",
+    "authorityValue": "Bezirkshauptmannschaft Tulln an der Donau (District Authority)",
+    "applicableLaw": "Applicable Regulations",
+    "applicableLawValue": "Austrian Associations Act 2002 (Vereinsgesetz 2002)",
+    "appDevEmail": "App Developer Email"
+  },
+  "board": {
+    "heading": "Board",
+    "subheading": "Bodies authorised to represent the association",
+    "role": {
+      "obperson": "Chairperson",
+      "kassier": "Treasurer"
+    }
+  },
+  "purpose": {
+    "heading": "Fundamental Orientation & Purpose of the Association",
+    "blattlinieLabel": "Editorial line",
+    "blattlinieText": "Information about the association's activities, and the promotion of political education, democracy and transparency in line with the purpose of the association set out below.",
+    "items": [
+      "The purpose of the association is to promote a fair, democratic and transparent society in line with the association's core values and principles. Somes is committed to upholding peace, human rights and democracy, promoting transparency and participation at all levels, creating free access to information, and overcoming societal polarisation. The association promotes political education, international exchange and the development of a global network in order to overcome social and cultural barriers.",
+      "The association's activities are not aimed at making a profit.",
+      "Under its statutes, the association pursues exclusively and directly charitable and benevolent purposes within the meaning of the applicable tax provisions (Sections 34 to 47 of the Austrian Federal Fiscal Code – BAO). Any purposes not privileged within the meaning of Sections 34 et seq. BAO are entirely subordinate to the privileged purposes and are pursued using no more than 10% of total resources."
+    ],
+    "meansHeading": "Ideal and Material Means of Achieving the Purpose",
+    "meansIntro": "The purpose of the association is to be achieved through the following activities:",
+    "means": [
+      { "lead": "Political education and awareness:", "text": "The association promotes political education and critical thinking. To this end, it holds workshops, seminars and events on topics such as democracy, human rights and civic participation, and disseminates knowledge through publications, studies and analyses." },
+      { "lead": "Promoting transparency and participation:", "text": "The association implements initiatives to promote political transparency and participation at local, national and international level, creating platforms that make it easier for citizens to access information and take part in decision-making." },
+      { "lead": "Building and operating the \"somes\" online platform:", "text": "The association develops and maintains an online platform to promote political transparency, democratic participation and open dialogue. It provides tools and resources that make it easier to exchange ideas, organise initiatives and connect people worldwide, and the platform is designed with particular attention to data protection and accessibility for all users." },
+      { "lead": "Overcoming social division:", "text": "The association holds dialogue forums to reduce social bubbles and societal polarisation, encouraging the exchange of different perspectives in order to strengthen understanding and social cohesion." },
+      { "lead": "International cooperation and networking:", "text": "The association builds and actively maintains a global network to promote peace and international cohesion, supporting projects that foster intercultural dialogue and cooperation between nations." },
+      { "lead": "Advocating for a free internet:", "text": "The association promotes free access to independent, high-quality information, and advocates for open source, data protection, media literacy and a critical engagement with disinformation." },
+      { "lead": "Investigative research:", "text": "The association carries out investigative research to uncover social problems, publishing analyses and data that contribute to well-informed public debate." },
+      { "lead": "Advice and support:", "text": "The association advises state institutions, companies and other organisations in line with its core values, and supports projects and initiatives that serve the association's aims." },
+      { "lead": "Organising and taking part in civic initiatives:", "text": "The association plans and supports referendums, demonstrations and events in line with its values, and promotes exchange between members and partner organisations." }
+    ],
+    "extraMeans": "Insofar as it serves the purpose of the association, the association is further entitled to hold interests in corporations, to make use of agents within the meaning of Section 40(1) BAO or to act as an agent itself, to pass on funds under Section 40a No. 1 BAO, to provide goods or services for consideration without the intent to make a profit under Section 40a No. 2 BAO, and to make funds available for prizes and scholarships under Section 40b BAO."
+  },
+  "disclaimer": {
+    "heading": "Disclaimer",
+    "section1": {
+      "title": "1. Independence of the Platform",
+      "body": "<b>somes</b> is an independent, civil-society project (originally a technical college diploma project) and has <b>no official connection</b> to the Republic of Austria, the Parliamentary Directorate, government bodies or political parties. Neither the operators and developers of this website, nor the members of the association's board, are members of, or close to, any political party."
+    },
+    "section2": {
+      "title": "2. Source and Accuracy of the Data",
+      "para1": "The information presented on this platform is based on publicly available data (open data), provided primarily by the Austrian Parliament (parlament.gv.at) and the Federal Legal Information System (www.ris.bka.gv.at). This data is collected, aggregated and processed entirely automatically, and is made available voluntarily, free of charge, without advertising and without tracking.",
+      "noWarranty": "We take the greatest care, but accept <b>no warranty or liability whatsoever</b> (including in cases of slight negligence):",
+      "liability": [
+        "for the accuracy, completeness, timeliness and technical availability of the data provided;",
+        "for errors arising from automated processing (e.g. parsing errors) or from misinterpretations of the original data;",
+        "for actions or decisions taken on the basis of information provided on somes."
+      ],
+      "note": "In case of doubt, the official documents and publications of the Parliamentary Directorate always apply. Use of this website is at your own risk."
+    },
+    "section3": {
+      "title": "3. Liability for Links",
+      "text": "Our platform contains links to external third-party websites over whose content we have no influence. The respective provider or operator is always responsible for the content of the linked pages. At the time of linking, the pages were checked for possible legal violations; no unlawful content was identifiable. However, permanently monitoring the content of linked pages without concrete evidence of a legal violation is not reasonable. If we become aware of any legal violations, we will remove such links immediately."
+    }
+  },
+  "footer": {
+    "text": "Consumers have the option of submitting complaints to the EU's Online Dispute Resolution platform: <link>http://ec.europa.eu/odr</link>. You can also send any complaints to the email address given above."
+  }
+}

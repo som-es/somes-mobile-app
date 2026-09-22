@@ -1,0 +1,66 @@
+{
+  "voteType": {
+    "law": "Gesetz",
+    "amendment": "Abänderung",
+    "resolution": "Entschließung",
+    "report": "Bericht",
+    "other": "Andere"
+  },
+  "majority": {
+    "simple": "einfache Mehrheit",
+    "twoThirds": "2/3 Mehrheit"
+  },
+  "tabs": {
+    "nationalrat": "Nationalrat",
+    "regierung": "Regierung"
+  },
+  "detail": {
+    "loadError": "Abstimmung konnte nicht geladen werden.",
+    "namedVoteSubtitle": "Namentlich abgestimmt am: {{date}}",
+    "voteSubtitle": "Abstimmung am: {{date}}",
+    "votingHeading": "Abstimmung",
+    "search": "Durchsuchen",
+    "broughtBy": "Eingebracht von"
+  },
+  "speeches": {
+    "loadError": "Reden konnten nicht geladen werden.",
+    "empty": "Keine Reden vorhanden"
+  },
+  "search": {
+    "namePlaceholder": "Name suchen...",
+    "topicPlaceholder": "Thema suchen..."
+  },
+  "filters": {
+    "parties": "Parteien",
+    "behavior": "Verhalten",
+    "votingBehavior": "Abstimmungsverhalten",
+    "countryOfOrigin": "Herkunftsland"
+  },
+  "votesList": {
+    "title": "Vergangene Abstimmungsergebnisse",
+    "filterTopics": "Themen",
+    "filterParties": "Parteien",
+    "filterGeneric": "Filter",
+    "error": "Abstimmungen konnten nicht geladen werden.",
+    "empty": "Keine Abstimmungsergebnisse gefunden"
+  },
+  "proposalsList": {
+    "title": "Ministerialentwürfe",
+    "filterTopics": "Themen",
+    "filterMinistries": "Ministerien",
+    "filterGeneric": "Filter",
+    "searchMinistry": "Ministerium suchen...",
+    "error": "Ministerialentwürfe konnten nicht geladen werden.",
+    "empty": "Keine Ministerialentwürfe gefunden"
+  },
+  "proposalDetail": {
+    "loadError": "Ministerialentwurf konnte nicht geladen werden.",
+    "subtitle": "Ministerialentwurf vom {{date}}",
+    "governmentBill": "Regierungsvorlage"
+  },
+  "decree": {
+    "sourceLabel": "Auf ris.bka.gv.at öffnen",
+    "loadError": "Verordnung konnte nicht geladen werden.",
+    "subtitle": "Verordnung vom {{date}}"
+  }
+}

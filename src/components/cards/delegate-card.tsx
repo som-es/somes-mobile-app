@@ -1,6 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import type { TFunction } from 'i18next';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
@@ -21,9 +23,10 @@ type Props = {
 
 /** the column flex weights have to match the header above the list */
 export function DelegateCard({ delegate }: Props) {
+  const { t } = useTranslation('delegates');
   const router = useRouter();
   const country = useCountry();
-  const party = partyLabel(delegate.party);
+  const party = partyLabel(t, delegate.party);
   const partyColor = usePartyColor(delegate.party);
   const years = age(delegate.birthdate);
 
@@ -62,8 +65,8 @@ export function DelegateCard({ delegate }: Props) {
 }
 
 /** the web puts this in place of a blank or ohne klub party */
-export function partyLabel(party: string | null): string {
-  if (!party || party.toUpperCase() === 'OK') return 'Ohne Klub';
+export function partyLabel(t: TFunction, party: string | null): string {
+  if (!party || party.toUpperCase() === 'OK') return t('delegates:card.withoutClub');
   return party;
 }
 

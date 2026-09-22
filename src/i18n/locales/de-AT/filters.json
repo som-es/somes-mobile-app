@@ -1,0 +1,27 @@
+{
+  "genericTitle": "Filter",
+  "period": "Legislaturperiode",
+  "accepted": "Angenommen",
+  "voteType": "Antragstyp",
+  "requiredMajority": "notwendige Mehrheit",
+  "voteStatus": "Abstimmungsstatus",
+  "mandateType": "Mandatsart",
+  "activeMandate": "Aktives Mandat",
+  "considerFormerParty": "Ehemalige Parteizugehörigkeit beachten",
+  "any": "egal",
+  "acceptedValue": "angenommen",
+  "rejected": "abgelehnt",
+  "rejectedEarly": "frühzeitig abgelehnt",
+  "withVoteResult": "mit Abstimmung",
+  "government": "Regierung",
+  "yes": "Ja",
+  "no": "Nein",
+  "allPeriods": "Alle",
+  "periodSince": "{{gp}} (seit {{year}})",
+  "noResults": "Nichts gefunden.",
+  "stance": {
+    "pro": "Pro",
+    "any": "Egal",
+    "contra": "Contra"
+  }
+}

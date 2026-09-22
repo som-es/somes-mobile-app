@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
@@ -13,8 +14,10 @@ type Props = {
 };
 
 export function DocumentList({ documents }: Props) {
+  const { t } = useTranslation();
+
   return (
-    <SectionCard title="Dokumente">
+    <SectionCard title={t('common:detail.documents')}>
       <View style={styles.list}>
         {documents.map((document) => (
           <Pressable
@@ -24,7 +27,7 @@ export function DocumentList({ documents }: Props) {
             style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
             <Ionicons name="document-text-outline" size={18} color={colors.textMuted} />
             <Text style={[typography.bodyMuted, styles.label]}>
-              {document.title ?? 'Dokument'}
+              {document.title ?? t('common:detail.document')}
             </Text>
           </Pressable>
         ))}

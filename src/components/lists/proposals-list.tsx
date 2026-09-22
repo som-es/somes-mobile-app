@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { ProposalCard } from '@/components/cards/proposal-card';
 import { ProposalGenericSheet } from '@/components/filters/generic-sheet';
@@ -15,6 +16,7 @@ import { emptyProposalFilters, govProposalsQuery, proposalFilterCounts } from '@
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
+import { useLocale } from '@/lib/use-locale';
 import { spacing } from '@/theme/layout';
 
 import { useFilterSources, withCount, type Sheet } from './filter-sources';
@@ -24,6 +26,8 @@ type Props = {
 };
 
 export function ProposalsList({ control }: Props) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const country = useCountry();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyProposalFilters(country));
@@ -57,8 +61,8 @@ export function ProposalsList({ control }: Props) {
       {control}
 
       <ScreenTitle
-        title="Ministerialentwürfe"
-        subtitle={updatedAt ? `Aktualisiert am ${isoToDotDate(updatedAt)}` : undefined}
+        title={t('proposalsList.title')}
+        subtitle={updatedAt ? t('delegates:list.updatedAt', { date: isoToDotDate(updatedAt, locale) }) : undefined}
         centered
       />
 
@@ -66,17 +70,20 @@ export function ProposalsList({ control }: Props) {
 
       <View style={styles.filters}>
         <View style={styles.slot}>
-          <FilterPill label={withCount('Themen', counts.topics)} onPress={() => setSheet('topics')} />
+          <FilterPill
+            label={withCount(t('proposalsList.filterTopics'), counts.topics)}
+            onPress={() => setSheet('topics')}
+          />
         </View>
         <View style={styles.slot}>
           <FilterPill
-            label={withCount('Ministerien', counts.ministries)}
+            label={withCount(t('proposalsList.filterMinistries'), counts.ministries)}
             onPress={() => setSheet('second')}
           />
         </View>
         <View style={styles.slot}>
           <FilterPill
-            label={withCount('Filter', counts.generic)}
+            label={withCount(t('proposalsList.filterGeneric'), counts.generic)}
             onPress={() => setSheet('generic')}
           />
         </View>
@@ -93,8 +100,8 @@ export function ProposalsList({ control }: Props) {
         renderItem={(proposal) => <ProposalCard proposal={proposal} />}
         isPending={results.isPending}
         isError={results.isError}
-        errorMessage="Ministerialentwürfe konnten nicht geladen werden."
-        emptyMessage="Keine Ministerialentwürfe gefunden"
+        errorMessage={t('proposalsList.error')}
+        emptyMessage={t('proposalsList.empty')}
         onEndReached={() => {
           if (results.hasNextPage && !results.isFetchingNextPage) results.fetchNextPage();
         }}
@@ -105,24 +112,24 @@ export function ProposalsList({ control }: Props) {
 
       <MultiSelectSheet
         visible={sheet === 'topics'}
-        title="Themen"
+        title={t('proposalsList.filterTopics')}
         values={topics}
         selected={filters.topics}
         onChange={(selected) => setFilters({ ...filters, topics: selected })}
         onClose={() => setSheet(null)}
         searchable
-        searchPlaceholder="Thema suchen..."
+        searchPlaceholder={t('search.topicPlaceholder')}
       />
 
       <MultiSelectSheet
         visible={sheet === 'second'}
-        title="Ministerien"
+        title={t('proposalsList.filterMinistries')}
         values={ministriesFor(ministries.data, filters.gp)}
         selected={filters.departments}
         onChange={(departments) => setFilters({ ...filters, departments })}
         onClose={() => setSheet(null)}
         searchable
-        searchPlaceholder="Ministerium suchen..."
+        searchPlaceholder={t('proposalsList.searchMinistry')}
       />
 
       <ProposalGenericSheet

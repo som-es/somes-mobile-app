@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { DelegateRow } from '@/components/detail/delegate-row';
@@ -13,10 +14,12 @@ import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
+import { useLocale } from '@/lib/use-locale';
 import { spacing } from '@/theme/layout';
 import type { GovProposalDelegate } from '@/types';
 
 export default function ProposalDetailScreen() {
+  const { t } = useTranslation('votes');
   const { gp, inr } = useLocalSearchParams<{ gp: string; inr: string }>();
 
   const proposal = useQuery({
@@ -33,7 +36,7 @@ export default function ProposalDetailScreen() {
           <CardSkeleton />
         </>
       ) : proposal.isError ? (
-        <Notice message="Ministerialentwurf konnte nicht geladen werden." />
+        <Notice message={t('proposalDetail.loadError')} />
       ) : (
         <ProposalDetail proposal={proposal.data} />
       )}
@@ -42,6 +45,8 @@ export default function ProposalDetailScreen() {
 }
 
 function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const { ministrial_proposal: draft, ai_summary, vote_result } = proposal.gov_proposal;
 
   const topics = topicNames(proposal.gov_proposal.eurovoc_topics, ai_summary);
@@ -52,7 +57,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
 
   const badges = [
     ...(draft.ressort ? [draft.ressort_shortform ?? draft.ressort] : []),
-    isoToDotDate(draft.raw_data_created_at),
+    isoToDotDate(draft.raw_data_created_at, locale),
     draft.gp,
   ];
 
@@ -60,7 +65,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
     <>
       <SummaryCard
         title={title}
-        subtitle={`Ministerialentwurf vom ${isoToDotDate(draft.raw_data_created_at)}`}
+        subtitle={t('proposalDetail.subtitle', { date: isoToDotDate(draft.raw_data_created_at, locale) })}
         summary={ai_summary?.short_summary ?? draft.description}
         aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
@@ -69,7 +74,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
       {delegates.length > 0 ? (
-        <SectionCard title="Eingebracht von">
+        <SectionCard title={t('detail.broughtBy')}>
           <View style={styles.issuers}>
             {delegates.map((delegate) => (
               <DelegateRow
@@ -85,7 +90,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
       ) : null}
 
       {vote_result ? (
-        <SectionCard title="Regierungsvorlage">
+        <SectionCard title={t('proposalDetail.governmentBill')}>
           <VoteResultCard voteResult={vote_result} />
         </SectionCard>
       ) : null}

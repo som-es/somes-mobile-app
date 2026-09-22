@@ -1,0 +1,100 @@
+{
+  "bottomSheet": {
+    "apply": "Apply",
+    "reset": "Reset",
+    "close": "Close"
+  },
+  "appHeader": {
+    "home": "somes — go to home",
+    "regionSwitch": "Switch region, currently {{region}}",
+    "impressum": "Legal notice and contact",
+    "notifications": "Notifications"
+  },
+  "country": {
+    "at": { "title": "Austria", "caption": "National Council" },
+    "eu": { "title": "European Union", "caption": "European Parliament" }
+  },
+  "regionSheet": {
+    "title": "Region"
+  },
+  "languageSheet": {
+    "title": "Language",
+    "deAT": { "title": "German", "caption": "Austria" },
+    "enGB": { "title": "English", "caption": "United Kingdom" }
+  },
+  "tabs": {
+    "home": "Home",
+    "abstimmungen": "Votes",
+    "abgeordnete": "MPs",
+    "profil": "Profile"
+  },
+  "duration": {
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} mins"
+  },
+  "relative": {
+    "inHours_one": "in {{count}} hour",
+    "inHours_other": "in {{count}} hours",
+    "inDays_one": "in {{count}} day",
+    "inDays_other": "in {{count}} days"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "back": "Back"
+  },
+  "states": {
+    "loading": "Loading …",
+    "error": "Something went wrong",
+    "empty": "Nothing found"
+  },
+  "detail": {
+    "back": "Back",
+    "openOnParliament": "Open on parlament.gv.at",
+    "documents": "Documents",
+    "speeches": "Speeches",
+    "topics": "Topics",
+    "partyFraction": "{{count}} of {{total}}",
+    "namedFor": "{{count}} of {{total}} in favour",
+    "namedAgainst": "{{count}} of {{total}} against",
+    "document": "Document",
+    "showAllSpeeches": "Show all speeches ({{count}})",
+    "unknownDelegate": "Unknown",
+    "unknownDelegateNumbered": "MP #{{id}}",
+    "aiSummaryBadge": "AI summary",
+    "summaryHeading": "Summary",
+    "aiGeneratedBadge": "AI-generated"
+  },
+  "votingBehavior": {
+    "infavor": "In favour",
+    "against": "Against",
+    "abstained": "Abstained",
+    "absent": "Did not vote"
+  },
+  "search": {
+    "placeholder": "Search..."
+  },
+  "topicGroups": {
+    "Arbeit": "Labour",
+    "Außenpolitik": "Foreign Policy",
+    "Bildung": "Education",
+    "Budget und Finanzen": "Budget & Finance",
+    "Europäische Union": "European Union",
+    "Familie und Generationen": "Family & Generations",
+    "Frauen und Gleichbehandlung": "Women & Equal Treatment",
+    "Gesundheit und Ernährung": "Health & Nutrition",
+    "Information und Medien": "Information & Media",
+    "Inneres und Recht": "Home Affairs & Law",
+    "Innovation, Technologie und Forschung": "Innovation, Technology & Research",
+    "Klima, Umwelt und Energie": "Climate, Environment & Energy",
+    "Kultur": "Culture",
+    "Landesverteidigung": "National Defence",
+    "Land- und Forstwirtschaft": "Agriculture & Forestry",
+    "Parlament und Demokratie": "Parliament & Democracy",
+    "Soziales": "Social Affairs",
+    "Sport": "Sport",
+    "Verkehr und Infrastruktur": "Transport & Infrastructure",
+    "Wirtschaft": "Economy",
+    "Sonstige": "Other"
+  }
+}

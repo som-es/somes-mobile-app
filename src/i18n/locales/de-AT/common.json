@@ -1,0 +1,100 @@
+{
+  "bottomSheet": {
+    "apply": "Anwenden",
+    "reset": "Zurücksetzen",
+    "close": "Schließen"
+  },
+  "appHeader": {
+    "home": "somes — zur Startseite",
+    "regionSwitch": "Region wechseln, aktuell {{region}}",
+    "impressum": "Impressum und Kontakt",
+    "notifications": "Benachrichtigungen"
+  },
+  "country": {
+    "at": { "title": "Österreich", "caption": "Nationalrat" },
+    "eu": { "title": "Europäische Union", "caption": "Europäisches Parlament" }
+  },
+  "regionSheet": {
+    "title": "Region"
+  },
+  "languageSheet": {
+    "title": "Sprache",
+    "deAT": { "title": "Deutsch", "caption": "Österreich" },
+    "enGB": { "title": "Englisch", "caption": "Vereinigtes Königreich" }
+  },
+  "tabs": {
+    "home": "Home",
+    "abstimmungen": "Abstimmungen",
+    "abgeordnete": "Abgeordnete",
+    "profil": "Profil"
+  },
+  "duration": {
+    "minutes_one": "{{count}} Min.",
+    "minutes_other": "{{count}} Min."
+  },
+  "relative": {
+    "inHours_one": "in {{count}} Stunde",
+    "inHours_other": "in {{count}} Stunden",
+    "inDays_one": "in {{count}} Tag",
+    "inDays_other": "in {{count}} Tagen"
+  },
+  "actions": {
+    "cancel": "Abbrechen",
+    "retry": "Erneut versuchen",
+    "back": "Zurück"
+  },
+  "states": {
+    "loading": "Wird geladen …",
+    "error": "Etwas ist schiefgelaufen",
+    "empty": "Nichts gefunden"
+  },
+  "detail": {
+    "back": "Zurück",
+    "openOnParliament": "Auf parlament.gv.at öffnen",
+    "documents": "Dokumente",
+    "speeches": "Reden",
+    "topics": "Themen",
+    "partyFraction": "{{count}} von {{total}}",
+    "namedFor": "{{count}} von {{total}} dafür",
+    "namedAgainst": "{{count}} von {{total}} dagegen",
+    "document": "Dokument",
+    "showAllSpeeches": "Alle Reden anzeigen ({{count}})",
+    "unknownDelegate": "Unbekannt",
+    "unknownDelegateNumbered": "Abgeordnete:r #{{id}}",
+    "aiSummaryBadge": "KI-Zusammenfassung",
+    "summaryHeading": "Zusammenfassung",
+    "aiGeneratedBadge": "KI-generiert"
+  },
+  "votingBehavior": {
+    "infavor": "Dafür",
+    "against": "Dagegen",
+    "abstained": "Enthalten",
+    "absent": "Nicht abgestimmt"
+  },
+  "search": {
+    "placeholder": "Suche..."
+  },
+  "topicGroups": {
+    "Arbeit": "Arbeit",
+    "Außenpolitik": "Außenpolitik",
+    "Bildung": "Bildung",
+    "Budget und Finanzen": "Budget und Finanzen",
+    "Europäische Union": "Europäische Union",
+    "Familie und Generationen": "Familie und Generationen",
+    "Frauen und Gleichbehandlung": "Frauen und Gleichbehandlung",
+    "Gesundheit und Ernährung": "Gesundheit und Ernährung",
+    "Information und Medien": "Information und Medien",
+    "Inneres und Recht": "Inneres und Recht",
+    "Innovation, Technologie und Forschung": "Innovation, Technologie und Forschung",
+    "Klima, Umwelt und Energie": "Klima, Umwelt und Energie",
+    "Kultur": "Kultur",
+    "Landesverteidigung": "Landesverteidigung",
+    "Land- und Forstwirtschaft": "Land- und Forstwirtschaft",
+    "Parlament und Demokratie": "Parlament und Demokratie",
+    "Soziales": "Soziales",
+    "Sport": "Sport",
+    "Verkehr und Infrastruktur": "Verkehr und Infrastruktur",
+    "Wirtschaft": "Wirtschaft",
+    "Sonstige": "Sonstige"
+  }
+}

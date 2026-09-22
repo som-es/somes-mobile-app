@@ -1,4 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { TopicChip } from '@/components/profile/topic-chip';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
@@ -14,13 +15,15 @@ type Props = {
 };
 
 export function SelectedTopicsSheet({ visible, topics, onRemove, onClose }: Props) {
+  const { t } = useTranslation('profile');
+
   return (
-    <BottomSheet visible={visible} title="Deine Interessen" onClose={onClose}>
+    <BottomSheet visible={visible} title={t('selectedTopicsSheet.title')} onClose={onClose}>
       {topics.length === 0 ? (
-        <Text style={typography.bodyMuted}>Noch keine Interessen ausgewählt.</Text>
+        <Text style={typography.bodyMuted}>{t('selectedTopicsSheet.empty')}</Text>
       ) : (
         <>
-          <Text style={typography.caption}>Zum Entfernen antippen.</Text>
+          <Text style={typography.caption}>{t('selectedTopicsSheet.hint')}</Text>
           <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
             <View style={styles.chips}>
               {topics.map((topic) => (

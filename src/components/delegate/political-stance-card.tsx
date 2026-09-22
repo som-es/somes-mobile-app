@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
 import { topicColor } from '@/theme/topic-colors';
+import { topicGroupLabel } from '@/theme/topic-group-labels';
 import { typography } from '@/theme/typography';
 import type { InterestShare, PoliticalPosition, StanceTopicScore } from '@/types';
 
@@ -30,13 +32,14 @@ type Props = {
 };
 
 export function PoliticalStanceCard({ name, party, position, stances, interests }: Props) {
+  const { t } = useTranslation('delegates');
   const partyColor = usePartyColor(party);
   const ranked = rankStances(stances, interests);
 
   if (!position && ranked.length === 0) return null;
 
   return (
-    <SectionCard title="Politische Haltung & Richtung">
+    <SectionCard title={t('stance.title')}>
       {position ? <Compass name={name} color={partyColor} position={position} /> : null}
       {ranked.length > 0 ? <StanceRails stances={ranked} hasCompass={!!position} /> : null}
     </SectionCard>
@@ -52,6 +55,7 @@ function Compass({
   color: string;
   position: PoliticalPosition;
 }) {
+  const { t } = useTranslation('delegates');
   // positive x leans capitalist, positive y authoritarian, screen y grows downwards
   const { socialist, capitalist, liberal, authoritarian } = position.total_score;
   const x = clamp(50 + (capitalist - socialist) * PERCENT_PER_UNIT);
@@ -59,10 +63,10 @@ function Compass({
 
   return (
     <View style={styles.compass}>
-      <Text style={[typography.caption, styles.poleLabel]}>AUTORITÄR</Text>
+      <Text style={[typography.caption, styles.poleLabel]}>{t('stance.authoritarian')}</Text>
 
       <View style={styles.compassMiddle}>
-        <SideLabel label="SOZIALISTISCH" />
+        <SideLabel label={t('stance.socialist')} />
 
         <View style={styles.plot}>
           <View style={styles.axisVertical} />
@@ -76,10 +80,10 @@ function Compass({
           </View>
         </View>
 
-        <SideLabel label="KAPITALISTISCH" />
+        <SideLabel label={t('stance.capitalist')} />
       </View>
 
-      <Text style={[typography.caption, styles.poleLabel]}>LIBERTÄR</Text>
+      <Text style={[typography.caption, styles.poleLabel]}>{t('stance.libertarian')}</Text>
     </View>
   );
 }
@@ -101,6 +105,8 @@ function StanceRails({
   stances: StanceTopicScore[];
   hasCompass: boolean;
 }) {
+  const { t } = useTranslation('delegates');
+
   return (
     <View style={[styles.stances, hasCompass && styles.stancesSpaced]}>
       {stances.map((stance) => {
@@ -110,12 +116,12 @@ function StanceRails({
         return (
           <View key={stance.topic} style={styles.stanceRow}>
             <Text style={[typography.subtitle, styles.stanceTopic]} numberOfLines={1}>
-              {stance.topic}
+              {topicGroupLabel(t, stance.topic)}
             </Text>
 
             <View style={styles.railRow}>
               <Text style={[typography.caption, styles.railEnd]} numberOfLines={1}>
-                Links
+                {t('stance.left')}
               </Text>
 
               <View style={styles.rail}>
@@ -130,7 +136,7 @@ function StanceRails({
               <Text
                 style={[typography.caption, styles.railEnd, styles.railEndRight]}
                 numberOfLines={1}>
-                Rechts
+                {t('stance.right')}
               </Text>
             </View>
           </View>

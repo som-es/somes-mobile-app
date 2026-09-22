@@ -7,8 +7,12 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+// side-effect import: initializes the shared i18next instance before loadLocale
+// (and anything else) can read or change i18n.language
+import '@/i18n';
 import { PushRegistrar } from '@/components/push-registrar';
 import { PushRouter } from '@/components/push-router';
+import { loadLocale } from '@/lib/locale';
 import { queryClient } from '@/lib/query-client';
 import { clearToken, getToken, isAuthError, loadCountry, loadToken, somes } from '@/lib/somes';
 import { colors } from '@/theme/colors';
@@ -46,6 +50,7 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({ Nunito_600SemiBold });
   const [tokenLoaded, setTokenLoaded] = useState(false);
   const [countryLoaded, setCountryLoaded] = useState(false);
+  const [localeLoaded, setLocaleLoaded] = useState(false);
 
   useEffect(() => {
     // load the jwt before anything can make an authenticated request
@@ -53,9 +58,12 @@ export default function RootLayout() {
     // load the region before the first request, so it doesn't fire against
     // the default country and then have to be redone against the stored one
     loadCountry().finally(() => setCountryLoaded(true));
+    // load the locale before the first frame renders, so it never flashes the
+    // i18next default (en-GB) before switching to a stored/detected German pick
+    loadLocale().finally(() => setLocaleLoaded(true));
   }, []);
 
-  const ready = fontsLoaded && tokenLoaded && countryLoaded;
+  const ready = fontsLoaded && tokenLoaded && countryLoaded && localeLoaded;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();

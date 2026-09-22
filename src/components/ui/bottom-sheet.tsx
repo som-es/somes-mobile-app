@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
@@ -26,8 +27,8 @@ type Props = {
       choice locally and only commit it once the user confirms */
   onApply?: () => void;
   /** the bottom button always closes the sheet, this only changes its label —
-      "Anwenden" reads wrong on a sheet with nothing to apply, e.g. a pure
-      info display */
+      the default "Apply" reads wrong on a sheet with nothing to apply, e.g. a
+      pure info display */
   applyLabel?: string;
   children: ReactNode;
 };
@@ -49,9 +50,10 @@ export function BottomSheet({
   onClose,
   onReset,
   onApply,
-  applyLabel = 'Anwenden',
+  applyLabel,
   children,
 }: Props) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
   const [height, setHeight] = useState(ASSUMED_HEIGHT);
@@ -111,7 +113,11 @@ export function BottomSheet({
   return (
     <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose}>
       <View style={styles.root}>
-        <Pressable style={styles.scrim} onPress={onClose} accessibilityLabel="Schließen" />
+        <Pressable
+          style={styles.scrim}
+          onPress={onClose}
+          accessibilityLabel={t('common:bottomSheet.close')}
+        />
 
         <Animated.View
           onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
@@ -127,7 +133,7 @@ export function BottomSheet({
             <Text style={typography.cardHeading}>{title}</Text>
             {onReset ? (
               <Pressable onPress={onReset} hitSlop={8}>
-                <Text style={[typography.subtitle, styles.reset]}>Zurücksetzen</Text>
+                <Text style={[typography.subtitle, styles.reset]}>{t('common:bottomSheet.reset')}</Text>
               </Pressable>
             ) : null}
           </View>
@@ -141,7 +147,9 @@ export function BottomSheet({
             }}
             accessibilityRole="button"
             style={({ pressed }) => [styles.apply, pressed && styles.pressed]}>
-            <Text style={[typography.button, styles.applyLabel]}>{applyLabel}</Text>
+            <Text style={[typography.button, styles.applyLabel]}>
+              {applyLabel ?? t('common:bottomSheet.apply')}
+            </Text>
           </Pressable>
         </Animated.View>
       </View>

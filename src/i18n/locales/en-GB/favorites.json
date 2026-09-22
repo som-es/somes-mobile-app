@@ -1,0 +1,22 @@
+{
+  "votes": {
+    "title": "Favourite votes",
+    "empty": "No favourite votes yet."
+  },
+  "delegates": {
+    "title": "Favourite MPs",
+    "subtitle": "Choose how often you're kept up to date on their activity.",
+    "empty": "No favourite MPs yet.",
+    "infoInterval": "Update frequency",
+    "intervals": {
+      "weekly": "Every week",
+      "biweekly": "Every 2 weeks",
+      "monthly": "Every month",
+      "bimonthly": "Every 2 months"
+    }
+  },
+  "loadError": "Favourites could not be loaded.",
+  "remove": "Remove from favourites",
+  "add": "Add to favourites",
+  "signInPrompt": "Sign in to add favourites"
+}
