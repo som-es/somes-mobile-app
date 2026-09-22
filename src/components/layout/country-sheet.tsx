@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { CountryFlag } from '@/components/ui/country-flag';
@@ -8,9 +9,9 @@ import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { Country } from '@/types';
 
-const OPTIONS: { value: Country; title: string; caption: string }[] = [
-  { value: 'at', title: 'Österreich', caption: 'Nationalrat' },
-  { value: 'eu', title: 'Europäische Union', caption: 'Europäisches Parlament' },
+const OPTIONS: { value: Country; titleKey: string; captionKey: string }[] = [
+  { value: 'at', titleKey: 'common:country.at.title', captionKey: 'common:country.at.caption' },
+  { value: 'eu', titleKey: 'common:country.eu.title', captionKey: 'common:country.eu.caption' },
 ];
 
 type Props = {
@@ -21,7 +22,9 @@ type Props = {
 };
 
 export function CountrySheet({ visible, value, onChange, onClose }: Props) {
-  /** staged locally, only committed on Anwenden — closing any other way
+  const { t } = useTranslation();
+
+  /** staged locally, only committed on Apply — closing any other way
       (backdrop tap, drag-to-dismiss, back button) discards the pick */
   const [pending, setPending] = useState(value);
   const [wasVisible, setWasVisible] = useState(visible);
@@ -36,7 +39,7 @@ export function CountrySheet({ visible, value, onChange, onClose }: Props) {
   return (
     <BottomSheet
       visible={visible}
-      title="Region"
+      title={t('common:regionSheet.title')}
       onClose={onClose}
       onApply={() => {
         if (pending !== value) onChange(pending);
@@ -57,8 +60,8 @@ export function CountrySheet({ visible, value, onChange, onClose }: Props) {
               ]}>
               <CountryFlag country={option.value} variant="map" size={44} />
               <View style={styles.labels}>
-                <Text style={typography.cardTitle}>{option.title}</Text>
-                <Text style={typography.caption}>{option.caption}</Text>
+                <Text style={typography.cardTitle}>{t(option.titleKey)}</Text>
+                <Text style={typography.caption}>{t(option.captionKey)}</Text>
               </View>
               <View style={[styles.radio, selected && styles.radioSelected]}>
                 {selected ? <View style={styles.radioDot} /> : null}

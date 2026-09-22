@@ -1,0 +1,79 @@
+{
+  "list": {
+    "titleAt": "MPs of the National Council",
+    "titleEu": "Members of the European Parliament",
+    "updatedAt": "Updated on {{date}}",
+    "filter": "Filter",
+    "all": "All",
+    "sortByLabel": "Sort by {{label}}",
+    "resetSort": "Reset sorting",
+    "error": "MPs could not be loaded.",
+    "empty": "No MPs found",
+    "columns": {
+      "name": "Name",
+      "partei": "Party",
+      "alter": "Age"
+    }
+  },
+  "card": {
+    "withoutClub": "No parliamentary group"
+  },
+  "detail": {
+    "error": "MP could not be loaded."
+  },
+  "header": {
+    "copyrightFallbackAt": "Parliamentary Directorate",
+    "copyrightFallbackEu": "European Parliament"
+  },
+  "absences": {
+    "title": "Absences",
+    "sittingAt": "National Council sitting",
+    "sittingEu": "Plenary sitting",
+    "missedSessions": "Missed plenary sittings ({{year}}):",
+    "none": "No absences",
+    "lastAbsent": "Recently absent",
+    "showAll": "Show all absences ({{count}})",
+    "totalCount_one": "{{count}} absence in total",
+    "totalCount_other": "{{count}} absences in total",
+    "absent": "Absent",
+    "present": "Present",
+    "openSource": "Open source →",
+    "close": "Close"
+  },
+  "speeches": {
+    "title": "Recent speeches",
+    "noTopic": "No agenda item",
+    "totalCount_one": "{{count}} speech in total",
+    "totalCount_other": "{{count}} speeches in total",
+    "showLess": "Show less",
+    "showMore": "Show more ({{count}})"
+  },
+  "namedVotes": {
+    "title": "Recent roll-call votes",
+    "totalCount_one": "{{count}} vote in total",
+    "totalCount_other": "{{count}} votes in total",
+    "loading": "Loading…",
+    "error": "Vote could not be loaded.",
+    "absent": "Absent",
+    "noVote": "No vote",
+    "more": "More votes ({{count}})",
+    "aiSummaryBadge": "AI summary"
+  },
+  "opinion": {
+    "for": "For",
+    "against": "Against"
+  },
+  "stance": {
+    "title": "Political stance & direction",
+    "authoritarian": "AUTHORITARIAN",
+    "libertarian": "LIBERTARIAN",
+    "socialist": "SOCIALIST",
+    "capitalist": "CAPITALIST",
+    "left": "Left",
+    "right": "Right"
+  },
+  "topics": {
+    "title": "Topics",
+    "more": "More topics"
+  }
+}

@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { OptionGroup } from '@/components/filters/option-group';
 import { SubScreen } from '@/components/layout/sub-screen';
@@ -21,15 +22,19 @@ import type { Delegate, DelegateFavo } from '@/types';
 
 const AVATAR = 48;
 
-/** the infoabstand select from somes-frontend, same values and captions */
-const INTERVALS = [
-  { label: 'Jede Woche', value: 7 },
-  { label: 'Jede 2. Woche', value: 14 },
-  { label: 'Jeden Monat', value: 30 },
-  { label: 'Jeden 2. Monat', value: 60 },
-] as const;
+/** the infoabstand select from somes-frontend, same values as before, captions
+    are resolved with t() inside FavoriteDelegate where they are rendered */
+const INTERVAL_VALUES = [7, 14, 30, 60] as const;
+
+const INTERVAL_KEYS: Record<(typeof INTERVAL_VALUES)[number], string> = {
+  7: 'weekly',
+  14: 'biweekly',
+  30: 'monthly',
+  60: 'bimonthly',
+};
 
 export default function FavoriteDelegatesScreen() {
+  const { t } = useTranslation('favorites');
   const favorites = useFavoriteDelegates();
   const entries = favorites.data ?? [];
 
@@ -44,16 +49,16 @@ export default function FavoriteDelegatesScreen() {
   return (
     <SubScreen refreshing={favorites.isRefetching} onRefresh={() => favorites.refetch()}>
       <ScreenTitle
-        title="Favorisierte Personen"
-        subtitle="Lege fest, wie oft du über ihre Aktivitäten informiert wirst."
+        title={t('delegates.title')}
+        subtitle={t('delegates.subtitle')}
       />
 
       {favorites.isPending ? (
         <CardSkeleton />
       ) : favorites.isError ? (
-        <Notice message="Favoriten konnten nicht geladen werden." />
+        <Notice message={t('loadError')} />
       ) : entries.length === 0 ? (
-        <Notice message="Keine favorisierten Personen vorhanden." />
+        <Notice message={t('delegates.empty')} />
       ) : (
         entries.map((favo, index) => (
           <FavoriteDelegate
@@ -74,12 +79,17 @@ function FavoriteDelegate({
   favo: DelegateFavo;
   delegate: Delegate | undefined;
 }) {
+  const { t } = useTranslation('favorites');
   const router = useRouter();
   const country = useCountry();
   const updateInterval = useUpdateFavoriteInterval();
   const { toggle, isPending } = useFavorite('delegate', favo.delegate_id);
   const party = delegate?.current_party ?? delegate?.party ?? null;
   const partyColor = usePartyColor(party);
+  const intervals = INTERVAL_VALUES.map((value) => ({
+    label: t(`delegates.intervals.${INTERVAL_KEYS[value]}`),
+    value,
+  }));
 
   return (
     <Card variant="outlined" elevation="row" style={styles.card}>
@@ -114,8 +124,8 @@ function FavoriteDelegate({
       <View style={styles.divider} />
 
       <OptionGroup
-        title="Infoabstand"
-        options={INTERVALS}
+        title={t('delegates.infoInterval')}
+        options={intervals}
         value={favo.user_info_days}
         onChange={(user_info_days) =>
           updateInterval.mutate({ delegate_id: favo.delegate_id, user_info_days })
@@ -129,7 +139,7 @@ function FavoriteDelegate({
         accessibilityRole="button"
         style={({ pressed }) => [styles.remove, pressed && styles.pressed]}>
         <Ionicons name="heart-dislike-outline" size={16} color={colors.danger} />
-        <Text style={[typography.caption, styles.removeLabel]}>Aus Favoriten entfernen</Text>
+        <Text style={[typography.caption, styles.removeLabel]}>{t('remove')}</Text>
       </Pressable>
     </Card>
   );

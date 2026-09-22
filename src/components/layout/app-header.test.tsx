@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import '@/test/i18n';
 import { AppHeader } from '@/components/layout/app-header';
 
 /** the header pads itself by the top inset and the real hook throws outside a
@@ -47,7 +48,7 @@ describe('AppHeader, notifications bell', () => {
   it('navigates to the notifications screen from another route', async () => {
     await render(<AppHeader />);
 
-    const bell = screen.getByRole('button', { name: 'Benachrichtigungen' });
+    const bell = screen.getByRole('button', { name: 'Notifications' });
     expect(bell.props.accessibilityState.disabled).toBe(false);
 
     fireEvent.press(bell);
@@ -63,7 +64,7 @@ describe('AppHeader, notifications bell', () => {
     mockPathname = '/notifications';
     await render(<AppHeader />);
 
-    const bell = screen.getByRole('button', { name: 'Benachrichtigungen' });
+    const bell = screen.getByRole('button', { name: 'Notifications' });
     expect(bell.props.accessibilityState.disabled).toBe(true);
     expect(bell.props.accessibilityState.selected).toBe(true);
 
@@ -78,7 +79,7 @@ describe('AppHeader, info button', () => {
   it('navigates to the impressum screen from another route', async () => {
     await render(<AppHeader />);
 
-    const info = screen.getByRole('button', { name: 'Impressum und Kontakt' });
+    const info = screen.getByRole('button', { name: 'Legal notice and contact' });
     expect(info.props.accessibilityState.disabled).toBe(false);
 
     fireEvent.press(info);
@@ -92,7 +93,7 @@ describe('AppHeader, info button', () => {
     mockPathname = '/impressum';
     await render(<AppHeader />);
 
-    const info = screen.getByRole('button', { name: 'Impressum und Kontakt' });
+    const info = screen.getByRole('button', { name: 'Legal notice and contact' });
     expect(info.props.accessibilityState.disabled).toBe(true);
     expect(info.props.accessibilityState.selected).toBe(true);
 

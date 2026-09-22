@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import { AbsencesCard } from '@/components/delegate/absences-card';
 import { DelegateHeaderCard } from '@/components/delegate/delegate-header-card';
@@ -12,10 +13,13 @@ import { FavoriteButton } from '@/components/ui/favorite-button';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { somes } from '@/lib/somes';
+import { useLocale } from '@/lib/use-locale';
 import type { Delegate, GeneralDelegateInfo, SpeechesWithMaxPage } from '@/types';
 
 export default function AbgeordneteDetailScreen() {
+  const { t } = useTranslation('delegates');
   const { id } = useLocalSearchParams<{ id: string }>();
+  const locale = useLocale();
 
   const delegate = useQuery({
     queryKey: ['delegate', id],
@@ -24,8 +28,8 @@ export default function AbgeordneteDetailScreen() {
   });
 
   const info = useQuery({
-    queryKey: ['delegate-info', id],
-    queryFn: () => somes.delegates.extended(Number(id)),
+    queryKey: ['delegate-info', id, locale],
+    queryFn: () => somes.delegates.extended(Number(id), locale === 'de-AT' ? 'de' : 'en'),
     staleTime: 1000 * 60 * 60 * 24,
   });
 
@@ -43,7 +47,7 @@ export default function AbgeordneteDetailScreen() {
       {delegate.isPending ? (
         <CardSkeleton />
       ) : delegate.isError ? (
-        <Notice message="Abgeordnete:r konnte nicht geladen werden." />
+        <Notice message={t('detail.error')} />
       ) : (
         <DelegateDetail
           delegate={delegate.data}

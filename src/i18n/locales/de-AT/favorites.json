@@ -1,0 +1,22 @@
+{
+  "votes": {
+    "title": "Favorisierte Abstimmungen",
+    "empty": "Keine favorisierten Abstimmungen vorhanden."
+  },
+  "delegates": {
+    "title": "Favorisierte Personen",
+    "subtitle": "Lege fest, wie oft du über ihre Aktivitäten informiert wirst.",
+    "empty": "Keine favorisierten Personen vorhanden.",
+    "infoInterval": "Infoabstand",
+    "intervals": {
+      "weekly": "Jede Woche",
+      "biweekly": "Jede 2. Woche",
+      "monthly": "Jeden Monat",
+      "bimonthly": "Jeden 2. Monat"
+    }
+  },
+  "loadError": "Favoriten konnten nicht geladen werden.",
+  "remove": "Aus Favoriten entfernen",
+  "add": "Zu Favoriten hinzufügen",
+  "signInPrompt": "Anmelden, um zu favorisieren"
+}

@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
@@ -18,11 +19,13 @@ type Props = {
 };
 
 export function DelegateHeaderCard({ delegate }: Props) {
+  const { t } = useTranslation('delegates');
   const country = useCountry();
   const years = age(delegate.birthdate);
   const party = delegate.party || delegate.current_party;
   const partyColor = usePartyColor(party);
-  const copyrightFallback = country === 'eu' ? 'Europäisches Parlament' : 'Parlamentsdirektion';
+  const copyrightFallback =
+    country === 'eu' ? t('header.copyrightFallbackEu') : t('header.copyrightFallbackAt');
 
   // committees first, the mandates stand in when a member sits on none
   const divisions = delegate.divisions ?? [];

@@ -1,0 +1,23 @@
+{
+  "session": {
+    "titleEu": "Next plenary session of the European Parliament",
+    "titleAt": "Next National Council session",
+    "dateUnknown": "Date not yet known",
+    "date": "on {{date}}",
+    "dateWithRelative": "on {{date}} ({{relative}})"
+  },
+  "votes": {
+    "title": "Latest votes",
+    "votedOn": "Voted on {{date}}",
+    "error": "Votes could not be loaded.",
+    "empty": "None.",
+    "more": "More votes"
+  },
+  "proposals": {
+    "title": "Ministerial drafts",
+    "subtitle": "From the last 30 days",
+    "error": "Ministerial drafts could not be loaded.",
+    "empty": "None.",
+    "more": "More ministerial drafts"
+  }
+}

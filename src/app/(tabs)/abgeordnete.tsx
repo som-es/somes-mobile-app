@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { AVATAR, DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
@@ -23,6 +24,7 @@ import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -43,13 +45,14 @@ function SortableColumn({
   onPress: (key: SortKey) => void;
   style: ViewStyle;
 }) {
+  const { t } = useTranslation('delegates');
   const active = sort?.key === sortKey;
 
   return (
     <Pressable
       onPress={() => onPress(sortKey)}
       accessibilityRole="button"
-      accessibilityLabel={`Nach ${label} sortieren`}
+      accessibilityLabel={t('list.sortByLabel', { label })}
       style={[styles.column, style]}>
       <Text style={typography.tableHead} numberOfLines={1}>
         {label}
@@ -77,6 +80,8 @@ export default function AbgeordneteScreen() {
 }
 
 function AbgeordneteScreenContent() {
+  const { t } = useTranslation('delegates');
+  const locale = useLocale();
   const country = useCountry();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyDelegateFilters(country));
@@ -119,8 +124,8 @@ function AbgeordneteScreenContent() {
     () =>
       (results.data?.pages.flatMap((page) => page.delegates) ?? [])
         .slice()
-        .sort(compareDelegates(sort)),
-    [results.data, sort]
+        .sort(compareDelegates(sort, t)),
+    [results.data, sort, t]
   );
   const updatedAt = results.data?.pages[0]?.updated_at;
 
@@ -138,8 +143,8 @@ function AbgeordneteScreenContent() {
   const header = (
     <>
       <ScreenTitle
-        title={country === 'eu' ? 'Mitglieder des Europäischen Parlaments' : 'Abgeordnete des Nationalrats'}
-        subtitle={updatedAt ? `Aktualisiert am ${isoToDotDate(updatedAt)}` : undefined}
+        title={country === 'eu' ? t('list.titleEu') : t('list.titleAt')}
+        subtitle={updatedAt ? t('list.updatedAt', { date: isoToDotDate(updatedAt, locale) }) : undefined}
         centered
       />
 
@@ -148,7 +153,7 @@ function AbgeordneteScreenContent() {
           <SearchField value={search} onChangeText={setSearch} />
         </View>
         <FilterPill
-          label={withCount('Filter', counts.generic)}
+          label={withCount(t('list.filter'), counts.generic)}
           onPress={() => setSheetOpen(true)}
         />
       </View>
@@ -158,7 +163,7 @@ function AbgeordneteScreenContent() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chips}>
         <Chip
-          label="Alle"
+          label={t('list.all')}
           color={colors.textMuted}
           dimmed={anyParty}
           onPress={() => setFilters({ ...filters, parties: [] })}
@@ -179,7 +184,7 @@ function AbgeordneteScreenContent() {
         {columns.map((column) => (
           <SortableColumn
             key={column.key}
-            label={column.label}
+            label={t(`list.columns.${column.key}`)}
             sortKey={column.key}
             sort={sort}
             onPress={(key) => setSort(toggleSort(sort, key))}
@@ -191,7 +196,7 @@ function AbgeordneteScreenContent() {
           disabled={sort === null}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Sortierung zurücksetzen"
+          accessibilityLabel={t('list.resetSort')}
           style={({ pressed }) => [
             styles.reset,
             sort === null && styles.resetInactive,
@@ -212,8 +217,8 @@ function AbgeordneteScreenContent() {
         renderItem={(delegate) => <DelegateCard delegate={delegate} />}
         isPending={results.isPending}
         isError={results.isError}
-        errorMessage="Abgeordnete konnten nicht geladen werden."
-        emptyMessage="Keine Abgeordneten gefunden"
+        errorMessage={t('list.error')}
+        emptyMessage={t('list.empty')}
         onEndReached={() => {
           if (results.hasNextPage && !results.isFetchingNextPage) results.fetchNextPage();
         }}

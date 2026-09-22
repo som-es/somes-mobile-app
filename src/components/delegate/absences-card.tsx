@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -20,9 +22,11 @@ type Props = {
 };
 
 export function AbsencesCard({ absences }: Props) {
+  const { t } = useTranslation('delegates');
+  const locale = useLocale();
   const country = useCountry();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const sittingLabel = country === 'eu' ? 'Plenarsitzung' : 'Nationalratssitzung';
+  const sittingLabel = country === 'eu' ? t('absences.sittingEu') : t('absences.sittingAt');
 
   // absence.date is a plain calendar date, so it sorts and formats as a string
   const sorted = absences.slice().sort((a, b) => b.date.localeCompare(a.date));
@@ -31,17 +35,17 @@ export function AbsencesCard({ absences }: Props) {
 
   return (
     <>
-      <SectionCard title="Abwesenheiten">
+      <SectionCard title={t('absences.title')}>
         <Text style={[typography.subtitle, styles.sectionLabel]}>
-          Verpasste Plenarsitzungen ({year}):
+          {t('absences.missedSessions', { year })}
         </Text>
         <Text style={styles.count}>{count}</Text>
 
         {sorted.length === 0 ? (
-          <Text style={typography.bodyMuted}>Keine Abwesenheiten</Text>
+          <Text style={typography.bodyMuted}>{t('absences.none')}</Text>
         ) : (
           <>
-            <Text style={[typography.subtitle, styles.subheading]}>Zuletzt abwesend</Text>
+            <Text style={[typography.subtitle, styles.subheading]}>{t('absences.lastAbsent')}</Text>
 
             <View style={styles.list}>
               {shown.map((absence, index) => (
@@ -54,7 +58,7 @@ export function AbsencesCard({ absences }: Props) {
                     </Text>
                   </View>
                   <Text style={typography.caption}>
-                    {isoToDotDate(absence.date)} ({absence.gp})
+                    {isoToDotDate(absence.date, locale)} ({absence.gp})
                   </Text>
                 </View>
               ))}
@@ -65,7 +69,7 @@ export function AbsencesCard({ absences }: Props) {
                 onPress={() => setSheetOpen(true)}
                 style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
                 <Text style={[typography.button, styles.buttonLabel]}>
-                  Alle Abwesenheiten anzeigen ({sorted.length})
+                  {t('absences.showAll', { count: sorted.length })}
                 </Text>
               </Pressable>
             ) : null}
@@ -100,6 +104,8 @@ function AbsencesSheet({
   sittingLabel: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation('delegates');
+  const locale = useLocale();
   const [selected, setSelected] = useState<SelectedSession | null>(null);
 
   // shared across every profile's sheet, sessions rarely change once recorded
@@ -117,12 +123,12 @@ function AbsencesSheet({
   return (
     <BottomSheet
       visible={visible}
-      title="Abwesenheiten"
+      title={t('absences.title')}
       onClose={() => {
         setSelected(null);
         onClose();
       }}
-      applyLabel="Schließen">
+      applyLabel={t('absences.close')}>
       <ScrollView contentContainerStyle={styles.sheetBody} showsVerticalScrollIndicator={false}>
         {gps.map((gp) => {
           const gpSessions = (sessions.data?.[gp] ?? []).slice().sort((a, b) => a.inr - b.inr);
@@ -160,7 +166,7 @@ function AbsencesSheet({
         })}
 
         <Text style={[typography.bodyMuted, styles.total]}>
-          {absences.length} {absences.length === 1 ? 'Abwesenheit' : 'Abwesenheiten'} insgesamt
+          {t('absences.totalCount', { count: absences.length })}
         </Text>
 
         {selected ? (
@@ -170,7 +176,7 @@ function AbsencesSheet({
                 {selected.session.inr}. {sittingLabel} ({selected.gp})
               </Text>
               <Badge
-                label={selected.absence ? 'Abwesend' : 'Anwesend'}
+                label={selected.absence ? t('absences.absent') : t('absences.present')}
                 color={selected.absence ? colors.dangerSurface : colors.inset}
                 textColor={selected.absence ? colors.dangerSubtle : colors.textMuted}
               />
@@ -181,18 +187,18 @@ function AbsencesSheet({
             ) : null}
 
             {selected.absence ? (
-              <Text style={typography.caption}>{isoToDotDate(selected.absence.date)}</Text>
+              <Text style={typography.caption}>{isoToDotDate(selected.absence.date, locale)}</Text>
             ) : null}
 
             {selected.absence?.source_url ? (
               <Pressable onPress={() => Linking.openURL(selected.absence!.source_url!)} hitSlop={8}>
-                <Text style={[typography.subtitle, styles.link]}>Quellennachweis öffnen →</Text>
+                <Text style={[typography.subtitle, styles.link]}>{t('absences.openSource')}</Text>
               </Pressable>
             ) : selected.session.absences_doc_url ? (
               <Pressable
                 onPress={() => Linking.openURL(selected.session.absences_doc_url!)}
                 hitSlop={8}>
-                <Text style={[typography.subtitle, styles.link]}>Quellennachweis öffnen →</Text>
+                <Text style={[typography.subtitle, styles.link]}>{t('absences.openSource')}</Text>
               </Pressable>
             ) : null}
           </View>

@@ -1,5 +1,8 @@
+import i18n from '@/i18n';
 import { compareDelegates, toggleSort } from '@/lib/delegate-sort';
 import type { Delegate } from '@/types';
+
+const t = i18n.getFixedT('de-AT');
 
 type TestDelegate = Omit<Delegate, 'party' | 'birthdate'> & {
   party: string | null;
@@ -43,15 +46,15 @@ describe('compareDelegates', () => {
     const a = delegate({ id: 1, name: 'Bauer Clemens' });
     const b = delegate({ id: 2, name: 'Atzwanger Daniel' });
 
-    expect([a, b].sort(compareDelegates(null))).toEqual([a, b]);
+    expect([a, b].sort(compareDelegates(null, t))).toEqual([a, b]);
   });
 
   it('sorts by name, ascending or descending', () => {
     const a = delegate({ id: 1, name: 'Bauer Clemens' });
     const b = delegate({ id: 2, name: 'Atzwanger Daniel' });
 
-    expect([a, b].sort(compareDelegates({ key: 'name', direction: 'asc' }))).toEqual([b, a]);
-    expect([a, b].sort(compareDelegates({ key: 'name', direction: 'desc' }))).toEqual([a, b]);
+    expect([a, b].sort(compareDelegates({ key: 'name', direction: 'asc' }, t))).toEqual([b, a]);
+    expect([a, b].sort(compareDelegates({ key: 'name', direction: 'desc' }, t))).toEqual([a, b]);
   });
 
   it('sorts by party label, mapping missing/OK party to Ohne Klub', () => {
@@ -60,7 +63,7 @@ describe('compareDelegates', () => {
     // near the same letter, so this doesn't depend on locale collation rules
     const fpoe = delegate({ id: 2, party: 'FPÖ' });
 
-    expect([noParty, fpoe].sort(compareDelegates({ key: 'partei', direction: 'asc' }))).toEqual([
+    expect([noParty, fpoe].sort(compareDelegates({ key: 'partei', direction: 'asc' }, t))).toEqual([
       fpoe,
       noParty,
     ]);
@@ -73,11 +76,11 @@ describe('compareDelegates', () => {
     const unknown = delegate({ id: 3, birthdate: null });
 
     expect(
-      [unknown, older, younger].sort(compareDelegates({ key: 'alter', direction: 'asc' }))
+      [unknown, older, younger].sort(compareDelegates({ key: 'alter', direction: 'asc' }, t))
     ).toEqual([younger, older, unknown]);
 
     expect(
-      [unknown, older, younger].sort(compareDelegates({ key: 'alter', direction: 'desc' }))
+      [unknown, older, younger].sort(compareDelegates({ key: 'alter', direction: 'desc' }, t))
     ).toEqual([older, younger, unknown]);
   });
 });

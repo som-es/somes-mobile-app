@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { minutes } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { useLocale } from '@/lib/use-locale';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { VoteMark } from '@/components/ui/vote-mark';
@@ -27,11 +29,12 @@ type Props = {
 };
 
 export function SpeechList({ speeches, delegates, gp, ityp, inr }: Props) {
+  const { t } = useTranslation();
   const router = useRouter();
   const shown = speeches.slice(0, PAGE);
 
   return (
-    <SectionCard title="Reden">
+    <SectionCard title={t('common:detail.speeches')}>
       <View style={styles.list}>
         {shown.map((item) => (
           <SpeechRow key={item.id} item={item} delegate={delegates.get(item.speech.delegate_id)} />
@@ -46,7 +49,7 @@ export function SpeechList({ speeches, delegates, gp, ityp, inr }: Props) {
           hitSlop={8}
           style={styles.more}>
           <Text style={[typography.subtitle, styles.moreLabel]}>
-            Alle Reden anzeigen ({speeches.length})
+            {t('common:detail.showAllSpeeches', { count: speeches.length })}
           </Text>
         </Pressable>
       ) : null}
@@ -57,6 +60,8 @@ export function SpeechList({ speeches, delegates, gp, ityp, inr }: Props) {
 /** the row itself, shared between the inline preview here and the full list at
     abstimmung/[gp]/[ityp]/[inr]/reden so the two never drift apart */
 export function SpeechRow({ item, delegate }: { item: Speech; delegate: Delegate | undefined }) {
+  const { t } = useTranslation();
+  const locale = useLocale();
   const country = useCountry();
   const { data: partyColors } = usePartyColors();
   const { speech, ai_summary } = item;
@@ -78,7 +83,7 @@ export function SpeechRow({ item, delegate }: { item: Speech; delegate: Delegate
 
       <View style={styles.text}>
         <Text style={typography.rowTitle} numberOfLines={1}>
-          {delegate?.name ?? 'Unbekannt'}
+          {delegate?.name ?? t('common:detail.unknownDelegate')}
         </Text>
 
         {party ? (
@@ -100,10 +105,10 @@ export function SpeechRow({ item, delegate }: { item: Speech; delegate: Delegate
           </Text>
         ) : null}
 
-        {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
+        {ai_summary?.short_summary ? <Badge label={t('common:detail.aiSummaryBadge')} /> : null}
 
         {speech.duration_in_seconds ? (
-          <Text style={typography.caption}>{minutes(speech.duration_in_seconds)}</Text>
+          <Text style={typography.caption}>{minutes(speech.duration_in_seconds, locale)}</Text>
         ) : null}
       </View>
 

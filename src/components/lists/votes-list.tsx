@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { VoteResultCard } from '@/components/cards/vote-result-card';
 import { VoteGenericSheet } from '@/components/filters/generic-sheet';
@@ -16,6 +17,7 @@ import { emptyVoteFilters, voteFilterCounts, voteResultsQuery } from '@/lib/filt
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
+import { useLocale } from '@/lib/use-locale';
 import { spacing } from '@/theme/layout';
 
 import { partiesFor, useFilterSources, withCount, type Sheet } from './filter-sources';
@@ -25,6 +27,8 @@ type Props = {
 };
 
 export function VotesList({ control }: Props) {
+  const { t } = useTranslation('votes');
+  const locale = useLocale();
   const country = useCountry();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyVoteFilters(country));
@@ -58,8 +62,8 @@ export function VotesList({ control }: Props) {
       {control}
 
       <ScreenTitle
-        title="Vergangene Abstimmungsergebnisse"
-        subtitle={updatedAt ? `Aktualisiert am ${isoToDotDate(updatedAt)}` : undefined}
+        title={t('votesList.title')}
+        subtitle={updatedAt ? t('delegates:list.updatedAt', { date: isoToDotDate(updatedAt, locale) }) : undefined}
         centered
       />
 
@@ -67,17 +71,20 @@ export function VotesList({ control }: Props) {
 
       <View style={styles.filters}>
         <View style={styles.slot}>
-          <FilterPill label={withCount('Themen', counts.topics)} onPress={() => setSheet('topics')} />
+          <FilterPill
+            label={withCount(t('votesList.filterTopics'), counts.topics)}
+            onPress={() => setSheet('topics')}
+          />
         </View>
         <View style={styles.slot}>
           <FilterPill
-            label={withCount('Parteien', counts.parties)}
+            label={withCount(t('votesList.filterParties'), counts.parties)}
             onPress={() => setSheet('second')}
           />
         </View>
         <View style={styles.slot}>
           <FilterPill
-            label={withCount('Filter', counts.generic)}
+            label={withCount(t('votesList.filterGeneric'), counts.generic)}
             onPress={() => setSheet('generic')}
           />
         </View>
@@ -94,8 +101,8 @@ export function VotesList({ control }: Props) {
         renderItem={(voteResult) => <VoteResultCard voteResult={voteResult} />}
         isPending={results.isPending}
         isError={results.isError}
-        errorMessage="Abstimmungen konnten nicht geladen werden."
-        emptyMessage="Keine Abstimmungsergebnisse gefunden"
+        errorMessage={t('votesList.error')}
+        emptyMessage={t('votesList.empty')}
         onEndReached={() => {
           if (results.hasNextPage && !results.isFetchingNextPage) results.fetchNextPage();
         }}
@@ -106,13 +113,13 @@ export function VotesList({ control }: Props) {
 
       <MultiSelectSheet
         visible={sheet === 'topics'}
-        title="Themen"
+        title={t('votesList.filterTopics')}
         values={topics}
         selected={filters.topics}
         onChange={(selected) => setFilters({ ...filters, topics: selected })}
         onClose={() => setSheet(null)}
         searchable
-        searchPlaceholder="Thema suchen..."
+        searchPlaceholder={t('search.topicPlaceholder')}
       />
 
       <PartySheet

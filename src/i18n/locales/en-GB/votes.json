@@ -1,0 +1,66 @@
+{
+  "voteType": {
+    "law": "Law",
+    "amendment": "Amendment",
+    "resolution": "Resolution",
+    "report": "Report",
+    "other": "Other"
+  },
+  "majority": {
+    "simple": "simple majority",
+    "twoThirds": "two-thirds majority"
+  },
+  "tabs": {
+    "nationalrat": "National Council",
+    "regierung": "Government"
+  },
+  "detail": {
+    "loadError": "Vote could not be loaded.",
+    "namedVoteSubtitle": "Roll-call vote on: {{date}}",
+    "voteSubtitle": "Vote on: {{date}}",
+    "votingHeading": "Vote",
+    "search": "Search",
+    "broughtBy": "Brought by"
+  },
+  "speeches": {
+    "loadError": "Speeches could not be loaded.",
+    "empty": "No speeches available"
+  },
+  "search": {
+    "namePlaceholder": "Search by name...",
+    "topicPlaceholder": "Search topic..."
+  },
+  "filters": {
+    "parties": "Parties",
+    "behavior": "Behaviour",
+    "votingBehavior": "Voting behaviour",
+    "countryOfOrigin": "Country of origin"
+  },
+  "votesList": {
+    "title": "Past vote results",
+    "filterTopics": "Topics",
+    "filterParties": "Parties",
+    "filterGeneric": "Filter",
+    "error": "Votes could not be loaded.",
+    "empty": "No vote results found"
+  },
+  "proposalsList": {
+    "title": "Ministerial drafts",
+    "filterTopics": "Topics",
+    "filterMinistries": "Ministries",
+    "filterGeneric": "Filter",
+    "searchMinistry": "Search ministry...",
+    "error": "Ministerial drafts could not be loaded.",
+    "empty": "No ministerial drafts found"
+  },
+  "proposalDetail": {
+    "loadError": "Ministerial draft could not be loaded.",
+    "subtitle": "Ministerial draft from {{date}}",
+    "governmentBill": "Government bill"
+  },
+  "decree": {
+    "sourceLabel": "Open on ris.bka.gv.at",
+    "loadError": "Decree could not be loaded.",
+    "subtitle": "Decree from {{date}}"
+  }
+}

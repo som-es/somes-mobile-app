@@ -1,27 +1,50 @@
 /* the api returns bare dates and datetimes without a timezone, both are handled here */
+import i18n from '@/i18n';
+import type { Locale } from '@/lib/locale';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-export function dashDateToDotDate(date: string): string {
-  const parts = date.split('-');
-  return `${parts[2]}.${parts[1]}.${parts[0]}`;
+/** parses the Y/M/D components directly rather than `new Date(dateString)`,
+    which the caller's device timezone could otherwise shift by a day */
+function utcDateFromDashDate(date: string): Date {
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
 }
 
-export function isoToDotDate(date: string): string {
-  return dashDateToDotDate(date.split('T')[0]);
+const dotDateFormatters: Partial<Record<Locale, Intl.DateTimeFormat>> = {};
+
+function dotDateFormatter(locale: Locale): Intl.DateTimeFormat {
+  return (dotDateFormatters[locale] ??= new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }));
 }
 
-export function relativeDayLabel(date: string): string | null {
+export function dashDateToDotDate(date: string, locale: Locale): string {
+  return dotDateFormatter(locale).format(utcDateFromDashDate(date));
+}
+
+export function isoToDotDate(date: string, locale: Locale): string {
+  return dashDateToDotDate(date.split('T')[0], locale);
+}
+
+/** Intl.RelativeTimeFormat isn't available in every Hermes build this app ships on
+    (DateTimeFormat is, RelativeTimeFormat/PluralRules often aren't), so this goes
+    through i18next's own pluralization instead of the Intl constructor */
+export function relativeDayLabel(date: string, locale: Locale): string | null {
   const days = (new Date(date).getTime() - Date.now()) / MS_PER_DAY;
   if (Number.isNaN(days) || days <= 0) return null;
 
+  const t = i18n.getFixedT(locale, 'common');
+
   if (days < 1) {
     const hours = Math.round(days * 24);
-    return hours <= 1 ? 'in 1 Stunde' : `in ${hours} Stunden`;
+    return t('relative.inHours', { count: Math.max(1, hours) });
   }
 
-  const rounded = Math.round(days);
-  return rounded === 1 ? 'in 1 Tag' : `in ${rounded} Tagen`;
+  return t('relative.inDays', { count: Math.round(days) });
 }
 
 /** calendar age, or null, compares calendar fields since dividing days by 365 drifts */
@@ -41,6 +64,7 @@ export function age(birthdate: string | null): number | null {
 }
 
 /** a speech length, under a minute still reads as 1 min rather than 0 min */
-export function minutes(seconds: number): string {
-  return `${Math.max(1, Math.round(seconds / 60))} Min.`;
+export function minutes(seconds: number, locale: Locale): string {
+  const count = Math.max(1, Math.round(seconds / 60));
+  return i18n.getFixedT(locale, 'common')('duration.minutes', { count });
 }

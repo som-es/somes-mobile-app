@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { AppHeader } from '@/components/layout/app-header';
 import { ResultList } from '@/components/lists/result-list';
@@ -15,6 +16,7 @@ import { typography } from '@/theme/typography';
 import type { Speech } from '@/types';
 
 export default function SpeechesScreen() {
+  const { t } = useTranslation('votes');
   const { gp, ityp, inr } = useLocalSearchParams<{ gp: string; ityp: string; inr: string }>();
   const router = useRouter();
 
@@ -46,10 +48,10 @@ export default function SpeechesScreen() {
     <>
       <Pressable onPress={() => router.back()} style={styles.back} hitSlop={8}>
         <Ionicons name="arrow-back" size={18} color={colors.text} />
-        <Text style={typography.subtitle}>Zurück</Text>
+        <Text style={typography.subtitle}>{t('common:detail.back')}</Text>
       </Pressable>
 
-      <ScreenTitle title="Reden" centered />
+      <ScreenTitle title={t('common:detail.speeches')} centered />
     </>
   );
 
@@ -72,8 +74,8 @@ export default function SpeechesScreen() {
         }
         isPending={vote.isPending}
         isError={vote.isError}
-        errorMessage="Reden konnten nicht geladen werden."
-        emptyMessage="Keine Reden vorhanden"
+        errorMessage={t('speeches.loadError')}
+        emptyMessage={t('speeches.empty')}
         onEndReached={() => {}}
         isFetchingNextPage={false}
         refreshing={vote.isRefetching}

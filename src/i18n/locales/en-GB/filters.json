@@ -1,0 +1,27 @@
+{
+  "genericTitle": "Filter",
+  "period": "Legislative period",
+  "accepted": "Accepted",
+  "voteType": "Proposal type",
+  "requiredMajority": "Required majority",
+  "voteStatus": "Vote status",
+  "mandateType": "Mandate type",
+  "activeMandate": "Active mandate",
+  "considerFormerParty": "Consider former party membership",
+  "any": "any",
+  "acceptedValue": "accepted",
+  "rejected": "rejected",
+  "rejectedEarly": "withdrawn early",
+  "withVoteResult": "with a vote",
+  "government": "Government",
+  "yes": "Yes",
+  "no": "No",
+  "allPeriods": "All",
+  "periodSince": "{{gp}} (since {{year}})",
+  "noResults": "Nothing found.",
+  "stance": {
+    "pro": "For",
+    "any": "Any",
+    "contra": "Against"
+  }
+}

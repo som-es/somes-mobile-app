@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
 export function DangerZoneCard() {
+  const { t } = useTranslation('profile');
   const { signOut } = useSession();
   const [pending, setPending] = useState(false);
 
@@ -19,10 +21,7 @@ export function DangerZoneCard() {
       await somes.account.deleteAccount();
     } catch {
       // somes-frontend clears the jwt regardless, so a failed delete looks like it worked
-      Alert.alert(
-        'Account konnte nicht gelöscht werden',
-        'Bitte versuche es später erneut. Dein Account ist unverändert.'
-      );
+      Alert.alert(t('dangerZone.deleteFailedTitle'), t('dangerZone.deleteFailedMessage'));
       return;
     } finally {
       setPending(false);
@@ -31,23 +30,22 @@ export function DangerZoneCard() {
   }
 
   function confirm() {
-    Alert.alert(
-      'Account löschen?',
-      'Deine Interessen, Favoriten und Benachrichtigungen werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.',
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        { text: 'Löschen', style: 'destructive', onPress: remove },
-      ]
-    );
+    Alert.alert(t('dangerZone.confirmTitle'), t('dangerZone.confirmMessage'), [
+      { text: t('common:actions.cancel'), style: 'cancel' },
+      { text: t('dangerZone.confirmDelete'), style: 'destructive', onPress: remove },
+    ]);
   }
 
   return (
     <Card style={styles.card}>
-      <Text style={[typography.cardHeading, styles.title]}>Gefahrenbereich</Text>
-      <Text style={[typography.caption, styles.subtitle]}>
-        Diese Aktion kann nicht rückgängig gemacht werden
-      </Text>
-      <Button label="Account löschen" onPress={confirm} variant="danger" loading={pending} />
+      <Text style={[typography.cardHeading, styles.title]}>{t('dangerZone.heading')}</Text>
+      <Text style={[typography.caption, styles.subtitle]}>{t('dangerZone.subtitle')}</Text>
+      <Button
+        label={t('dangerZone.deleteButton')}
+        onPress={confirm}
+        variant="danger"
+        loading={pending}
+      />
     </Card>
   );
 }

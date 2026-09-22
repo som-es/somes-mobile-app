@@ -1,11 +1,13 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { OpinionCard, OpinionLegend } from '@/components/delegate/opinion';
 import { SectionCard } from '@/components/detail/section-card';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { minutes } from '@/lib/date';
+import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
@@ -20,6 +22,8 @@ type Props = {
 };
 
 export function DelegateSpeechesCard({ speeches, total }: Props) {
+  const { t } = useTranslation('delegates');
+  const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
 
   if (speeches.length === 0) return null;
@@ -27,9 +31,9 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
   const shown = expanded ? speeches : speeches.slice(0, PREVIEW);
 
   return (
-    <SectionCard title="Letzte Reden" action={<OpinionLegend />}>
+    <SectionCard title={t('speeches.title')} action={<OpinionLegend />}>
       <Text style={[typography.caption, styles.total]}>
-        {total} {total === 1 ? 'Rede' : 'Reden'} insgesamt
+        {t('speeches.totalCount', { count: total })}
       </Text>
 
       <View style={styles.list}>
@@ -44,7 +48,7 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
               onPress={documentUrl ? () => Linking.openURL(documentUrl) : undefined}>
               <View style={styles.titleRow}>
                 <Text style={[typography.rowTitle, styles.title]} numberOfLines={3}>
-                  {speech.about ?? 'Ohne Tagesordnungspunkt'}
+                  {speech.about ?? t('speeches.noTopic')}
                 </Text>
                 {speech.infavor !== null ? (
                   <VoteMark infavor={speech.infavor} size={18} />
@@ -55,7 +59,7 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
                 <Text style={typography.caption}>
                   {[
                     speech.infavor === null ? speech.opinion : null,
-                    speech.duration_in_seconds ? minutes(speech.duration_in_seconds) : null,
+                    speech.duration_in_seconds ? minutes(speech.duration_in_seconds, locale) : null,
                   ]
                     .filter(Boolean)
                     .join(' · ')}
@@ -72,7 +76,9 @@ export function DelegateSpeechesCard({ speeches, total }: Props) {
       {speeches.length > PREVIEW ? (
         <Pressable onPress={() => setExpanded(!expanded)} hitSlop={8} style={styles.more}>
           <Text style={[typography.subtitle, styles.moreLabel]}>
-            {expanded ? 'Weniger anzeigen' : `Mehr anzeigen (${speeches.length - PREVIEW})`}
+            {expanded
+              ? t('speeches.showLess')
+              : t('speeches.showMore', { count: speeches.length - PREVIEW })}
           </Text>
         </Pressable>
       ) : null}

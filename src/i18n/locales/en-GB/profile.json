@@ -1,0 +1,64 @@
+{
+  "accountCard": {
+    "heading": "Account info",
+    "notSignedIn": "Not signed in",
+    "signIn": "Sign in",
+    "anonymised": "anonymised ...{{hash}}...",
+    "signOut": "Sign out"
+  },
+  "dangerZone": {
+    "deleteFailedTitle": "Account could not be deleted",
+    "deleteFailedMessage": "Please try again later. Your account is unchanged.",
+    "confirmTitle": "Delete account?",
+    "confirmMessage": "Your interests, favourites and notifications will be permanently deleted. This action cannot be undone.",
+    "confirmDelete": "Delete",
+    "heading": "Danger zone",
+    "subtitle": "This action cannot be undone",
+    "deleteButton": "Delete account"
+  },
+  "screenTitle": {
+    "title": "Profile",
+    "subtitle": "Manage your settings and preferences"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "caption": "Set up push and email"
+  },
+  "guestBlurb": {
+    "title": "With an account",
+    "benefits": {
+      "interests": "Choose topics that interest you",
+      "favorites": "Save MPs and votes",
+      "sync": "Keep your choices in sync across devices"
+    },
+    "noAccountNote": "You can also view all votes, ministerial drafts and MPs without an account."
+  },
+  "favoritesLinks": {
+    "loadError": "Could not be loaded",
+    "savedCount_one": "{{count}} saved",
+    "savedCount_other": "{{count}} saved"
+  },
+  "interests": {
+    "heading": "Choose your interests",
+    "showSelectedA11y": "Show {{count}} selected interests",
+    "selectedCount_one": "{{count}} selected",
+    "selectedCount_other": "{{count}} selected",
+    "description": "This drives your email notifications about new votes, ministerial drafts and motions.",
+    "searchPlaceholder": "Search topics...",
+    "noResults": "No topics found",
+    "moreResults": "… and {{count}} more. Refine your search."
+  },
+  "topicAccordion": {
+    "toggleAllA11y": "{{action}} all topics in {{title}}",
+    "deselectAll": "Deselect",
+    "selectAll": "Select"
+  },
+  "topicChip": {
+    "removeA11y": "Remove {{label}}"
+  },
+  "selectedTopicsSheet": {
+    "title": "Your interests",
+    "empty": "No interests selected yet.",
+    "hint": "Tap to remove."
+  }
+}
