@@ -45,6 +45,7 @@ export function DangerZoneCard() {
         onPress={confirm}
         variant="danger"
         loading={pending}
+        style={styles.bigButton}
       />
     </Card>
   );
@@ -62,5 +63,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: colors.dangerSubtle,
+  },
+  bigButton: {
+    height: 'auto'
   },
 });
