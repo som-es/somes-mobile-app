@@ -51,7 +51,7 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
   const title = ai_summary?.short_title ?? draft.title.split('|')[0].trim();
 
   const badges = [
-    ...(draft.ressort ? [draft.ressort] : []),
+    ...(draft.ressort ? [draft.ressort_shortform ?? draft.ressort] : []),
     isoToDotDate(draft.raw_data_created_at),
     draft.gp,
   ];

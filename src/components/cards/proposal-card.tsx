@@ -55,7 +55,7 @@ export function ProposalCard({ proposal }: Props) {
 
       <View style={styles.badges}>
         {ai_summary?.short_summary ? <Badge label="KI-Zusammenfassung" /> : null}
-        {draft.ressort ? <Badge label={draft.ressort} /> : null}
+        {draft.ressort ? <Badge label={draft.ressort_shortform ?? draft.ressort} /> : null}
         <Badge label={isoToDotDate(draft.raw_data_created_at)} />
         <Badge label={draft.gp} />
       </View>
