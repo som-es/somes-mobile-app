@@ -19,10 +19,13 @@ export const AVATAR = 40;
 
 type Props = {
   delegate: Delegate;
+  /** overrides the default navigate-to-profile behaviour, e.g. for pickers that
+      select a delegate instead of viewing their profile */
+  onPress?: () => void;
 };
 
 /** the column flex weights have to match the header above the list */
-export function DelegateCard({ delegate }: Props) {
+export function DelegateCard({ delegate, onPress }: Props) {
   const { t } = useTranslation('delegates');
   const router = useRouter();
   const country = useCountry();
@@ -33,8 +36,9 @@ export function DelegateCard({ delegate }: Props) {
   return (
     <Card
       elevation="row"
-      onPress={() =>
-        router.push({ pathname: '/abgeordnete/[id]', params: { id: delegate.id } })
+      onPress={
+        onPress ??
+        (() => router.push({ pathname: '/abgeordnete/[id]', params: { id: delegate.id } }))
       }>
       <View style={styles.row}>
         <Avatar

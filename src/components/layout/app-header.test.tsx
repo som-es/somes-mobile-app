@@ -24,7 +24,7 @@ jest.mock('@/components/ui/country-flag', () => ({
   CountryFlag: () => null,
 }));
 
-const mockCountrySheet = jest.fn(() => null);
+const mockCountrySheet = jest.fn((_props: unknown) => null);
 jest.mock('@/components/layout/country-sheet', () => ({
   __esModule: true,
   CountrySheet: (props: unknown) => mockCountrySheet(props),

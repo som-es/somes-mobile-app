@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -24,13 +24,11 @@ import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useDebounced } from '@/lib/use-debounced';
+import { useDelegates } from '@/lib/use-delegates';
 import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-
-/** the web asks for 50 at a time, a phone shows far fewer per screen */
-const ENTRIES_PER_PAGE = 25;
 
 function SortableColumn({
   label,
@@ -90,24 +88,7 @@ function AbgeordneteScreenContent() {
 
   const debouncedSearch = useDebounced(search);
 
-  const results = useInfiniteQuery({
-    // the filter object is part of the key, react-query hashes it stably
-    queryKey: ['delegates', filters, debouncedSearch],
-    initialPageParam: 1,
-    queryFn: ({ pageParam }) =>
-      somes.delegates.search({
-        page: pageParam,
-        entriesPerPage: ENTRIES_PER_PAGE,
-        name: debouncedSearch || null,
-        legisPeriods: filters.gp ? [filters.gp] : [],
-        parties: filters.parties,
-        onlyGovernment: filters.onlyGov,
-        includePreviousPartyMembership: filters.mindPreviousPartyMembership,
-        hasActiveMandate: filters.hasActiveMandate,
-      }),
-    getNextPageParam: (last, pages) =>
-      pages.length < last.max_page ? pages.length + 1 : undefined,
-  });
+  const results = useDelegates(filters, debouncedSearch);
 
   const { periods } = useFilterSources();
   // EU delegate data has no reliable birthdate, so age is meaningless there
