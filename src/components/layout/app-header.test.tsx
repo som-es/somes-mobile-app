@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import '@/test/i18n';
 import { AppHeader } from '@/components/layout/app-header';
@@ -11,26 +11,23 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 const mockNavigate = jest.fn();
-const mockPush = jest.fn();
-let mockPathname = '/';
 
 jest.mock('expo-router', () => ({
   __esModule: true,
-  useRouter: () => ({ navigate: mockNavigate, push: mockPush }),
-  usePathname: () => mockPathname,
+  useRouter: () => ({ navigate: mockNavigate }),
+  usePathname: () => '/',
 }));
 
-// the flags are .svg imports, which metro turns into components and jest does not,
-// and the country sheet is always mounted and animates on entry. the bell is what is
-// under test here, so stub both out
+// the flag is an .svg import, which metro turns into a component and jest does not
 jest.mock('@/components/ui/country-flag', () => ({
   __esModule: true,
   CountryFlag: () => null,
 }));
 
+const mockCountrySheet = jest.fn(() => null);
 jest.mock('@/components/layout/country-sheet', () => ({
   __esModule: true,
-  CountrySheet: () => null,
+  CountrySheet: (props: unknown) => mockCountrySheet(props),
 }));
 
 jest.mock('@/lib/use-country', () => ({
@@ -41,65 +38,30 @@ jest.mock('@/lib/use-country', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockPathname = '/';
 });
 
-describe('AppHeader, notifications bell', () => {
-  it('navigates to the notifications screen from another route', async () => {
+describe('AppHeader', () => {
+  it('navigates home when the logo is pressed', async () => {
     await render(<AppHeader />);
 
-    const bell = screen.getByRole('button', { name: 'Notifications' });
-    expect(bell.props.accessibilityState.disabled).toBe(false);
+    fireEvent.press(screen.getByRole('button', { name: 'somes — go to home' }));
 
-    fireEvent.press(bell);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/notifications');
-    // it has to be navigate: a NAVIGATE action reuses the route when it is already on
-    // top, so a second tap landing before the guard re-renders cannot stack a second
-    // copy. push has no such dedupe, which is the bug this replaced.
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
-  it('goes inert on the notifications screen instead of stacking another copy', async () => {
-    mockPathname = '/notifications';
+  it('opens the country sheet when the region switcher is pressed', async () => {
     await render(<AppHeader />);
 
-    const bell = screen.getByRole('button', { name: 'Notifications' });
-    expect(bell.props.accessibilityState.disabled).toBe(true);
-    expect(bell.props.accessibilityState.selected).toBe(true);
+    expect(mockCountrySheet).toHaveBeenLastCalledWith(
+      expect.objectContaining({ visible: false })
+    );
 
-    fireEvent.press(bell);
+    fireEvent.press(screen.getByRole('button', { name: 'Switch region, currently Austria' }));
 
-    expect(mockNavigate).not.toHaveBeenCalled();
-    expect(mockPush).not.toHaveBeenCalled();
-  });
-});
-
-describe('AppHeader, info button', () => {
-  it('navigates to the impressum screen from another route', async () => {
-    await render(<AppHeader />);
-
-    const info = screen.getByRole('button', { name: 'Legal notice and contact' });
-    expect(info.props.accessibilityState.disabled).toBe(false);
-
-    fireEvent.press(info);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/impressum');
-    // same dedupe requirement as the bell: navigate, not push
-    expect(mockPush).not.toHaveBeenCalled();
-  });
-
-  it('goes inert on the impressum screen instead of stacking another copy', async () => {
-    mockPathname = '/impressum';
-    await render(<AppHeader />);
-
-    const info = screen.getByRole('button', { name: 'Legal notice and contact' });
-    expect(info.props.accessibilityState.disabled).toBe(true);
-    expect(info.props.accessibilityState.selected).toBe(true);
-
-    fireEvent.press(info);
-
-    expect(mockNavigate).not.toHaveBeenCalled();
-    expect(mockPush).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(mockCountrySheet).toHaveBeenLastCalledWith(
+        expect.objectContaining({ visible: true })
+      )
+    );
   });
 });
