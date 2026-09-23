@@ -1,24 +1,18 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AVATAR, DelegateCard } from '@/components/cards/delegate-card';
+import { DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
+import { DelegateTableHead } from '@/components/lists/delegate-table-head';
 import { partiesFor, useFilterSources, withCount } from '@/components/lists/filter-sources';
 import { ResultList } from '@/components/lists/result-list';
 import { Chip } from '@/components/ui/chip';
 import { FilterPill } from '@/components/ui/filter-pill';
 import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
-import {
-  compareDelegates,
-  SORT_COLUMNS,
-  toggleSort,
-  type Sort,
-  type SortKey,
-} from '@/lib/delegate-sort';
+import { compareDelegates, type Sort } from '@/lib/delegate-sort';
 import { isoToDotDate } from '@/lib/date';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { somes } from '@/lib/somes';
@@ -28,49 +22,6 @@ import { useDelegates } from '@/lib/use-delegates';
 import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
-import { typography } from '@/theme/typography';
-
-function SortableColumn({
-  label,
-  sortKey,
-  sort,
-  onPress,
-  style,
-}: {
-  label: string;
-  sortKey: SortKey;
-  sort: Sort;
-  onPress: (key: SortKey) => void;
-  style: ViewStyle;
-}) {
-  const { t } = useTranslation('delegates');
-  const active = sort?.key === sortKey;
-
-  return (
-    <Pressable
-      onPress={() => onPress(sortKey)}
-      accessibilityRole="button"
-      accessibilityLabel={t('list.sortByLabel', { label })}
-      style={[styles.column, style]}>
-      <Text style={typography.tableHead} numberOfLines={1}>
-        {label}
-      </Text>
-      {active ? (
-        <Ionicons
-          name={sort.direction === 'asc' ? 'chevron-up' : 'chevron-down'}
-          size={12}
-          color={colors.textMuted}
-        />
-      ) : null}
-    </Pressable>
-  );
-}
-
-const COLUMN_STYLE: Record<SortKey, ViewStyle> = {
-  name: { flex: 3 },
-  partei: { flex: 2 },
-  alter: { flex: 1 },
-};
 
 export default function AbgeordneteScreen() {
   const country = useCountry();
@@ -91,8 +42,6 @@ function AbgeordneteScreenContent() {
   const results = useDelegates(filters, debouncedSearch);
 
   const { periods } = useFilterSources();
-  // EU delegate data has no reliable birthdate, so age is meaningless there
-  const columns = country === 'eu' ? SORT_COLUMNS.filter((column) => column.key !== 'alter') : SORT_COLUMNS;
 
   const parties = useQuery({
     queryKey: ['parties-per-gp'],
@@ -160,32 +109,7 @@ function AbgeordneteScreenContent() {
         ))}
       </ScrollView>
 
-      <View style={styles.tableHead}>
-        <View style={styles.avatarSpacer} />
-        {columns.map((column) => (
-          <SortableColumn
-            key={column.key}
-            label={t(`list.columns.${column.key}`)}
-            sortKey={column.key}
-            sort={sort}
-            onPress={(key) => setSort(toggleSort(sort, key))}
-            style={COLUMN_STYLE[column.key]}
-          />
-        ))}
-        <Pressable
-          onPress={() => setSort(null)}
-          disabled={sort === null}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={t('list.resetSort')}
-          style={({ pressed }) => [
-            styles.reset,
-            sort === null && styles.resetInactive,
-            pressed && styles.pressed,
-          ]}>
-          <Ionicons name="refresh-outline" size={16} color={colors.textMuted} />
-        </Pressable>
-      </View>
+      <DelegateTableHead sort={sort} onSortChange={setSort} country={country} />
     </>
   );
 
@@ -231,27 +155,5 @@ const styles = StyleSheet.create({
   chips: {
     gap: spacing.xs,
     paddingRight: spacing.screen,
-  },
-  tableHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.card,
-  },
-  avatarSpacer: { width: AVATAR },
-  column: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  reset: {
-    width: 18,
-    alignItems: 'center',
-  },
-  resetInactive: {
-    opacity: 0.35,
-  },
-  pressed: {
-    opacity: 0.6,
   },
 });

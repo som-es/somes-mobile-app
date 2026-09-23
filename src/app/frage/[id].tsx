@@ -1,36 +1,34 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { QuestionRecipient } from '@/components/cards/question-recipient';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { DetailScreen } from '@/components/detail/detail-screen';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { isoToDotDate } from '@/lib/date';
-import { delegateAvatarUrl, somes } from '@/lib/somes';
-import { useCountry } from '@/lib/use-country';
+import { MOCK_QUESTIONS, mockQuestionById } from '@/lib/mock-questions';
+import { somes } from '@/lib/somes';
 import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-import type { Delegate, PublicDelegateQuestion } from '@/types';
+import type { PublicDelegateQuestion } from '@/types';
 
 export default function FrageDetailScreen() {
   const { t } = useTranslation('questions');
   const { id } = useLocalSearchParams<{ id: string }>();
+  // mock ids are negative, so a real question opened while mocking still loads
+  const mocked = MOCK_QUESTIONS && Number(id) < 0;
 
   const question = useQuery({
-    queryKey: ['delegate-question', id],
-    queryFn: () => somes.delegateQuestions.byId(Number(id)),
-  });
-
-  const delegate = useQuery({
-    queryKey: ['delegate', question.data?.delegate_id],
-    queryFn: () => somes.delegates.byId(question.data!.delegate_id),
-    enabled: !!question.data,
+    queryKey: ['delegate-question', id, mocked],
+    queryFn: () =>
+      mocked ? Promise.resolve(mockQuestionById(Number(id))) : somes.delegateQuestions.byId(Number(id)),
   });
 
   return (
@@ -40,22 +38,15 @@ export default function FrageDetailScreen() {
       ) : question.isError ? (
         <Notice message={t('detail.loadError')} />
       ) : (
-        <QuestionDetail question={question.data} delegate={delegate.data} />
+        <QuestionDetail question={question.data} />
       )}
     </DetailScreen>
   );
 }
 
-function QuestionDetail({
-  question,
-  delegate,
-}: {
-  question: PublicDelegateQuestion;
-  delegate: Delegate | undefined;
-}) {
+function QuestionDetail({ question }: { question: PublicDelegateQuestion }) {
   const { t } = useTranslation('questions');
   const locale = useLocale();
-  const country = useCountry();
 
   return (
     <>
@@ -77,21 +68,7 @@ function QuestionDetail({
         </View>
       ) : null}
 
-      {delegate ? (
-        <View style={styles.recipientRow}>
-          <Image
-            source={{ uri: delegateAvatarUrl(country, delegate.id, delegate.image_url) }}
-            style={styles.avatar}
-            accessibilityLabel={delegate.name}
-          />
-          <View>
-            <Text style={typography.caption}>{t('detail.askedLabel')}</Text>
-            <Text style={typography.cardTitle}>
-              {delegate.name} · {delegate.party}
-            </Text>
-          </View>
-        </View>
-      ) : null}
+      <QuestionRecipient delegateId={question.delegate_id} size={40} />
 
       <Text style={[typography.sectionTitle, styles.answersTitle]}>{t('detail.answersHeading')}</Text>
 
@@ -119,17 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.xs,
-  },
-  recipientRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 999,
-    backgroundColor: colors.card,
   },
   answersTitle: {
     marginTop: spacing.sm,

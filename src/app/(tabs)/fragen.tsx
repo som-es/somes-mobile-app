@@ -15,6 +15,7 @@ import { FilterPill } from '@/components/ui/filter-pill';
 import { Screen, ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { isoToDotDate } from '@/lib/date';
+import { MOCK_QUESTIONS, MOCK_QUESTIONS_PAGE } from '@/lib/mock-questions';
 import { somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
 import { useCountry } from '@/lib/use-country';
@@ -80,16 +81,18 @@ export default function FragenScreen() {
   );
 
   const results = useInfiniteQuery({
-    queryKey: ['delegate-questions', topicIds, debouncedSearch],
+    queryKey: ['delegate-questions', topicIds, debouncedSearch, MOCK_QUESTIONS],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      somes.delegateQuestions.search({
-        page: pageParam,
-        entriesPerPage: ENTRIES_PER_PAGE,
-        search: debouncedSearch || undefined,
-        topicIds,
-        sort: 'Desc',
-      }),
+      MOCK_QUESTIONS
+        ? Promise.resolve(MOCK_QUESTIONS_PAGE)
+        : somes.delegateQuestions.search({
+            page: pageParam,
+            entriesPerPage: ENTRIES_PER_PAGE,
+            search: debouncedSearch || undefined,
+            topicIds,
+            sort: 'Desc',
+          }),
     getNextPageParam: (last, pages) => (pages.length < last.max_page ? pages.length + 1 : undefined),
     enabled: quickFilter !== 'mine',
   });

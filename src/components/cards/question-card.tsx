@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
+import { QuestionRecipient } from '@/components/cards/question-recipient';
 import { Card } from '@/components/ui/card';
 import { SectionLink } from '@/components/ui/section-link';
 import { isoToDotDate } from '@/lib/date';
@@ -44,6 +45,10 @@ export function QuestionCard({ question }: Props) {
         {question.body}
       </Text>
 
+      <View style={styles.recipient}>
+        <QuestionRecipient delegateId={question.delegate_id} size={32} />
+      </View>
+
       {answer ? (
         <View style={styles.answer}>
           <Text style={typography.subtitle}>{t('card.answerLabel')}</Text>
@@ -75,6 +80,9 @@ const styles = StyleSheet.create({
   },
   subject: {
     marginTop: spacing.sm,
+  },
+  recipient: {
+    marginTop: spacing.md,
   },
   answer: {
     marginTop: spacing.md,
