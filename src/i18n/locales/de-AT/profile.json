@@ -1,4 +1,8 @@
 {
+  "impressum": {
+    "title": "Impressum",
+    "subtitle": "Rechtliche angaben bezüglich der App und Somes"
+  },
   "accountCard": {
     "heading": "Benutzerinfos",
     "notSignedIn": "Nicht angemeldet",

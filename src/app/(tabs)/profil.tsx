@@ -46,8 +46,6 @@ export default function ProfilScreen() {
 
       {isAuthenticated ? (
         <>
-          <InterestsCard />
-          <FavoritesLinkCards />
 
           <Card onPress={() => router.navigate('/notifications')}>
             <View style={styles.link}>
@@ -60,9 +58,24 @@ export default function ProfilScreen() {
             </View>
           </Card>
 
+          <InterestsCard />
+          <FavoritesLinkCards />
+
+          <Card onPress={() => router.navigate('/impressum')}>
+            <View style={styles.link}>
+              <Ionicons name="document-outline" size={22} color={colors.accent} />
+              <View style={styles.linkText}>
+                <Text style={typography.cardHeading}>{t('impressum.title')}</Text>
+                <Text style={typography.caption}>{t('impressum.subtitle')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+            </View>
+          </Card>
+
           <DangerZoneCard />
         </>
       ) : (
+          <>
         <Card style={styles.blurbCard}>
           <Text style={typography.cardHeading}>{t('guestBlurb.title')}</Text>
           <View style={styles.benefits}>
@@ -77,7 +90,19 @@ export default function ProfilScreen() {
           </View>
 
           <Text style={typography.caption}>{t('guestBlurb.noAccountNote')}</Text>
-        </Card>
+          </Card>
+
+          <Card onPress={() => router.navigate('/impressum')}>
+            <View style={styles.link}>
+              <Ionicons name="document-outline" size={22} color={colors.accent} />
+              <View style={styles.linkText}>
+                <Text style={typography.cardHeading}>{t('impressum.title')}</Text>
+                <Text style={typography.caption}>{t('impressum.subtitle')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+            </View>
+            </Card>
+          </>
       )}
 
       <LanguageSheet

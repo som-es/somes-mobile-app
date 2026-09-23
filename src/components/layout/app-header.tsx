@@ -52,49 +52,6 @@ export function AppHeader() {
             style={({ pressed }) => [styles.flag, pressed && styles.pressed]}>
             <CountryFlag country={country} size={28} variant='map' color='#fff' />
           </Pressable>
-
-          {/* navigate, not push: same double-open fix as the bell above, so a second
-              tap before the guard re-renders cannot stack a duplicate impressum screen */}
-          <Pressable
-            onPress={() => router.navigate('/impressum')}
-            disabled={onImpressum}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel={t('common:appHeader.impressum')}
-            accessibilityState={{ selected: onImpressum, disabled: onImpressum }}
-            style={({ pressed }) => [
-              styles.info,
-              onImpressum && styles.inactive,
-              pressed && styles.pressed,
-            ]}>
-            <Ionicons
-              name={onImpressum ? 'information-circle' : 'information-circle-outline'}
-              size={22}
-              color={colors.onChrome}
-            />
-          </Pressable>
-
-          {/* navigate, not push: a NAVIGATE action reuses the route when it is already
-              on top, so a second tap that lands before the guard below re-renders
-              cannot stack a duplicate screen. push never dedupes. */}
-          <Pressable
-            onPress={() => router.navigate('/notifications')}
-            disabled={onNotifications}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel={t('common:appHeader.notifications')}
-            accessibilityState={{ selected: onNotifications, disabled: onNotifications }}
-            style={({ pressed }) => [
-              styles.bell,
-              onNotifications && styles.inactive,
-              pressed && styles.pressed,
-            ]}>
-            <Ionicons
-              name={onNotifications ? 'notifications' : 'notifications-outline'}
-              size={22}
-              color={colors.onChrome}
-            />
-          </Pressable>
         </View>
       </View>
 

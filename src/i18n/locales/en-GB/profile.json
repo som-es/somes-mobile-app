@@ -1,4 +1,8 @@
 {
+  "impressum": {
+    "title": "Legal Notice",
+    "subtitle": "Legal information regarding the App and Somes"
+  },
   "accountCard": {
     "heading": "Account info",
     "notSignedIn": "Not signed in",
