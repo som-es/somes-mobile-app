@@ -43,6 +43,9 @@
     "picker": {
       "subtitle": "Wähle zuerst die Person aus, die du fragen möchtest.",
       "searchPlaceholder": "Abgeordnete:n suchen...",
+      "filter": "Filter",
+      "all": "Alle",
+      "loadMore": "Mehr laden",
       "error": "Abgeordnete konnten nicht geladen werden.",
       "empty": "Keine Abgeordneten gefunden."
     },
@@ -59,7 +62,14 @@
       "bodyLabel": "Deine Frage",
       "bodyPlaceholder": "Formuliere deine Frage...",
       "topicsSelect": "Themen auswählen",
-      "submit": "Frage einreichen"
+      "submit": "Frage einreichen",
+      "notice": {
+        "items": [
+          "Dein Account bleibt für andere Nutzer:innen anonym, aber nicht für uns.",
+          "Deine Frage wird per Somes E-Mail versendet.",
+          "Sie wird anhand des Moderationskodex geprüft und danach freigeschaltet oder gelöscht."
+        ]
+      }
     },
     "errors": {
       "unavailable": "Fragen sind für dieses Parlament derzeit nicht möglich.",

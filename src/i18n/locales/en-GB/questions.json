@@ -43,6 +43,9 @@
     "picker": {
       "subtitle": "First choose the person you'd like to ask.",
       "searchPlaceholder": "Search MPs...",
+      "filter": "Filter",
+      "all": "All",
+      "loadMore": "Load more",
       "error": "MPs could not be loaded.",
       "empty": "No MPs found."
     },
@@ -59,7 +62,14 @@
       "bodyLabel": "Your question",
       "bodyPlaceholder": "Write your question...",
       "topicsSelect": "Select topics",
-      "submit": "Submit question"
+      "submit": "Submit question",
+      "notice": {
+        "items": [
+          "Your account stays anonymous to other users, but not to Somes.",
+          "Your question is sent via a Somes email.",
+          "It's checked against the moderation code before it's published or rejected."
+        ]
+      }
     },
     "errors": {
       "unavailable": "Questions are not currently possible for this parliament.",
