@@ -10,6 +10,7 @@ import { DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
 import { SubScreen } from '@/components/layout/sub-screen';
+import { DelegateTableHead } from '@/components/lists/delegate-table-head';
 import { partiesFor, useFilterSources, withCount } from '@/components/lists/filter-sources';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -20,6 +21,7 @@ import { ScreenTitle } from '@/components/ui/screen';
 import { SearchField } from '@/components/ui/search-field';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { TextField } from '@/components/ui/text-field';
+import { compareDelegates, type Sort } from '@/lib/delegate-sort';
 import { delegateFilterCounts, emptyDelegateFilters } from '@/lib/filter-query';
 import { delegateAvatarUrl, isAuthError, somes } from '@/lib/somes';
 import { useAuth } from '@/lib/use-auth';
@@ -85,10 +87,13 @@ export default function FrageNeuScreen() {
 
 function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
   const { t } = useTranslation('questions');
+  // compareDelegates resolves party labels against the delegates namespace
+  const { t: tDelegates } = useTranslation('delegates');
   const country = useCountry();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState(() => emptyDelegateFilters(country));
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [sort, setSort] = useState<Sort>(null);
   const debouncedSearch = useDebounced(search);
 
   // same query as the MP list tab, so the picker shows the same MPs for the same
@@ -106,8 +111,11 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
   const chips = useMemo(() => partiesFor(parties.data, filters.gp), [parties.data, filters.gp]);
   const anyParty = filters.parties.length > 0;
   const items = useMemo(
-    () => results.data?.pages.flatMap((page) => page.delegates) ?? [],
-    [results.data]
+    () =>
+      (results.data?.pages.flatMap((page) => page.delegates) ?? [])
+        .slice()
+        .sort(compareDelegates(sort, tDelegates)),
+    [results.data, sort, tDelegates]
   );
 
   const toggleParty = (name: string) =>
@@ -156,6 +164,8 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
           />
         ))}
       </ScrollView>
+
+      <DelegateTableHead sort={sort} onSortChange={setSort} country={country} />
 
       {results.isPending ? (
         <View style={styles.pickerList}>
