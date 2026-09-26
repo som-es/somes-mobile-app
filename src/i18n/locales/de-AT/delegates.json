@@ -16,7 +16,8 @@
     }
   },
   "card": {
-    "withoutClub": "Ohne Klub"
+    "withoutClub": "Ohne Klub",
+    "ageUnknown": "K.A."
   },
   "detail": {
     "error": "Abgeordnete:r konnte nicht geladen werden."
@@ -70,7 +71,9 @@
     "socialist": "SOZIALISTISCH",
     "capitalist": "KAPITALISTISCH",
     "left": "Links",
-    "right": "Rechts"
+    "right": "Rechts",
+    "infoButtonLabel": "Wie wird die politische Position bestimmt?",
+    "infoDisclaimer": "Die Einordnung der politischen Position ist eine grobe Schätzung und muss nicht der Realität entsprechen. Verwendet wurden AI generierte Antworten zu Fragen, die nicht immer vollständig korrekt und unter Details abrufbar sind."
   },
   "topics": {
     "title": "Themen",

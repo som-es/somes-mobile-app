@@ -16,7 +16,8 @@
     }
   },
   "card": {
-    "withoutClub": "No parliamentary group"
+    "withoutClub": "No parliamentary group",
+    "ageUnknown": "N/A"
   },
   "detail": {
     "error": "MP could not be loaded."
@@ -70,7 +71,9 @@
     "socialist": "SOCIALIST",
     "capitalist": "CAPITALIST",
     "left": "Left",
-    "right": "Right"
+    "right": "Right",
+    "infoButtonLabel": "How is the political stance determined?",
+    "infoDisclaimer": "The classification of the political position is a rough estimate and may not reflect reality. It is based on AI-generated answers to questions, which are not always fully accurate and can be reviewed under Details."
   },
   "topics": {
     "title": "Topics",

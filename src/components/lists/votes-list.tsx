@@ -124,7 +124,7 @@ export function VotesList({ control }: Props) {
 
       <PartySheet
         visible={sheet === 'second'}
-        parties={partiesFor(parties.data, filters.gp)}
+        parties={partiesFor(parties.data, filters.gp, country)}
         selected={filters.partyVotes}
         onChange={(partyVotes) => setFilters({ ...filters, partyVotes })}
         onClose={() => setSheet(null)}

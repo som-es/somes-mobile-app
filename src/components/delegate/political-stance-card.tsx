@@ -1,7 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
+import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -35,14 +38,35 @@ export function PoliticalStanceCard({ name, party, position, stances, interests 
   const { t } = useTranslation('delegates');
   const partyColor = usePartyColor(party);
   const ranked = rankStances(stances, interests);
+  const [infoOpen, setInfoOpen] = useState(false);
 
   if (!position && ranked.length === 0) return null;
 
   return (
-    <SectionCard title={t('stance.title')}>
-      {position ? <Compass name={name} color={partyColor} position={position} /> : null}
-      {ranked.length > 0 ? <StanceRails stances={ranked} hasCompass={!!position} /> : null}
-    </SectionCard>
+    <>
+      <SectionCard
+        title={t('stance.title')}
+        action={
+          <Pressable
+            onPress={() => setInfoOpen(true)}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={t('stance.infoButtonLabel')}>
+            <Ionicons name="information-circle-outline" size={20} color={colors.textMuted} />
+          </Pressable>
+        }>
+        {position ? <Compass name={name} color={partyColor} position={position} /> : null}
+        {ranked.length > 0 ? <StanceRails stances={ranked} hasCompass={!!position} /> : null}
+      </SectionCard>
+
+      <BottomSheet
+        visible={infoOpen}
+        title={t('stance.title')}
+        onClose={() => setInfoOpen(false)}
+        applyLabel={t('common:bottomSheet.close')}>
+        <Text style={typography.bodyMuted}>{t('stance.infoDisclaimer')}</Text>
+      </BottomSheet>
+    </>
   );
 }
 

@@ -6,7 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { DelegateCard } from '@/components/cards/delegate-card';
 import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
 import { DelegateTableHead } from '@/components/lists/delegate-table-head';
-import { partiesFor, useFilterSources, withCount } from '@/components/lists/filter-sources';
+import {
+  NO_CLUB_PARTY,
+  partiesFor,
+  useFilterSources,
+  withCount,
+} from '@/components/lists/filter-sources';
 import { ResultList } from '@/components/lists/result-list';
 import { Chip } from '@/components/ui/chip';
 import { FilterPill } from '@/components/ui/filter-pill';
@@ -39,7 +44,7 @@ function AbgeordneteScreenContent() {
 
   const debouncedSearch = useDebounced(search);
 
-  const results = useDelegates(filters, debouncedSearch);
+  const results = useDelegates(filters, debouncedSearch, sort !== null);
 
   const { periods } = useFilterSources();
 
@@ -59,7 +64,10 @@ function AbgeordneteScreenContent() {
   );
   const updatedAt = results.data?.pages[0]?.updated_at;
 
-  const chips = useMemo(() => partiesFor(parties.data, filters.gp), [parties.data, filters.gp]);
+  const chips = useMemo(
+    () => partiesFor(parties.data, filters.gp, country),
+    [parties.data, filters.gp, country]
+  );
   const anyParty = filters.parties.length > 0;
 
   const toggleParty = (name: string) =>
@@ -101,7 +109,11 @@ function AbgeordneteScreenContent() {
         {chips.map((party) => (
           <Chip
             key={party.name}
-            label={party.name}
+            label={
+              party.name.toUpperCase() === NO_CLUB_PARTY[country].toUpperCase()
+                ? t('card.withoutClub')
+                : party.name
+            }
             color={party.color ?? colors.textMuted}
             dimmed={anyParty && !filters.parties.includes(party.name)}
             onPress={() => toggleParty(party.name)}

@@ -59,7 +59,9 @@ export function DelegateCard({ delegate, onPress }: Props) {
         </View>
 
         {country === 'eu' ? null : (
-          <Text style={[typography.rowMeta, styles.ageCol]}>{years ?? '–'}</Text>
+          <Text style={[typography.rowMeta, styles.ageCol]}>
+            {years ?? t('card.ageUnknown')}
+          </Text>
         )}
 
         <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />

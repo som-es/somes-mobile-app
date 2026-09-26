@@ -11,7 +11,12 @@ import { DelegateGenericSheet } from '@/components/filters/generic-sheet';
 import { MultiSelectSheet } from '@/components/filters/multi-select-sheet';
 import { SubScreen } from '@/components/layout/sub-screen';
 import { DelegateTableHead } from '@/components/lists/delegate-table-head';
-import { partiesFor, useFilterSources, withCount } from '@/components/lists/filter-sources';
+import {
+  NO_CLUB_PARTY,
+  partiesFor,
+  useFilterSources,
+  withCount,
+} from '@/components/lists/filter-sources';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
@@ -108,7 +113,10 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
   });
 
   const counts = delegateFilterCounts(filters);
-  const chips = useMemo(() => partiesFor(parties.data, filters.gp), [parties.data, filters.gp]);
+  const chips = useMemo(
+    () => partiesFor(parties.data, filters.gp, country),
+    [parties.data, filters.gp, country]
+  );
   const anyParty = filters.parties.length > 0;
   const items = useMemo(
     () =>
@@ -157,7 +165,11 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
         {chips.map((party) => (
           <Chip
             key={party.name}
-            label={party.name}
+            label={
+              party.name.toUpperCase() === NO_CLUB_PARTY[country].toUpperCase()
+                ? tDelegates('card.withoutClub')
+                : party.name
+            }
             color={party.color ?? colors.textMuted}
             dimmed={anyParty && !filters.parties.includes(party.name)}
             onPress={() => toggleParty(party.name)}
