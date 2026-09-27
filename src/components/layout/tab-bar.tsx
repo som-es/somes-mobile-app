@@ -4,6 +4,10 @@ import { type ComponentProps, useEffect, useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import DelegatesIcon from '@/assets/icons/delegates.svg';
+import HomeIcon from '@/assets/icons/home.svg';
+import ThumbsIcon from '@/assets/icons/thumbs.svg';
+import UserIcon from '@/assets/icons/user.svg';
 import { useQuestionsEnabled } from '@/lib/use-questions';
 import { colors } from '@/theme/colors';
 import { ICON_SIZE, spacing, TAB_BAR_HEIGHT, TAB_BUTTON, TAB_GAP } from '@/theme/layout';
@@ -12,24 +16,34 @@ type BottomTabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tab
 
 type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
-const ICONS: Record<string, { inactive: IoniconName; active: IoniconName }> = {
-  index: { inactive: 'home-outline', active: 'home' },
-  abstimmungen: { inactive: 'podium-outline', active: 'podium' },
-  abgeordnete: { inactive: 'people-outline', active: 'people' },
+/** the brand's own flat-color line icons, one per main tab; width follows each
+    icon's own viewBox aspect off a shared ICON_SIZE height, same technique
+    SomesMark uses for the header logo */
+const TAB_ICONS: Record<string, { Icon: typeof HomeIcon; aspect: number }> = {
+  index: { Icon: HomeIcon, aspect: 81.416 / 28.318 },
+  abstimmungen: { Icon: ThumbsIcon, aspect: 36 / 24 },
+  abgeordnete: { Icon: DelegatesIcon, aspect: 1 },
+  profil: { Icon: UserIcon, aspect: 1 },
+};
+
+/** fragen has no brand icon yet, so it keeps the Ionicons pair */
+const IONICONS: Record<string, { inactive: IoniconName; active: IoniconName }> = {
   fragen: { inactive: 'chatbubble-outline', active: 'chatbubble' },
-  profil: { inactive: 'person-circle-outline', active: 'person-circle' },
 };
 
 type TabButtonProps = {
-  icons: (typeof ICONS)[string] | undefined;
+  routeName: string;
   isFocused: boolean;
   label?: string;
   onPress: () => void;
   onLongPress: () => void;
 };
 
-function TabButton({ icons, isFocused, label, onPress, onLongPress }: TabButtonProps) {
+function TabButton({ routeName, isFocused, label, onPress, onLongPress }: TabButtonProps) {
   const [progress] = useState(() => new Animated.Value(isFocused ? 1 : 0));
+  const color = isFocused ? colors.onChrome : colors.onChromeMuted;
+  const tabIcon = TAB_ICONS[routeName];
+  const ionicon = IONICONS[routeName];
 
   useEffect(() => {
     Animated.spring(progress, {
@@ -64,11 +78,13 @@ function TabButton({ icons, isFocused, label, onPress, onLongPress }: TabButtonP
           },
         ]}
       />
-      {icons ? (
+      {tabIcon ? (
+        <tabIcon.Icon width={ICON_SIZE * tabIcon.aspect} height={ICON_SIZE} color={color} />
+      ) : ionicon ? (
         <Ionicons
-          name={isFocused ? icons.active : icons.inactive}
+          name={isFocused ? ionicon.active : ionicon.inactive}
           size={ICON_SIZE}
-          color={isFocused ? colors.onChrome : colors.onChromeMuted}
+          color={color}
         />
       ) : null}
     </Pressable>
@@ -103,7 +119,7 @@ export function AppTabBar({ state, descriptors, navigation }: BottomTabBarProps)
             return (
               <TabButton
                 key={route.key}
-                icons={ICONS[route.name]}
+                routeName={route.name}
                 isFocused={isFocused}
                 label={options.tabBarAccessibilityLabel ?? options.title}
                 onPress={onPress}
