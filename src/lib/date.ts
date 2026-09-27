@@ -30,6 +30,28 @@ export function isoToDotDate(date: string, locale: Locale): string {
   return dashDateToDotDate(date.split('T')[0], locale);
 }
 
+const shortDateFormatters: Partial<Record<Locale, Intl.DateTimeFormat>> = {};
+
+function shortDateFormatter(locale: Locale): Intl.DateTimeFormat {
+  return (shortDateFormatters[locale] ??= new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'numeric',
+    timeZone: 'UTC',
+  }));
+}
+
+/** day/month only, no year - for labels too small for the full dotted date */
+export function dashDateToShortDate(date: string, locale: Locale): string {
+  return shortDateFormatter(locale).format(utcDateFromDashDate(date));
+}
+
+/** EU's plenary-session `inr` doubles as an encoded YYYYMMDD date rather than
+    a small sequential sitting number the way AT's is */
+export function inrEncodedDate(inr: number): string {
+  const digits = String(inr);
+  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+}
+
 /** Intl.RelativeTimeFormat isn't available in every Hermes build this app ships on
     (DateTimeFormat is, RelativeTimeFormat/PluralRules often aren't), so this goes
     through i18next's own pluralization instead of the Intl constructor */

@@ -22,7 +22,7 @@ export const radius = {
 export const HEADER_HEIGHT = 60;
 
 export const TAB_BUTTON = 48;
-export const TAB_GAP = 30;
+export const TAB_GAP = 36;
 export const ICON_SIZE = 24;
 
 export const TAB_BAR_HEIGHT = TAB_BUTTON + spacing.sm * 2;

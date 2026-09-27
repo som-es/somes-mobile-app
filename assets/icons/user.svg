@@ -1,11 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 30 30"
-    fill="currentColor"
->
-    <path
-        id="Pfad_8"
-        data-name="Pfad 8"
-        d="M15,15c4.734,0,8.571-3.358,8.571-7.5S19.734,0,15,0,6.429,3.358,6.429,7.5,10.266,15,15,15Zm-3.06,2.812C5.344,17.812,0,22.488,0,28.26A1.877,1.877,0,0,0,1.989,30H28.011A1.877,1.877,0,0,0,30,28.26c0-5.771-5.344-10.447-11.94-10.447Z"
-    />
+   viewBox="0 0 30 30"
+   fill="currentColor"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="user.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="20.05"
+     inkscape:cx="3.5411471"
+     inkscape:cy="15.037406"
+     inkscape:window-width="2560"
+     inkscape:window-height="1412"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     id="Pfad_8"
+     data-name="Pfad 8"
+     d="m 15,14.998935 c 2.774299,0 5.022922,-1.967913 5.022922,-4.395277 0,-2.4273649 -2.248623,-4.3952769 -5.022922,-4.3952769 -2.774299,0 -5.0229226,1.967912 -5.0229226,4.3952769 0,2.427364 2.2486236,4.395277 5.0229226,4.395277 z m -1.793273,1.647935 c -3.8654996,0 -6.997281,2.74031 -6.997281,6.122915 a 1.0999913,1.0999913 0 0 0 1.1656274,1.019704 H 22.624926 a 1.0999913,1.0999913 0 0 0 1.165628,-1.019704 c 0,-3.38202 -3.131782,-6.122328 -6.99728,-6.122328 z"
+     style="stroke-width:0.586037" />
 </svg>

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { SectionCard } from '@/components/detail/section-card';
 import { Badge } from '@/components/ui/badge';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
-import { isoToDotDate } from '@/lib/date';
+import { dashDateToDotDate, dashDateToShortDate, inrEncodedDate, isoToDotDate } from '@/lib/date';
 import { somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useLocale } from '@/lib/use-locale';
@@ -27,6 +27,12 @@ export function AbsencesCard({ absences }: Props) {
   const country = useCountry();
   const [sheetOpen, setSheetOpen] = useState(false);
   const sittingLabel = country === 'eu' ? t('absences.sittingEu') : t('absences.sittingAt');
+  // AT's inr is a small sequential sitting number ("50. Sitzung"), but EU's is
+  // an encoded YYYYMMDD date, which reads as a date rather than an ordinal
+  const sittingHeadline = (inr: number) =>
+    country === 'eu'
+      ? `${dashDateToDotDate(inrEncodedDate(inr), locale)} · ${sittingLabel}`
+      : `${inr}. ${sittingLabel}`;
 
   // absence.date is a plain calendar date, so it sorts and formats as a string
   const sorted = absences.slice().sort((a, b) => b.date.localeCompare(a.date));
@@ -54,7 +60,7 @@ export function AbsencesCard({ absences }: Props) {
                   <View style={styles.left}>
                     <View style={styles.dot} />
                     <Text style={[typography.subtitle, styles.sitting]} numberOfLines={1}>
-                      {absence.inr}. {sittingLabel}
+                      {sittingHeadline(absence.inr)}
                     </Text>
                   </View>
                   <Text style={typography.caption}>
@@ -80,7 +86,7 @@ export function AbsencesCard({ absences }: Props) {
       <AbsencesSheet
         visible={sheetOpen}
         absences={sorted}
-        sittingLabel={sittingLabel}
+        sittingHeadline={sittingHeadline}
         onClose={() => setSheetOpen(false)}
       />
     </>
@@ -96,19 +102,24 @@ type SelectedSession = {
 function AbsencesSheet({
   visible,
   absences,
-  sittingLabel,
+  sittingHeadline,
   onClose,
 }: {
   visible: boolean;
   absences: Absence[];
-  sittingLabel: string;
+  sittingHeadline: (inr: number) => string;
   onClose: () => void;
 }) {
   const { t } = useTranslation('delegates');
   const locale = useLocale();
+  const country = useCountry();
   const [selected, setSelected] = useState<SelectedSession | null>(null);
   const { height: windowHeight } = useWindowDimensions();
   const scrollMaxHeight = Math.min(340, windowHeight * 0.35);
+  // AT's grid shows the plain sitting number; EU's inr has no small ordinal to
+  // show, so the square shows a short day/month instead
+  const gridLabel = (inr: number) =>
+    country === 'eu' ? dashDateToShortDate(inrEncodedDate(inr), locale) : String(inr);
 
   // shared across every profile's sheet, sessions rarely change once recorded
   const sessions = useQuery({
@@ -186,8 +197,9 @@ function AbsencesSheet({
                           style={[
                             typography.caption,
                             absence ? styles.squareTextAbsent : styles.squareTextPresent,
-                          ]}>
-                          {session.inr}
+                          ]}
+                          numberOfLines={1}>
+                          {gridLabel(session.inr)}
                         </Text>
                       </Pressable>
                     );
@@ -208,7 +220,7 @@ function AbsencesSheet({
           <View style={styles.detail}>
             <View style={styles.detailHead}>
               <Text style={typography.cardHeading}>
-                {selected.session.inr}. {sittingLabel} ({selected.gp})
+                {sittingHeadline(selected.session.inr)} ({selected.gp})
               </Text>
               <Badge
                 label={selected.absence ? t('absences.absent') : t('absences.present')}
@@ -338,8 +350,9 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   square: {
-    width: 30,
+    minWidth: 30,
     height: 30,
+    paddingHorizontal: spacing.xs,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.thumb,

@@ -16,14 +16,19 @@ type BottomTabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tab
 
 type IoniconName = ComponentProps<typeof Ionicons>['name'];
 
-/** the brand's own flat-color line icons, one per main tab; width follows each
-    icon's own viewBox aspect off a shared ICON_SIZE height, same technique
-    SomesMark uses for the header logo */
-const TAB_ICONS: Record<string, { Icon: typeof HomeIcon; aspect: number }> = {
-  index: { Icon: HomeIcon, aspect: 81.416 / 28.318 },
-  abstimmungen: { Icon: ThumbsIcon, aspect: 36 / 24 },
-  abgeordnete: { Icon: DelegatesIcon, aspect: 1 },
-  profil: { Icon: UserIcon, aspect: 1 },
+/** smaller than the Ionicons' 24, since these hand-drawn glyphs fill their
+    viewBox edge-to-edge with no built-in padding, unlike an Ionicon */
+const TAB_ICON_SIZE = 30;
+
+/** the brand's own flat-color line icons, one per main tab; rendered into the
+    same size×size box regardless of each svg's own viewBox aspect ratio, so
+    react-native-svg's default preserveAspectRatio scales every icon down to
+    fit and centers it, keeping all four the same visual size */
+const TAB_ICONS: Record<string, typeof HomeIcon> = {
+  index: HomeIcon,
+  abstimmungen: ThumbsIcon,
+  abgeordnete: DelegatesIcon,
+  profil: UserIcon,
 };
 
 /** fragen has no brand icon yet, so it keeps the Ionicons pair */
@@ -42,7 +47,7 @@ type TabButtonProps = {
 function TabButton({ routeName, isFocused, label, onPress, onLongPress }: TabButtonProps) {
   const [progress] = useState(() => new Animated.Value(isFocused ? 1 : 0));
   const color = isFocused ? colors.onChrome : colors.onChromeMuted;
-  const tabIcon = TAB_ICONS[routeName];
+  const TabIcon = TAB_ICONS[routeName];
   const ionicon = IONICONS[routeName];
 
   useEffect(() => {
@@ -78,8 +83,8 @@ function TabButton({ routeName, isFocused, label, onPress, onLongPress }: TabBut
           },
         ]}
       />
-      {tabIcon ? (
-        <tabIcon.Icon width={ICON_SIZE * tabIcon.aspect} height={ICON_SIZE} color={color} />
+      {TabIcon ? (
+        <TabIcon width={TAB_ICON_SIZE} height={TAB_ICON_SIZE} color={color} />
       ) : ionicon ? (
         <Ionicons
           name={isFocused ? ionicon.active : ionicon.inactive}
