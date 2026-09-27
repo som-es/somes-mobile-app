@@ -65,8 +65,8 @@ function AbgeordneteScreenContent() {
   const updatedAt = results.data?.pages[0]?.updated_at;
 
   const chips = useMemo(
-    () => partiesFor(parties.data, filters.gp, country),
-    [parties.data, filters.gp, country]
+    () => partiesFor(parties.data, filters.gp),
+    [parties.data, filters.gp]
   );
   const anyParty = filters.parties.length > 0;
 

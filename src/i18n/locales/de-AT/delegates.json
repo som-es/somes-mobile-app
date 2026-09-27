@@ -47,7 +47,9 @@
     "totalCount_one": "{{count}} Rede insgesamt",
     "totalCount_other": "{{count}} Reden insgesamt",
     "showLess": "Weniger anzeigen",
-    "showMore": "Mehr anzeigen ({{count}})"
+    "showMore": "Mehr anzeigen ({{count}})",
+    "loadError": "Reden konnten nicht geladen werden.",
+    "empty": "Keine Reden gefunden"
   },
   "namedVotes": {
     "title": "Letzte namentliche Abstimmungen",

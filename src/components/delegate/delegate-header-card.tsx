@@ -47,9 +47,10 @@ export function DelegateHeaderCard({ delegate }: Props) {
           style={styles.portrait}
         />
 
-        <Text style={styles.name}>
-          {years === null ? delegate.name : `${delegate.name} - ${years}`}
-        </Text>
+        <View style={styles.nameGroup}>
+          <Text style={styles.name}>{delegate.name}</Text>
+          {years !== null ? <Text style={[typography.caption, styles.age]}>{years}</Text> : null}
+        </View>
 
         {party ? (
           <View style={styles.party}>
@@ -87,10 +88,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
+  nameGroup: {
+    alignItems: 'center',
+    gap: 2,
+  },
   name: {
     fontSize: 22,
     fontWeight: '600',
     color: colors.textTitle,
+    textAlign: 'center',
+  },
+  age: {
     textAlign: 'center',
   },
   portrait: {

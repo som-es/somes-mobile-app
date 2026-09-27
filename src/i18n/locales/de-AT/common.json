@@ -55,7 +55,6 @@
     "documents": "Dokumente",
     "speeches": "Reden",
     "topics": "Themen",
-    "partyFraction": "{{count}} von {{total}}",
     "namedFor": "{{count}} von {{total}} dafür",
     "namedAgainst": "{{count}} von {{total}} dagegen",
     "document": "Dokument",
@@ -64,7 +63,15 @@
     "unknownDelegateNumbered": "Abgeordnete:r #{{id}}",
     "aiSummaryBadge": "KI-Zusammenfassung",
     "summaryHeading": "Zusammenfassung",
-    "aiGeneratedBadge": "KI-generiert"
+    "aiGeneratedBadge": "KI-generiert",
+    "viewDetails": "Details anzeigen",
+    "speechNotAvailable": "Diese Rede ist nicht einzeln abrufbar — öffne sie über die Abstimmung oder das Abgeordnetenprofil, zu dem sie gehört.",
+    "detailedSummary": "Ausführliche Zusammenfassung",
+    "keyPoints": "Kernpunkte",
+    "criticalAnalysis": "Kritische Analyse",
+    "argumentsFor": "Argumente dafür",
+    "argumentsAgainst": "Argumente dagegen",
+    "tone": "Tonfall"
   },
   "votingBehavior": {
     "infavor": "Dafür",

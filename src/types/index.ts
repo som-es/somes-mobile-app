@@ -21,6 +21,7 @@ export type {
   GovProposalDelegate,
   GovProposalsWithMaxPage,
   InterestShare,
+  Keypoint,
   LegisInitFavo,
   LegisPeriod,
   LegislativeInitiative,

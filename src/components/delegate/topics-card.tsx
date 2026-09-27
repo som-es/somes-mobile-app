@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
+import { useTopicGroupLookup } from '@/lib/use-topic-group-lookup';
 import { radius, spacing } from '@/theme/layout';
 import { topicColor } from '@/theme/topic-colors';
 import { topicGroupLabel } from '@/theme/topic-group-labels';
@@ -18,6 +19,7 @@ type Props = {
 
 export function TopicsCard({ interests }: Props) {
   const { t } = useTranslation('delegates');
+  const { resolve } = useTopicGroupLookup();
 
   if (interests.length === 0) return null;
 
@@ -26,24 +28,28 @@ export function TopicsCard({ interests }: Props) {
   const overflow = sorted.slice(MAX_TILES);
 
   const [lead, ...rest] = tiles;
+  const leadGroup = resolve(lead.topic_id, lead.topic);
 
   return (
     <SectionCard title={t('topics.title')}>
       <View style={styles.grid}>
         <Tile
-          label={topicGroupLabel(t, lead.topic)}
+          label={topicGroupLabel(t, leadGroup)}
           count={lead.occurences}
-          color={topicColor(lead.topic)}
+          color={topicColor(leadGroup)}
           wide
         />
-        {rest.map((interest) => (
-          <Tile
-            key={interest.topic}
-            label={topicGroupLabel(t, interest.topic)}
-            count={interest.occurences}
-            color={topicColor(interest.topic)}
-          />
-        ))}
+        {rest.map((interest) => {
+          const group = resolve(interest.topic_id, interest.topic);
+          return (
+            <Tile
+              key={interest.topic_id}
+              label={topicGroupLabel(t, group)}
+              count={interest.occurences}
+              color={topicColor(group)}
+            />
+          );
+        })}
         {overflow.length > 0 ? (
           <Tile
             label={t('topics.more')}

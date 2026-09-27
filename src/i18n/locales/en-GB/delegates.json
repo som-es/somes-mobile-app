@@ -47,7 +47,9 @@
     "totalCount_one": "{{count}} speech in total",
     "totalCount_other": "{{count}} speeches in total",
     "showLess": "Show less",
-    "showMore": "Show more ({{count}})"
+    "showMore": "Show more ({{count}})",
+    "loadError": "Speeches could not be loaded.",
+    "empty": "No speeches found"
   },
   "namedVotes": {
     "title": "Recent roll-call votes",

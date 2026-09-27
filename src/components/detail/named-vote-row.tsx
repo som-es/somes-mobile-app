@@ -8,6 +8,7 @@ import { VoteMark } from '@/components/ui/vote-mark';
 import { behaviorLabel, votingBehaviorOf } from '@/lib/named-vote-behavior';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
+import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
@@ -55,6 +56,12 @@ export function NamedVoteRow({ vote, delegate }: Props) {
 
         {behavior === 'infavor' || behavior === 'against' ? (
           <VoteMark infavor={behavior === 'infavor'} size={18} />
+        ) : behavior === 'abstained' ? (
+          <Text
+            style={styles.abstainDash}
+            accessibilityLabel={behaviorLabel(t, behavior)}>
+            {'—'}
+          </Text>
         ) : (
           <Text style={typography.caption}>{behaviorLabel(t, behavior)}</Text>
         )}
@@ -82,5 +89,10 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 999,
+  },
+  abstainDash: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.voteAbstain,
   },
 });

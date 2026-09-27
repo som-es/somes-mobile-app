@@ -55,7 +55,6 @@
     "documents": "Documents",
     "speeches": "Speeches",
     "topics": "Topics",
-    "partyFraction": "{{count}} of {{total}}",
     "namedFor": "{{count}} of {{total}} in favour",
     "namedAgainst": "{{count}} of {{total}} against",
     "document": "Document",
@@ -64,7 +63,15 @@
     "unknownDelegateNumbered": "MP #{{id}}",
     "aiSummaryBadge": "AI summary",
     "summaryHeading": "Summary",
-    "aiGeneratedBadge": "AI-generated"
+    "aiGeneratedBadge": "AI-generated",
+    "viewDetails": "View details",
+    "speechNotAvailable": "This speech isn't available on its own — open it from the vote or MP profile it belongs to.",
+    "detailedSummary": "Detailed summary",
+    "keyPoints": "Key points",
+    "criticalAnalysis": "Critical analysis",
+    "argumentsFor": "Arguments in favour",
+    "argumentsAgainst": "Arguments against",
+    "tone": "Tone"
   },
   "votingBehavior": {
     "infavor": "In favour",

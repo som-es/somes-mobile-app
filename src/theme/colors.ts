@@ -124,7 +124,10 @@ export const colors = {
 
   voteYes: '#1FA14B',
   voteNo: '#DC2626',
-  voteAbstain: warning[500],
+  voteAbstain: '#3B82F6',
+  /** same tone as textCaption, kept as its own token so vote-result call sites
+      read as a vote state rather than a text color */
+  voteAbsent: '#8C8F95',
   voteNone: primary[500],
 
   danger: '#FF4C4C',

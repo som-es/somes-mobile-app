@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { Chip } from '@/components/ui/chip';
 import { spacing } from '@/theme/layout';
-import { typography } from '@/theme/typography';
 import type { DbAiSummary, Topic } from '@/types';
 
 import { SectionCard } from './section-card';
@@ -18,10 +18,7 @@ export function TopicList({ topics }: Props) {
     <SectionCard title={t('common:detail.topics')}>
       <View style={styles.list}>
         {topics.map((topic) => (
-          <View key={topic} style={styles.row}>
-            <Text style={typography.bodyMuted}>{'•'}</Text>
-            <Text style={[typography.bodyMuted, styles.label]}>{topic}</Text>
-          </View>
+          <Chip key={topic} label={topic} selected={false} interactive={false} />
         ))}
       </View>
     </SectionCard>
@@ -38,13 +35,8 @@ export function topicNames(eurovoc: Topic[], aiSummary: DbAiSummary | null): str
 
 const styles = StyleSheet.create({
   list: {
-    gap: spacing.sm,
-  },
-  row: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.sm,
-  },
-  label: {
-    flex: 1,
   },
 });

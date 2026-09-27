@@ -7,6 +7,7 @@ import { DelegateRow } from '@/components/detail/delegate-row';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
 import { FavoriteButton } from '@/components/ui/favorite-button';
 import { DocumentList, pdfDocuments } from '@/components/detail/document-list';
+import { KeyPointsCard } from '@/components/detail/key-points-card';
 import { Divider, SectionCard } from '@/components/detail/section-card';
 import { SectionLink } from '@/components/ui/section-link';
 import { SpeechList } from '@/components/detail/speech-list';
@@ -114,6 +115,8 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
       />
 
       {topics.length > 0 ? <TopicList topics={topics} /> : null}
+
+      <KeyPointsCard keyPoints={ai_summary?.full_summary?.key_points ?? []} />
 
       {voteResult.votes.length > 0 || voteResult.named_votes ? (
         <SectionCard

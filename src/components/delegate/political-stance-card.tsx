@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
+import { useTopicGroupLookup } from '@/lib/use-topic-group-lookup';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
@@ -37,6 +38,7 @@ type Props = {
 export function PoliticalStanceCard({ name, party, position, stances, interests }: Props) {
   const { t } = useTranslation('delegates');
   const partyColor = usePartyColor(party);
+  const { resolve } = useTopicGroupLookup();
   const ranked = rankStances(stances, interests);
   const [infoOpen, setInfoOpen] = useState(false);
 
@@ -56,7 +58,9 @@ export function PoliticalStanceCard({ name, party, position, stances, interests 
           </Pressable>
         }>
         {position ? <Compass name={name} color={partyColor} position={position} /> : null}
-        {ranked.length > 0 ? <StanceRails stances={ranked} hasCompass={!!position} /> : null}
+        {ranked.length > 0 ? (
+          <StanceRails stances={ranked} hasCompass={!!position} resolve={resolve} />
+        ) : null}
       </SectionCard>
 
       <BottomSheet
@@ -125,9 +129,11 @@ function SideLabel({ label }: { label: string }) {
 function StanceRails({
   stances,
   hasCompass,
+  resolve,
 }: {
   stances: StanceTopicScore[];
   hasCompass: boolean;
+  resolve: (topicId: string, fallbackTopicName: string) => string;
 }) {
   const { t } = useTranslation('delegates');
 
@@ -136,11 +142,12 @@ function StanceRails({
       {stances.map((stance) => {
         // the web maps a score of -0.5 to 0.5 across the full rail
         const at = clamp((stance.score * 2 + 1) * 50);
+        const group = resolve(stance.topic_id, stance.topic);
 
         return (
-          <View key={stance.topic} style={styles.stanceRow}>
+          <View key={stance.topic_id} style={styles.stanceRow}>
             <Text style={[typography.subtitle, styles.stanceTopic]} numberOfLines={1}>
-              {topicGroupLabel(t, stance.topic)}
+              {topicGroupLabel(t, group)}
             </Text>
 
             <View style={styles.railRow}>
@@ -150,10 +157,7 @@ function StanceRails({
 
               <View style={styles.rail}>
                 <View
-                  style={[
-                    styles.stanceDot,
-                    { left: `${at}%`, backgroundColor: topicColor(stance.topic) },
-                  ]}
+                  style={[styles.stanceDot, { left: `${at}%`, backgroundColor: topicColor(group) }]}
                 />
               </View>
 
@@ -170,11 +174,15 @@ function StanceRails({
   );
 }
 
+/** matches by topic_id rather than the (possibly translated) topic name, so an
+    interest and a stance on the same topic still pair up correctly regardless
+    of UI language */
 function rankStances(stances: StanceTopicScore[], interests: InterestShare[]) {
   return stances
     .map((stance) => ({
       stance,
-      occurences: interests.find((interest) => interest.topic === stance.topic)?.occurences ?? 0,
+      occurences:
+        interests.find((interest) => interest.topic_id === stance.topic_id)?.occurences ?? 0,
     }))
     .sort((a, b) => b.occurences - a.occurences)
     .slice(0, MAX_STANCES)

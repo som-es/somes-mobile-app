@@ -59,7 +59,7 @@ export function DelegateCard({ delegate, onPress }: Props) {
         </View>
 
         {country === 'eu' ? null : (
-          <Text style={[typography.rowMeta, styles.ageCol]}>
+          <Text style={[typography.caption, styles.ageCol]}>
             {years ?? t('card.ageUnknown')}
           </Text>
         )}

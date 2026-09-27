@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +13,7 @@ import { useLocale } from '@/lib/use-locale';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
-import type { Absence, PlenarySession } from '@/types';
+import type { Absence, LegisPeriod, PlenarySession } from '@/types';
 
 const PREVIEW = 3;
 
@@ -116,9 +116,35 @@ function AbsencesSheet({
     enabled: visible,
   });
 
-  // newest legislative period first, matches the flat preview list's own ordering
-  const gps = [...new Set(absences.map((absence) => absence.gp))].sort().reverse();
+  // same cache useFilterSources() populates, reused here for a hit rather than a
+  // second request — AT's roman numerals happen to sort right as plain strings,
+  // but EU's numeric gp ids ("9" vs "10") don't, so real start dates are needed
+  const periods = useQuery({
+    queryKey: ['all-gps'],
+    queryFn: () => somes.reference.legisPeriods(),
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+  const gps = sortGpsByStartDate(
+    [...new Set(absences.map((absence) => absence.gp))],
+    periods.data ?? []
+  );
   const absenceBySessionId = new Map(absences.map((absence) => [absence.plenary_session_id, absence]));
+
+  // absences is already sorted newest-first by the parent AbsencesCard, so the
+  // first entry is the one to preselect once the sheet's sessions are in
+  useEffect(() => {
+    if (!visible || selected !== null || absences.length === 0 || !sessions.data) return;
+
+    const mostRecent = absences[0];
+    const session = (sessions.data[mostRecent.gp] ?? []).find(
+      (candidate) => candidate.id === mostRecent.plenary_session_id
+    );
+    if (session) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- preselects the newest absence once its session is available, not a response to a user action
+      setSelected({ gp: mostRecent.gp, session, absence: mostRecent });
+    }
+  }, [visible, absences, sessions.data, selected]);
 
   return (
     <BottomSheet
@@ -129,46 +155,53 @@ function AbsencesSheet({
         onClose();
       }}
       applyLabel={t('absences.close')}>
-      <ScrollView contentContainerStyle={styles.sheetBody} showsVerticalScrollIndicator={false}>
-        {gps.map((gp) => {
-          const gpSessions = (sessions.data?.[gp] ?? []).slice().sort((a, b) => a.inr - b.inr);
-          if (gpSessions.length === 0) return null;
+      <View style={styles.sheetRoot}>
+        <ScrollView
+          style={styles.sheetScroll}
+          contentContainerStyle={styles.sheetBody}
+          showsVerticalScrollIndicator={false}>
+          {gps.map((gp) => {
+            const gpSessions = (sessions.data?.[gp] ?? []).slice().sort((a, b) => a.inr - b.inr);
+            if (gpSessions.length === 0) return null;
 
-          return (
-            <View key={gp} style={styles.gpGroup}>
-              <Text style={typography.cardHeading}>{gp}</Text>
-              <View style={styles.grid}>
-                {gpSessions.map((session) => {
-                  const absence = absenceBySessionId.get(session.id) ?? null;
-                  const isSelected = selected?.session.id === session.id;
-                  return (
-                    <Pressable
-                      key={session.id}
-                      onPress={() => setSelected({ gp, session, absence })}
-                      style={[
-                        styles.square,
-                        absence ? styles.squareAbsent : styles.squarePresent,
-                        isSelected && styles.squareSelected,
-                      ]}>
-                      <Text
+            return (
+              <View key={gp} style={styles.gpGroup}>
+                <Text style={typography.cardHeading}>{gp}</Text>
+                <View style={styles.grid}>
+                  {gpSessions.map((session) => {
+                    const absence = absenceBySessionId.get(session.id) ?? null;
+                    const isSelected = selected?.session.id === session.id;
+                    return (
+                      <Pressable
+                        key={session.id}
+                        onPress={() => setSelected({ gp, session, absence })}
                         style={[
-                          typography.caption,
-                          absence ? styles.squareTextAbsent : styles.squareTextPresent,
+                          styles.square,
+                          absence ? styles.squareAbsent : styles.squarePresent,
+                          isSelected && styles.squareSelected,
                         ]}>
-                        {session.inr}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                        <Text
+                          style={[
+                            typography.caption,
+                            absence ? styles.squareTextAbsent : styles.squareTextPresent,
+                          ]}>
+                          {session.inr}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })}
 
-        <Text style={[typography.bodyMuted, styles.total]}>
-          {t('absences.totalCount', { count: absences.length })}
-        </Text>
+          <Text style={[typography.bodyMuted, styles.total]}>
+            {t('absences.totalCount', { count: absences.length })}
+          </Text>
+        </ScrollView>
 
+        {/* a sibling of the ScrollView rather than its last child, so pressing a
+            square in a long grid can never push this out of the visible area */}
         {selected ? (
           <View style={styles.detail}>
             <View style={styles.detailHead}>
@@ -203,9 +236,22 @@ function AbsencesSheet({
             ) : null}
           </View>
         ) : null}
-      </ScrollView>
+      </View>
     </BottomSheet>
   );
+}
+
+/** newest first; falls back to a plain string compare only when a gp is missing
+    from the legislative-periods list (AT's roman numerals happen to sort right
+    that way, but EU's numeric ids, e.g. "9" vs "10", do not) */
+function sortGpsByStartDate(gps: string[], periods: LegisPeriod[]): string[] {
+  const startDateByGp = new Map(periods.map((period) => [period.gp, period.start_date]));
+
+  return gps.slice().sort((a, b) => {
+    const aDate = startDateByGp.get(a);
+    const bDate = startDateByGp.get(b);
+    return aDate && bDate ? bDate.localeCompare(aDate) : b.localeCompare(a);
+  });
 }
 
 function headlineYear(sorted: Absence[]): { year: number; count: number } {
@@ -272,6 +318,13 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.8,
+  },
+  sheetRoot: {
+    flex: 1,
+    gap: spacing.md,
+  },
+  sheetScroll: {
+    flex: 1,
   },
   sheetBody: {
     gap: spacing.lg,

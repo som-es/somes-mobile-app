@@ -20,6 +20,10 @@ type Props<T> = {
   isFetchingNextPage: boolean;
   refreshing: boolean;
   onRefresh: () => void;
+  /** 'space' (default) keeps today's plain spacing, e.g. durchsuchen.tsx's named
+      vote list; 'divider' draws a real hairline between rows instead, for lists
+      where rows need a visible boundary, e.g. the full speech lists */
+  separator?: 'space' | 'divider';
 };
 
 export function ResultList<T>({
@@ -35,6 +39,7 @@ export function ResultList<T>({
   isFetchingNextPage,
   refreshing,
   onRefresh,
+  separator = 'space',
 }: Props<T>) {
   const insets = useSafeAreaInsets();
   const renderFlatListItem = useCallback(
@@ -69,7 +74,9 @@ export function ResultList<T>({
           <ActivityIndicator style={styles.footer} color={colors.chrome} />
         ) : null
       }
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ItemSeparatorComponent={() => (
+        <View style={separator === 'divider' ? styles.divider : styles.separator} />
+      )}
       onEndReached={onEndReached}
       // prefetch about half a screen early, so the spinner rarely shows
       onEndReachedThreshold={0.5}
@@ -104,6 +111,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: spacing.md,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.inputBorder,
+    marginVertical: spacing.md,
   },
   footer: {
     marginTop: spacing.lg,

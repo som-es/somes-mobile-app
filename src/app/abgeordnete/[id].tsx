@@ -104,7 +104,11 @@ function DelegateDetail({
       {speechesPending ? <CardSkeleton /> : null}
 
       {speeches ? (
-        <DelegateSpeechesCard speeches={speeches.speeches} total={speeches.entry_count} />
+        <DelegateSpeechesCard
+          speeches={speeches.speeches}
+          total={speeches.entry_count}
+          delegate={delegate}
+        />
       ) : null}
 
       {info ? <NamedVotesCard namedVotes={info.named_votes} /> : null}

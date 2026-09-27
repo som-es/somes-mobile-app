@@ -114,8 +114,8 @@ function DelegatePicker({ onPick }: { onPick: (delegate: Delegate) => void }) {
 
   const counts = delegateFilterCounts(filters);
   const chips = useMemo(
-    () => partiesFor(parties.data, filters.gp, country),
-    [parties.data, filters.gp, country]
+    () => partiesFor(parties.data, filters.gp),
+    [parties.data, filters.gp]
   );
   const anyParty = filters.parties.length > 0;
   const items = useMemo(

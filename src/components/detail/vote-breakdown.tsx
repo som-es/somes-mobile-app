@@ -2,18 +2,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { VoteMark } from '@/components/ui/vote-mark';
-import { byPartySize, partyInfavor, partySeats } from '@/lib/votes';
+import { byPartySize, partyInfavor } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { usePartyColors } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
 import type { NamedVoteInfo, Vote } from '@/types';
+
+import { VoteResultBar } from './vote-result-bar';
 
 type Props = {
   votes: Vote[];
 };
 
 export function VoteBreakdown({ votes }: Props) {
-  const { t } = useTranslation();
   const { data: partyColors } = usePartyColors();
 
   // slice first, votes belongs to the react-query cache
@@ -22,15 +23,17 @@ export function VoteBreakdown({ votes }: Props) {
   return (
     <View style={styles.list}>
       {sorted.map((vote) => (
-        <View key={vote.party} style={styles.row}>
-          <View
-            style={[styles.dot, { backgroundColor: partyColors?.get(vote.party) ?? '#ccc' }]}
-          />
-          <Text style={[typography.subtitle, styles.label]} numberOfLines={1}>
-            {vote.party} (
-            {t('common:detail.partyFraction', { count: vote.infavor_count, total: partySeats(vote) })})
-          </Text>
-          <VoteMark infavor={partyInfavor(vote)} size={18} />
+        <View key={vote.party} style={styles.partyBlock}>
+          <View style={styles.row}>
+            <View
+              style={[styles.dot, { backgroundColor: partyColors?.get(vote.party) ?? '#ccc' }]}
+            />
+            <Text style={[typography.subtitle, styles.label]} numberOfLines={1}>
+              {vote.party}
+            </Text>
+            <VoteMark infavor={partyInfavor(vote)} size={18} />
+          </View>
+          <VoteResultBar vote={vote} />
         </View>
       ))}
     </View>
@@ -67,6 +70,9 @@ export function NamedVoteBreakdown({ info }: NamedProps) {
 const styles = StyleSheet.create({
   list: {
     gap: spacing.md,
+  },
+  partyBlock: {
+    gap: spacing.sm,
   },
   row: {
     flexDirection: 'row',
