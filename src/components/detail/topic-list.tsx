@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Chip } from '@/components/ui/chip';
+import { Badge } from '@/components/ui/badge';
 import { spacing } from '@/theme/layout';
 import type { DbAiSummary, Topic } from '@/types';
 
@@ -18,7 +18,7 @@ export function TopicList({ topics }: Props) {
     <SectionCard title={t('common:detail.topics')}>
       <View style={styles.list}>
         {topics.map((topic) => (
-          <Chip key={topic} label={topic} selected={false} interactive={false} />
+          <Badge key={topic} label={topic} />
         ))}
       </View>
     </SectionCard>

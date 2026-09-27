@@ -147,7 +147,9 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
             </>
           ) : null}
         </SectionCard>
-      ) : null}
+      ) : (
+        <Notice message={t('common:detail.noAiSummary')} />
+      )}
 
       {full && full.key_points.length > 0 ? (
         <SectionCard title={t('common:detail.keyPoints')}>

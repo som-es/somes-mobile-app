@@ -59,7 +59,7 @@ export function DelegateCard({ delegate, onPress }: Props) {
         </View>
 
         {country === 'eu' ? null : (
-          <Text style={[typography.caption, styles.ageCol]}>
+          <Text style={[typography.subtitle, styles.ageCol]}>
             {years ?? t('card.ageUnknown')}
           </Text>
         )}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   nameCol: { flex: 3 },
   partyCol: { flex: 2 },
-  ageCol: { flex: 1 },
+  ageCol: { flex: 1, textAlign: 'right' },
   party: {
     flexDirection: 'row',
     alignItems: 'center',

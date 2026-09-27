@@ -58,7 +58,10 @@ export function AppHeader() {
       <CountrySheet
         visible={showCountrySheet}
         value={country}
-        onChange={switchCountry}
+        onChange={async (next) => {
+          await switchCountry(next);
+          if (pathname !== '/profil') router.navigate('/');
+        }}
         onClose={() => setShowCountrySheet(false)}
       />
     </View>

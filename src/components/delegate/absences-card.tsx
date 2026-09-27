@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
@@ -107,6 +107,8 @@ function AbsencesSheet({
   const { t } = useTranslation('delegates');
   const locale = useLocale();
   const [selected, setSelected] = useState<SelectedSession | null>(null);
+  const { height: windowHeight } = useWindowDimensions();
+  const scrollMaxHeight = Math.min(340, windowHeight * 0.35);
 
   // shared across every profile's sheet, sessions rarely change once recorded
   const sessions = useQuery({
@@ -157,7 +159,7 @@ function AbsencesSheet({
       applyLabel={t('absences.close')}>
       <View style={styles.sheetRoot}>
         <ScrollView
-          style={styles.sheetScroll}
+          style={[styles.sheetScroll, { maxHeight: scrollMaxHeight }]}
           contentContainerStyle={styles.sheetBody}
           showsVerticalScrollIndicator={false}>
           {gps.map((gp) => {
@@ -320,12 +322,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   sheetRoot: {
-    flex: 1,
     gap: spacing.md,
   },
-  sheetScroll: {
-    flex: 1,
-  },
+  sheetScroll: {},
   sheetBody: {
     gap: spacing.lg,
     paddingBottom: spacing.sm,

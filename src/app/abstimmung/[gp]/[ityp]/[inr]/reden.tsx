@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   badgeRow: {
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

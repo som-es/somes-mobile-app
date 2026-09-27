@@ -89,6 +89,7 @@ function DelegateDetail({
       {info ? (
         <>
           <PoliticalStanceCard
+            delegateId={delegate.id}
             name={delegate.name}
             party={delegate.party}
             position={info.political_position}
@@ -97,7 +98,7 @@ function DelegateDetail({
             interests={info.interests}
           />
           <AbsencesCard absences={info.absences} />
-          <TopicsCard interests={info.interests} />
+          <TopicsCard delegateId={delegate.id} interests={info.interests} />
         </>
       ) : null}
 

@@ -14,12 +14,13 @@ const MAX_TILES = 8;
 const MUTED_TILE = '#64748b';
 
 type Props = {
+  delegateId: number;
   interests: InterestShare[];
 };
 
-export function TopicsCard({ interests }: Props) {
+export function TopicsCard({ delegateId, interests }: Props) {
   const { t } = useTranslation('delegates');
-  const { resolve } = useTopicGroupLookup();
+  const { resolve } = useTopicGroupLookup(delegateId);
 
   if (interests.length === 0) return null;
 

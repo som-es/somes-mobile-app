@@ -28,6 +28,7 @@ const SIDE_LABEL = 120;
 const MAX_STANCES = 8;
 
 type Props = {
+  delegateId: number;
   name: string;
   party: string | null;
   position: PoliticalPosition | null;
@@ -35,10 +36,17 @@ type Props = {
   interests: InterestShare[];
 };
 
-export function PoliticalStanceCard({ name, party, position, stances, interests }: Props) {
+export function PoliticalStanceCard({
+  delegateId,
+  name,
+  party,
+  position,
+  stances,
+  interests,
+}: Props) {
   const { t } = useTranslation('delegates');
   const partyColor = usePartyColor(party);
-  const { resolve } = useTopicGroupLookup();
+  const { resolve } = useTopicGroupLookup(delegateId);
   const ranked = rankStances(stances, interests);
   const [infoOpen, setInfoOpen] = useState(false);
 

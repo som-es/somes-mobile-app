@@ -66,6 +66,7 @@
     "aiGeneratedBadge": "KI-generiert",
     "viewDetails": "Details anzeigen",
     "speechNotAvailable": "Diese Rede ist nicht einzeln abrufbar — öffne sie über die Abstimmung oder das Abgeordnetenprofil, zu dem sie gehört.",
+    "noAiSummary": "Für diese Rede ist noch keine KI-Zusammenfassung verfügbar.",
     "detailedSummary": "Ausführliche Zusammenfassung",
     "keyPoints": "Kernpunkte",
     "criticalAnalysis": "Kritische Analyse",

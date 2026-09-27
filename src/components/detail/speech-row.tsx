@@ -40,6 +40,7 @@ export function SpeechRow({ item, delegate, expanded, onToggle, onViewDetails }:
   const documentUrl = speech.document_urls?.[0] ?? null;
   const shortSummary = ai_summary?.short_summary ?? speech.about ?? null;
   const longSummary = ai_summary?.summary ?? ai_summary?.detailed_summary ?? shortSummary;
+  const displayedSummary = expanded ? longSummary : shortSummary;
   const durationText = speech.duration_in_seconds
     ? minutes(speech.duration_in_seconds, locale)
     : null;
@@ -79,11 +80,7 @@ export function SpeechRow({ item, delegate, expanded, onToggle, onViewDetails }:
             </Text>
           ) : null}
 
-          {shortSummary ? (
-            <Text style={typography.bodyMuted} numberOfLines={2}>
-              {shortSummary}
-            </Text>
-          ) : null}
+          {displayedSummary ? <Text style={typography.bodyMuted}>{displayedSummary}</Text> : null}
 
           {metaText ? <Text style={typography.caption}>{metaText}</Text> : null}
         </View>
@@ -100,8 +97,6 @@ export function SpeechRow({ item, delegate, expanded, onToggle, onViewDetails }:
 
       {expanded ? (
         <View style={styles.expanded}>
-          {longSummary ? <Text style={typography.bodyMuted}>{longSummary}</Text> : null}
-
           <Pressable
             onPress={onViewDetails}
             accessibilityRole="button"
