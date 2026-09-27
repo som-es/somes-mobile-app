@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   nameCol: { flex: 3 },
   partyCol: { flex: 2 },
-  ageCol: { flex: 1, textAlign: 'right' },
+  ageCol: { flex: 1 },
   party: {
     flexDirection: 'row',
     alignItems: 'center',

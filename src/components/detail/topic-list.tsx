@@ -30,7 +30,9 @@ export function topicNames(eurovoc: Topic[], aiSummary: DbAiSummary | null): str
     eurovoc.length > 0
       ? eurovoc.map((topic) => topic.topic)
       : (aiSummary?.full_summary?.topics ?? []);
-  return names.slice().sort((a, b) => a.length - b.length);
+  // the ai-generated fallback list occasionally repeats a topic, which would
+  // otherwise render two Badges with the same key
+  return [...new Set(names)].sort((a, b) => a.length - b.length);
 }
 
 const styles = StyleSheet.create({

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { Badge } from '@/components/ui/badge';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { Keypoint } from '@/types';
@@ -17,7 +18,9 @@ export function KeyPointsCard({ keyPoints }: Props) {
   if (keyPoints.length === 0) return null;
 
   return (
-    <SectionCard title={t('common:detail.keyPoints')}>
+    <SectionCard
+      title={t('common:detail.keyPoints')}
+      action={<Badge label={t('common:detail.aiSummaryBadge')} />}>
       <View style={styles.list}>
         {keyPoints.map((keyPoint, index) => (
           <View key={index} style={styles.row}>

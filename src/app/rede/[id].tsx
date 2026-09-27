@@ -152,7 +152,9 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
       )}
 
       {full && full.key_points.length > 0 ? (
-        <SectionCard title={t('common:detail.keyPoints')}>
+        <SectionCard
+          title={t('common:detail.keyPoints')}
+          action={<Badge label={t('common:detail.aiSummaryBadge')} />}>
           <BulletList items={full.key_points.map((point) => point.summarized_point)} />
         </SectionCard>
       ) : null}
