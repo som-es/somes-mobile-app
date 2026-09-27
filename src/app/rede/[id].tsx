@@ -66,6 +66,7 @@ function resolveSpeech(queryClient: QueryClient, params: SpeechParams): Speech |
 export default function SpeechDetailScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const country = useCountry();
   const params = useLocalSearchParams<SpeechParams>();
   const { id, gp, ityp, inr, delegateId } = params;
 
@@ -80,7 +81,8 @@ export default function SpeechDetailScreen() {
   });
 
   return (
-    <DetailScreen sourceUrl={gp && ityp && inr ? parliamentUrl(gp, ityp, inr) : undefined}>
+    <DetailScreen
+      sourceUrl={gp && ityp && inr ? parliamentUrl(country, gp, ityp, inr) : undefined}>
       {speech ? (
         <SpeechDetail speech={speech} delegate={delegate.data} />
       ) : (

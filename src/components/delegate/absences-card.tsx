@@ -26,6 +26,11 @@ export function AbsencesCard({ absences }: Props) {
   const locale = useLocale();
   const country = useCountry();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [initialAbsence, setInitialAbsence] = useState<Absence | null>(null);
+  const openSheet = (absence: Absence | null) => {
+    setInitialAbsence(absence);
+    setSheetOpen(true);
+  };
   const sittingLabel = country === 'eu' ? t('absences.sittingEu') : t('absences.sittingAt');
   // AT's inr is a small sequential sitting number ("50. Sitzung"), but EU's is
   // an encoded YYYYMMDD date, which reads as a date rather than an ordinal
@@ -56,7 +61,11 @@ export function AbsencesCard({ absences }: Props) {
             <View style={styles.list}>
               {shown.map((absence, index) => (
                 // two absences can share a plenary_session_id, so use the position
-                <View key={index} style={styles.row}>
+                <Pressable
+                  key={index}
+                  onPress={() => openSheet(absence)}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
                   <View style={styles.left}>
                     <View style={styles.dot} />
                     <Text style={[typography.subtitle, styles.sitting]} numberOfLines={1}>
@@ -66,13 +75,13 @@ export function AbsencesCard({ absences }: Props) {
                   <Text style={typography.caption}>
                     {isoToDotDate(absence.date, locale)} ({absence.gp})
                   </Text>
-                </View>
+                </Pressable>
               ))}
             </View>
 
             {sorted.length > PREVIEW ? (
               <Pressable
-                onPress={() => setSheetOpen(true)}
+                onPress={() => openSheet(null)}
                 style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
                 <Text style={[typography.button, styles.buttonLabel]}>
                   {t('absences.showAll', { count: sorted.length })}
@@ -86,6 +95,7 @@ export function AbsencesCard({ absences }: Props) {
       <AbsencesSheet
         visible={sheetOpen}
         absences={sorted}
+        initialAbsence={initialAbsence}
         sittingHeadline={sittingHeadline}
         onClose={() => setSheetOpen(false)}
       />
@@ -102,11 +112,13 @@ type SelectedSession = {
 function AbsencesSheet({
   visible,
   absences,
+  initialAbsence,
   sittingHeadline,
   onClose,
 }: {
   visible: boolean;
   absences: Absence[];
+  initialAbsence: Absence | null;
   sittingHeadline: (inr: number) => string;
   onClose: () => void;
 }) {
@@ -144,20 +156,23 @@ function AbsencesSheet({
   );
   const absenceBySessionId = new Map(absences.map((absence) => [absence.plenary_session_id, absence]));
 
-  // absences is already sorted newest-first by the parent AbsencesCard, so the
-  // first entry is the one to preselect once the sheet's sessions are in
+  // preselects the tapped absence once its session is available - or, absent
+  // one (opened via "show all" instead of a specific row), the most recent,
+  // since absences is already sorted newest-first by the parent AbsencesCard
   useEffect(() => {
-    if (!visible || selected !== null || absences.length === 0 || !sessions.data) return;
+    if (!visible || selected !== null || !sessions.data) return;
 
-    const mostRecent = absences[0];
-    const session = (sessions.data[mostRecent.gp] ?? []).find(
-      (candidate) => candidate.id === mostRecent.plenary_session_id
+    const target = initialAbsence ?? absences[0];
+    if (!target) return;
+
+    const session = (sessions.data[target.gp] ?? []).find(
+      (candidate) => candidate.id === target.plenary_session_id
     );
     if (session) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- preselects the newest absence once its session is available, not a response to a user action
-      setSelected({ gp: mostRecent.gp, session, absence: mostRecent });
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- preselects once its session is available, not a response to a user action
+      setSelected({ gp: target.gp, session, absence: target });
     }
-  }, [visible, absences, sessions.data, selected]);
+  }, [visible, initialAbsence, absences, sessions.data, selected]);
 
   return (
     <BottomSheet

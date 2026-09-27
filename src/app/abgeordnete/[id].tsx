@@ -14,6 +14,7 @@ import { FavoriteButton } from '@/components/ui/favorite-button';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton } from '@/components/ui/skeleton';
 import { somes } from '@/lib/somes';
+import { useCountry } from '@/lib/use-country';
 import { useLocale } from '@/lib/use-locale';
 import type { Delegate, GeneralDelegateInfo, SpeechesWithMaxPage } from '@/types';
 
@@ -21,6 +22,7 @@ export default function AbgeordneteDetailScreen() {
   const { t } = useTranslation('delegates');
   const { id } = useLocalSearchParams<{ id: string }>();
   const locale = useLocale();
+  const country = useCountry();
 
   const delegate = useQuery({
     queryKey: ['delegate', id],
@@ -43,7 +45,7 @@ export default function AbgeordneteDetailScreen() {
 
   return (
     <DetailScreen
-      sourceUrl={personUrl(id)}
+      sourceUrl={personUrl(country, id)}
       action={
         <>
           <AskQuestionButton delegateId={Number(id)} />

@@ -28,6 +28,7 @@ import type { Delegate, VoteResult } from '@/types';
 export default function VoteDetailScreen() {
   const { t } = useTranslation('votes');
   const { gp, ityp, inr } = useLocalSearchParams<{ gp: string; ityp: string; inr: string }>();
+  const country = useCountry();
 
   const vote = useQuery({
     queryKey: ['vote-result', gp, ityp, inr],
@@ -49,7 +50,7 @@ export default function VoteDetailScreen() {
 
   return (
     <DetailScreen
-      sourceUrl={parliamentUrl(gp, ityp, inr)}
+      sourceUrl={parliamentUrl(country, gp, ityp, inr)}
       // the bookmark is keyed on the vote result id, the route only carries gp/ityp/inr
       action={<FavoriteButton kind="vote" id={vote.data?.id ?? null} />}>
       {vote.isPending ? (

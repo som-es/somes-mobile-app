@@ -4,6 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/lib/use-auth';
+import { useQuestionsEnabled } from '@/lib/use-questions';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 
@@ -12,11 +13,16 @@ type Props = {
   size?: number;
 };
 
-/** signed out it stays visible and routes to anmelden, same convention as FavoriteButton */
+/** signed out it stays visible and routes to anmelden, same convention as FavoriteButton;
+    hidden entirely when the questions feature is toggled off server-side, same gate
+    the "fragen" tab itself uses */
 export function AskQuestionButton({ delegateId, size = 22 }: Props) {
   const { t } = useTranslation('questions');
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+  const questionsEnabled = useQuestionsEnabled();
+
+  if (!questionsEnabled) return null;
 
   return (
     <Pressable

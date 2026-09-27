@@ -9,6 +9,7 @@ import { Screen } from '@/components/ui/screen';
 import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
+import type { Country } from '@/types';
 
 type Props = {
   /** optional because a decree only carries its link once the fetch resolves, and
@@ -56,14 +57,30 @@ export function DetailScreen({ sourceUrl, sourceLabel, action, children }: Props
   );
 }
 
-/** utm_source matches what somes.at appends to the same link */
-export function parliamentUrl(gp: string, ityp: string, inr: string | number): string {
+/** utm_source matches what somes.at appends to the same link; EU has no
+    gegenstand page, so its inr - a year and a running number encoded
+    together, e.g. 20262876 - gets split back apart for oeil's own
+    procedure-file reference format instead */
+export function parliamentUrl(
+  country: Country,
+  gp: string,
+  ityp: string,
+  inr: string | number
+): string {
+  if (country === 'eu') {
+    const digits = String(inr);
+    const year = digits.slice(0, 4);
+    const nr = digits.slice(4);
+    return `https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=${year}/${nr}(${ityp})&utm_source=somes.at`;
+  }
   return `https://parlament.gv.at/gegenstand/${gp}/${ityp}/${inr}?utm_source=somes.at`;
 }
 
 /** a person has their own shape of parliament url, no gp/ityp/inr */
-export function personUrl(id: string | number): string {
-  return `https://parlament.gv.at/person/${id}?utm_source=somes.at`;
+export function personUrl(country: Country, id: string | number): string {
+  return country === 'eu'
+    ? `https://www.europarl.europa.eu/meps/en/${id}?utm_source=somes.at`
+    : `https://parlament.gv.at/person/${id}?utm_source=somes.at`;
 }
 
 const styles = StyleSheet.create({

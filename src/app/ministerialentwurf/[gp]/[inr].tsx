@@ -28,8 +28,9 @@ export default function ProposalDetailScreen() {
     staleTime: 1000 * 60 * 60 * 24,
   });
 
+  // ministerialentwurf/ME is an AT-only concept, no EU equivalent exists
   return (
-    <DetailScreen sourceUrl={parliamentUrl(gp, 'ME', inr)}>
+    <DetailScreen sourceUrl={parliamentUrl('at', gp, 'ME', inr)}>
       {proposal.isPending ? (
         <>
           <CardSkeleton />
