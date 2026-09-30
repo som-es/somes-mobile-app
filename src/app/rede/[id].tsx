@@ -10,7 +10,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Notice } from '@/components/ui/notice';
-import { VoteMark } from '@/components/ui/vote-mark';
+import { StanceMark } from '@/components/ui/stance-mark';
 import { minutes } from '@/lib/date';
 import { delegateAvatarUrl, somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
@@ -20,6 +20,9 @@ import { spacing } from '@/theme/layout';
 import { usePartyColor } from '@/theme/party-colors';
 import { typography } from '@/theme/typography';
 import type { Delegate, Speech, SpeechesWithMaxPage, VoteResult } from '@/types';
+
+/** the backend is still working on the critical analysis, flip once it's ready */
+const SHOW_CRITICAL_ANALYSIS = false;
 
 type SpeechParams = {
   id: string;
@@ -121,7 +124,7 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
               </View>
             ) : null}
           </View>
-          {speech.infavor !== null ? <VoteMark infavor={speech.infavor} size={22} /> : null}
+          {speech.infavor !== null ? <StanceMark infavor={speech.infavor} size={22} /> : null}
         </View>
 
         {speech.infavor === null && speech.opinion ? (
@@ -161,7 +164,7 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
         </SectionCard>
       ) : null}
 
-      {full ? (
+      {SHOW_CRITICAL_ANALYSIS && full ? (
         <SectionCard title={t('common:detail.criticalAnalysis')}>
           <Text style={typography.caption}>
             {t('common:detail.tone')}: {full.critical_analysis.tone}

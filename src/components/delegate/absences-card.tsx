@@ -16,6 +16,8 @@ import { typography } from '@/theme/typography';
 import type { Absence, LegisPeriod, PlenarySession } from '@/types';
 
 const PREVIEW = 3;
+/** below this window width the absent badge moves under the heading */
+const NARROW_WIDTH = 380;
 
 type Props = {
   absences: Absence[];
@@ -126,7 +128,9 @@ function AbsencesSheet({
   const locale = useLocale();
   const country = useCountry();
   const [selected, setSelected] = useState<SelectedSession | null>(null);
-  const { height: windowHeight } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  // on narrow screens the badge no longer fits beside the heading, stack it below
+  const stackBadge = windowWidth < NARROW_WIDTH;
   const scrollMaxHeight = Math.min(340, windowHeight * 0.35);
   // AT's grid shows the plain sitting number; EU's inr has no small ordinal to
   // show, so the square shows a short day/month instead
@@ -233,8 +237,8 @@ function AbsencesSheet({
             square in a long grid can never push this out of the visible area */}
         {selected ? (
           <View style={styles.detail}>
-            <View style={styles.detailHead}>
-              <Text style={typography.cardHeading}>
+            <View style={[styles.detailHead, stackBadge ? styles.detailHeadStacked : null]}>
+              <Text style={[typography.cardHeading, styles.detailTitle]}>
                 {sittingHeadline(selected.session.inr)} ({selected.gp})
               </Text>
               <Badge
@@ -404,6 +408,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.sm,
+  },
+  detailHeadStacked: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  detailTitle: {
+    flexShrink: 1,
   },
   link: {
     color: colors.accent,

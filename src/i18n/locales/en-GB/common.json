@@ -58,6 +58,10 @@
     "namedFor": "{{count}} of {{total}} in favour",
     "namedAgainst": "{{count}} of {{total}} against",
     "document": "Document",
+    "speechLegend": {
+      "pro": "Speech in favour",
+      "against": "Speech against"
+    },
     "showAllSpeeches": "Show all speeches ({{count}})",
     "unknownDelegate": "Unknown",
     "unknownDelegateNumbered": "MP #{{id}}",

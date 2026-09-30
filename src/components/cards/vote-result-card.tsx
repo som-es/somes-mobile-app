@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { VoteDonut } from '@/components/ui/vote-donut';
 import { VoteMark } from '@/components/ui/vote-mark';
 import { useCountry } from '@/lib/use-country';
 import { useLocale } from '@/lib/use-locale';
 import { voteBadges } from '@/lib/vote-labels';
-import { byPartySize, partyInfavor } from '@/lib/votes';
+import { byPartySize, partyInfavor, votePercent } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import { type VoteResult } from '@/types';
@@ -31,6 +32,8 @@ export function VoteResultCard({ voteResult }: Props) {
   const showAcceptedMark = country !== 'eu' && hasResult;
   // slice first, votes belongs to the react-query cache
   const votes = voteResult.votes.slice().sort(byPartySize);
+  // roll call votes show their share in favour, party votes stay a plain check or cross
+  const percent = named_votes ? votePercent(named_votes.named_vote_info) : null;
 
   return (
     <Card
@@ -42,7 +45,13 @@ export function VoteResultCard({ voteResult }: Props) {
       }>
       <View style={styles.titleRow}>
         <Text style={[typography.cardTitle, styles.title]}>{title}</Text>
-        {showAcceptedMark ? <VoteMark infavor={initiative.accepted === 'a'} size={24} /> : null}
+        {showAcceptedMark ? (
+          percent !== null ? (
+            <VoteDonut percent={percent} />
+          ) : (
+            <VoteMark infavor={initiative.accepted === 'a'} size={24} />
+          )
+        ) : null}
       </View>
 
       {ai_summary?.short_summary ? (

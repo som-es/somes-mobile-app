@@ -12,7 +12,7 @@ import { Divider, SectionCard } from '@/components/detail/section-card';
 import { SectionLink } from '@/components/ui/section-link';
 import { SpeechList } from '@/components/detail/speech-list';
 import { SummaryCard } from '@/components/detail/summary-card';
-import { topicNames, TopicList } from '@/components/detail/topic-list';
+import { topicNames } from '@/components/detail/topic-list';
 import { NamedVoteBreakdown, VoteBreakdown } from '@/components/detail/vote-breakdown';
 import { Notice } from '@/components/ui/notice';
 import { CardSkeleton, RowSkeleton } from '@/components/ui/skeleton';
@@ -109,13 +109,12 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
         summary={ai_summary?.short_summary ?? null}
         aiGenerated={ai_summary?.short_summary != null}
         badges={voteBadges(t, locale, initiative)}
+        topics={topics}
         // EU acceptance data isn't ready to surface yet
         accepted={
           country === 'eu' || initiative.accepted === null ? null : initiative.accepted === 'a'
         }
       />
-
-      {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
       <KeyPointsCard keyPoints={ai_summary?.full_summary?.key_points ?? []} />
 
@@ -135,7 +134,9 @@ function VoteDetail({ voteResult, delegates, delegatesLoading, gp, ityp, inr }: 
               />
             ) : undefined
           }>
-          {voteResult.votes.length > 0 ? <VoteBreakdown votes={voteResult.votes} /> : null}
+          {voteResult.votes.length > 0 ? (
+            <VoteBreakdown votes={voteResult.votes} showBars={initiative.voted_by_name === true} />
+          ) : null}
           {voteResult.votes.length > 0 && voteResult.named_votes ? <Divider /> : null}
           {voteResult.named_votes ? (
             <NamedVoteBreakdown info={voteResult.named_votes.named_vote_info} />

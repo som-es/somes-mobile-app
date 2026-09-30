@@ -12,9 +12,11 @@ import { VoteResultBar } from './vote-result-bar';
 
 type Props = {
   votes: Vote[];
+  /** party votes are one line per party, only roll call votes have splits worth a bar */
+  showBars?: boolean;
 };
 
-export function VoteBreakdown({ votes }: Props) {
+export function VoteBreakdown({ votes, showBars = true }: Props) {
   const { data: partyColors } = usePartyColors();
 
   // slice first, votes belongs to the react-query cache
@@ -33,7 +35,7 @@ export function VoteBreakdown({ votes }: Props) {
             </Text>
             <VoteMark infavor={partyInfavor(vote)} size={18} />
           </View>
-          <VoteResultBar vote={vote} />
+          {showBars ? <VoteResultBar vote={vote} /> : null}
         </View>
       ))}
     </View>

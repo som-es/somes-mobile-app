@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { SectionCard } from '@/components/detail/section-card';
+import { SpeechLegend } from '@/components/detail/speech-legend';
 import { SpeechRow } from '@/components/detail/speech-row';
 import { Badge } from '@/components/ui/badge';
 import { spacing } from '@/theme/layout';
@@ -56,6 +57,8 @@ export function DelegateSpeechesCard({ speeches, total, delegate }: Props) {
           />
         ))}
       </View>
+
+      <SpeechLegend />
 
       {total > PREVIEW ? (
         <Pressable

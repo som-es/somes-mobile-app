@@ -37,6 +37,14 @@ function majorityOptions(t: TFunction) {
   ] as const;
 }
 
+function votingModeOptions(t: TFunction) {
+  return [
+    { label: t('filters:any'), value: null },
+    { label: t('filters:namedVote'), value: true },
+    { label: t('filters:anonymousVote'), value: false },
+  ] as const;
+}
+
 function hasVoteResultOptions(t: TFunction) {
   return [
     { label: t('filters:any'), value: null },
@@ -94,7 +102,13 @@ export function VoteGenericSheet({
       title={t('genericTitle')}
       onClose={onClose}
       onReset={() =>
-        onChange({ ...filters, accepted: null, voteType: null, simpleMajority: null })
+        onChange({
+          ...filters,
+          accepted: null,
+          voteType: null,
+          simpleMajority: null,
+          votedByName: null,
+        })
       }>
       <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <OptionGroup
@@ -123,6 +137,12 @@ export function VoteGenericSheet({
           options={majorityOptions(t)}
           value={filters.simpleMajority}
           onChange={(simpleMajority) => onChange({ ...filters, simpleMajority })}
+        />
+        <OptionGroup
+          title={t('votingMode')}
+          options={votingModeOptions(t)}
+          value={filters.votedByName}
+          onChange={(votedByName) => onChange({ ...filters, votedByName })}
         />
       </ScrollView>
     </BottomSheet>

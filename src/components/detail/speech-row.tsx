@@ -3,7 +3,7 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/ui/avatar';
-import { VoteMark } from '@/components/ui/vote-mark';
+import { StanceMark } from '@/components/ui/stance-mark';
 import { minutes } from '@/lib/date';
 import { delegateAvatarUrl } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
@@ -86,7 +86,7 @@ export function SpeechRow({ item, delegate, expanded, onToggle, onViewDetails }:
         </View>
 
         <View style={styles.trailing}>
-          {speech.infavor !== null ? <VoteMark infavor={speech.infavor} size={18} /> : null}
+          {speech.infavor !== null ? <StanceMark infavor={speech.infavor} size={18} /> : null}
           <Ionicons
             name={expanded ? 'chevron-up' : 'chevron-down'}
             size={16}

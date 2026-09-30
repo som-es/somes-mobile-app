@@ -23,6 +23,17 @@ describe('voteResultsQuery', () => {
     });
   });
 
+  it('sends the named vote filter only when set', () => {
+    const named = voteResultsQuery({ ...emptyVoteFilters('at'), votedByName: true }, '', 1);
+    const anonymous = voteResultsQuery({ ...emptyVoteFilters('at'), votedByName: false }, '', 1);
+
+    expect(named['legislative_initiative[voted_by_name][eq]']).toBe(true);
+    expect(anonymous['legislative_initiative[voted_by_name][eq]']).toBe(false);
+    expect(voteResultsQuery(emptyVoteFilters('at'), '', 1)).not.toHaveProperty(
+      'legislative_initiative[voted_by_name][eq]'
+    );
+  });
+
   it('drops the sort key once a search term is present', () => {
     const query = voteResultsQuery(emptyVoteFilters('at'), 'klima', 1);
 

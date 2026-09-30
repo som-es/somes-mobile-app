@@ -9,6 +9,7 @@ import { typography } from '@/theme/typography';
 import type { Delegate, Speech } from '@/types';
 
 import { SectionCard } from './section-card';
+import { SpeechLegend } from './speech-legend';
 import { SpeechRow } from './speech-row';
 
 const PAGE = 3;
@@ -62,6 +63,8 @@ export function SpeechList({ speeches, delegates, gp, ityp, inr }: Props) {
           </Text>
         </Pressable>
       ) : null}
+
+      <SpeechLegend />
     </SectionCard>
   );
 }

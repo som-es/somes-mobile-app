@@ -58,6 +58,10 @@
     "namedFor": "{{count}} von {{total}} dafür",
     "namedAgainst": "{{count}} von {{total}} dagegen",
     "document": "Dokument",
+    "speechLegend": {
+      "pro": "Rede dafür",
+      "against": "Rede dagegen"
+    },
     "showAllSpeeches": "Alle Reden anzeigen ({{count}})",
     "unknownDelegate": "Unbekannt",
     "unknownDelegateNumbered": "Abgeordnete:r #{{id}}",

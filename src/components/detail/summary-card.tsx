@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { VoteMark } from '@/components/ui/vote-mark';
+import { colors } from '@/theme/colors';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 
@@ -17,6 +18,8 @@ type Props = {
       disclaimer badge only shows when that's actually true */
   aiGenerated?: boolean;
   badges: string[];
+  /** shown under the date, above the first divider */
+  topics?: string[];
   accepted?: boolean | null;
 };
 
@@ -26,6 +29,7 @@ export function SummaryCard({
   summary,
   aiGenerated = false,
   badges,
+  topics = [],
   accepted = null,
 }: Props) {
   const { t } = useTranslation();
@@ -36,6 +40,13 @@ export function SummaryCard({
         <View style={styles.titleText}>
           <Text style={typography.detailTitle}>{title}</Text>
           <Text style={typography.caption}>{subtitle}</Text>
+          {topics.length > 0 ? (
+            <View style={styles.topics}>
+              {topics.map((topic) => (
+                <Badge key={topic} label={topic} color={colors.chipSelected} textColor="#FFFFFF" />
+              ))}
+            </View>
+          ) : null}
         </View>
         {accepted !== null ? <VoteMark infavor={accepted} size={24} /> : null}
       </View>
@@ -69,6 +80,12 @@ const styles = StyleSheet.create({
   titleText: {
     flex: 1,
     gap: spacing.xs,
+  },
+  topics: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
   },
   summaryHead: {
     flexDirection: 'row',

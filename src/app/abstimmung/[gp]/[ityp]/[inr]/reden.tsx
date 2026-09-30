@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppHeader } from '@/components/layout/app-header';
+import { SpeechLegend } from '@/components/detail/speech-legend';
 import { SpeechRow } from '@/components/detail/speech-row';
 import { ResultList } from '@/components/lists/result-list';
 import { Badge } from '@/components/ui/badge';
@@ -101,6 +102,7 @@ export default function SpeechesScreen() {
         refreshing={vote.isRefetching}
         onRefresh={() => vote.refetch()}
         separator="divider"
+        footer={<SpeechLegend />}
       />
     </View>
   );

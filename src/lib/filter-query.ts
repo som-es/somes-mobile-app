@@ -22,6 +22,8 @@ export type VoteFilters = {
   /** law, resolution, amendment or report */
   voteType: string | null;
   simpleMajority: boolean | null;
+  /** true named (roll call) votes, false anonymous party votes, null egal */
+  votedByName: boolean | null;
   topics: string[];
   partyVotes: PartyVote[];
 };
@@ -39,6 +41,7 @@ export function emptyVoteFilters(country: Country): VoteFilters {
     accepted: null,
     voteType: null,
     simpleMajority: null,
+    votedByName: null,
     topics: [],
     partyVotes: [],
   };
@@ -80,6 +83,10 @@ export function voteResultsQuery(
   }
   if (filters.simpleMajority !== null) {
     query['legislative_initiative[requires_simple_majority][eq]'] = filters.simpleMajority;
+  }
+
+  if (filters.votedByName !== null) {
+    query['legislative_initiative[voted_by_name][eq]'] = filters.votedByName;
   }
 
   filters.partyVotes.forEach((partyVote, i) => {
@@ -126,7 +133,7 @@ export function voteFilterCounts(filters: VoteFilters) {
   return {
     topics: filters.topics.length,
     parties: filters.partyVotes.length,
-    generic: [filters.accepted, filters.voteType, filters.simpleMajority].filter(
+    generic: [filters.accepted, filters.voteType, filters.simpleMajority, filters.votedByName].filter(
       (value) => value !== null
     ).length,
   };

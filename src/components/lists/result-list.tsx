@@ -24,6 +24,8 @@ type Props<T> = {
       vote list; 'divider' draws a real hairline between rows instead, for lists
       where rows need a visible boundary, e.g. the full speech lists */
   separator?: 'space' | 'divider';
+  /** rendered under the last row, e.g. a legend */
+  footer?: ReactNode;
 };
 
 export function ResultList<T>({
@@ -40,6 +42,7 @@ export function ResultList<T>({
   refreshing,
   onRefresh,
   separator = 'space',
+  footer,
 }: Props<T>) {
   const insets = useSafeAreaInsets();
   const renderFlatListItem = useCallback(
@@ -70,9 +73,12 @@ export function ResultList<T>({
         )
       }
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.chrome} />
-        ) : null
+        <>
+          {isFetchingNextPage ? (
+            <ActivityIndicator style={styles.footer} color={colors.chrome} />
+          ) : null}
+          {isPending || isError ? null : footer}
+        </>
       }
       ItemSeparatorComponent={() => (
         <View style={separator === 'divider' ? styles.divider : styles.separator} />
