@@ -38,9 +38,11 @@ export function SpeechRow({ item, delegate, expanded, onToggle, onViewDetails }:
   const party = delegate?.party;
   // the first link is the one the old single document_url pointed at
   const documentUrl = speech.document_urls?.[0] ?? null;
-  const shortSummary = ai_summary?.short_summary ?? speech.about ?? null;
-  const longSummary = ai_summary?.summary ?? ai_summary?.detailed_summary ?? shortSummary;
-  const displayedSummary = expanded ? longSummary : shortSummary;
+  // empty strings fall through, speeches not regenerated yet keep their old text
+  const collapsedSummary =
+    ai_summary?.one_sentence_short_summary || ai_summary?.short_summary || speech.about || null;
+  const expandedSummary = ai_summary?.very_short_summary || collapsedSummary;
+  const displayedSummary = expanded ? expandedSummary : collapsedSummary;
   const durationText = speech.duration_in_seconds
     ? minutes(speech.duration_in_seconds, locale)
     : null;

@@ -71,7 +71,11 @@
     "viewDetails": "View details",
     "speechNotAvailable": "This speech isn't available on its own — open it from the vote or MP profile it belongs to.",
     "noAiSummary": "No AI summary is available for this speech yet.",
-    "detailedSummary": "Detailed summary",
+    "summaryLength": {
+      "short": "Short",
+      "normal": "Normal",
+      "long": "Long"
+    },
     "keyPoints": "Key points",
     "criticalAnalysis": "Critical analysis",
     "argumentsFor": "Arguments in favour",

@@ -71,7 +71,11 @@
     "viewDetails": "Details anzeigen",
     "speechNotAvailable": "Diese Rede ist nicht einzeln abrufbar — öffne sie über die Abstimmung oder das Abgeordnetenprofil, zu dem sie gehört.",
     "noAiSummary": "Für diese Rede ist noch keine KI-Zusammenfassung verfügbar.",
-    "detailedSummary": "Ausführliche Zusammenfassung",
+    "summaryLength": {
+      "short": "Kurz",
+      "normal": "Normal",
+      "long": "Lang"
+    },
     "keyPoints": "Schwerpunkte",
     "criticalAnalysis": "Kritische Analyse",
     "argumentsFor": "Argumente dafür",

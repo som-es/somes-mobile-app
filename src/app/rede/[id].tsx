@@ -1,17 +1,20 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Divider, SectionCard } from '@/components/detail/section-card';
+import { SectionCard } from '@/components/detail/section-card';
 import { DetailScreen, parliamentUrl } from '@/components/detail/detail-screen';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Notice } from '@/components/ui/notice';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { StanceMark } from '@/components/ui/stance-mark';
 import { minutes } from '@/lib/date';
+import { availableLengths, summaryText, type SummaryLength } from '@/lib/speech-summary';
 import { delegateAvatarUrl, somes } from '@/lib/somes';
 import { useCountry } from '@/lib/use-country';
 import { useLocale } from '@/lib/use-locale';
@@ -103,6 +106,8 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
   const { speech, ai_summary } = item;
   const full = ai_summary?.full_speech_summary;
   const documentUrls = speech.document_urls ?? [];
+  const [length, setLength] = useState<SummaryLength>('normal');
+  const lengths = ai_summary ? availableLengths(ai_summary) : [];
 
   return (
     <>
@@ -138,24 +143,6 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
         ) : null}
       </Card>
 
-      {ai_summary ? (
-        <SectionCard
-          title={t('common:detail.summaryHeading')}
-          action={<Badge label={t('common:detail.aiSummaryBadge')} />}>
-          <Text style={typography.bodyMuted}>{ai_summary.summary || ai_summary.short_summary}</Text>
-
-          {ai_summary.detailed_summary ? (
-            <>
-              <Divider />
-              <Text style={typography.cardHeading}>{t('common:detail.detailedSummary')}</Text>
-              <Text style={[typography.bodyMuted, styles.spaced]}>{ai_summary.detailed_summary}</Text>
-            </>
-          ) : null}
-        </SectionCard>
-      ) : (
-        <Notice message={t('common:detail.noAiSummary')} />
-      )}
-
       {full && full.key_points.length > 0 ? (
         <SectionCard
           title={t('common:detail.keyPoints')}
@@ -163,6 +150,28 @@ function SpeechDetail({ speech: item, delegate }: { speech: Speech; delegate: De
           <BulletList items={full.key_points.map((point) => point.summarized_point)} />
         </SectionCard>
       ) : null}
+
+      {ai_summary ? (
+        <SectionCard
+          title={t('common:detail.summaryHeading')}
+          action={<Badge label={t('common:detail.aiSummaryBadge')} />}>
+          {lengths.length > 1 ? (
+            <View style={styles.lengthControl}>
+              <SegmentedControl
+                options={lengths.map((value) => ({
+                  value,
+                  label: t(`common:detail.summaryLength.${value}`),
+                }))}
+                value={lengths.includes(length) ? length : lengths[0]}
+                onChange={setLength}
+              />
+            </View>
+          ) : null}
+          <Text style={typography.bodyMuted}>{summaryText(ai_summary, length)}</Text>
+        </SectionCard>
+      ) : (
+        <Notice message={t('common:detail.noAiSummary')} />
+      )}
 
       {SHOW_CRITICAL_ANALYSIS && full ? (
         <SectionCard title={t('common:detail.criticalAnalysis')}>
@@ -246,6 +255,9 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 999,
+  },
+  lengthControl: {
+    marginBottom: spacing.md,
   },
   spaced: {
     marginTop: spacing.sm,
