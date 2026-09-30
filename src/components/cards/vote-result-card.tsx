@@ -68,21 +68,6 @@ export function VoteResultCard({ voteResult }: Props) {
                 </View>
               ))
             : null}
-
-          {named_votes ? (
-            <>
-              <View style={styles.vote}>
-                <VoteMark infavor size={16} />
-                <Text style={typography.partyLabel}>{named_votes.named_vote_info.pro_count}</Text>
-              </View>
-              <View style={styles.vote}>
-                <VoteMark infavor={false} size={16} />
-                <Text style={typography.partyLabel}>
-                  {named_votes.named_vote_info.contra_count}
-                </Text>
-              </View>
-            </>
-          ) : null}
         </View>
       ) : null}
 
