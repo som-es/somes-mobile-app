@@ -9,7 +9,7 @@ import { VoteMark } from '@/components/ui/vote-mark';
 import { useCountry } from '@/lib/use-country';
 import { useLocale } from '@/lib/use-locale';
 import { voteBadges } from '@/lib/vote-labels';
-import { byPartySize, partyInfavor, votePercent } from '@/lib/votes';
+import { byPartySize, partyInfavor, partySegments } from '@/lib/votes';
 import { spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import { type VoteResult } from '@/types';
@@ -32,8 +32,6 @@ export function VoteResultCard({ voteResult }: Props) {
   const showAcceptedMark = country !== 'eu' && hasResult;
   // slice first, votes belongs to the react-query cache
   const votes = voteResult.votes.slice().sort(byPartySize);
-  // roll call votes show their share in favour, party votes stay a plain check or cross
-  const percent = named_votes ? votePercent(named_votes.named_vote_info) : null;
 
   return (
     <Card
@@ -45,13 +43,7 @@ export function VoteResultCard({ voteResult }: Props) {
       }>
       <View style={styles.titleRow}>
         <Text style={[typography.cardTitle, styles.title]}>{title}</Text>
-        {showAcceptedMark ? (
-          percent !== null ? (
-            <VoteDonut percent={percent} />
-          ) : (
-            <VoteMark infavor={initiative.accepted === 'a'} size={24} />
-          )
-        ) : null}
+        {showAcceptedMark ? <VoteMark infavor={initiative.accepted === 'a'} size={24} /> : null}
       </View>
 
       {ai_summary?.short_summary ? (
@@ -66,7 +58,13 @@ export function VoteResultCard({ voteResult }: Props) {
             ? votes.map((vote) => (
                 <View key={vote.party} style={styles.vote}>
                   <Text style={typography.partyLabel}>{vote.party}</Text>
-                  <VoteMark infavor={partyInfavor(vote)} size={16} />
+                  {/* an anonymous vote only has pass or fail per party, a split donut
+                      means something only when the members voted by name */}
+                  {initiative.voted_by_name === true ? (
+                    <VoteDonut segments={partySegments(vote)} size={20} />
+                  ) : (
+                    <VoteMark infavor={partyInfavor(vote)} size={16} />
+                  )}
                 </View>
               ))
             : null}

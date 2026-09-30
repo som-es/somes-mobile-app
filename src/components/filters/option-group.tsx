@@ -34,7 +34,9 @@ export function OptionGroup<T>({ title, options, value, onChange }: Props<T>) {
                 selected && styles.selected,
                 pressed && styles.pressed,
               ]}>
-              <Text style={[typography.badge, selected && styles.selectedLabel]}>
+              <Text
+                style={[typography.badge, selected && styles.selectedLabel]}
+                numberOfLines={1}>
                 {option.label}
               </Text>
             </Pressable>
@@ -56,6 +58,7 @@ const styles = StyleSheet.create({
   },
   option: {
     height: 32,
+    alignSelf: 'flex-start',
     justifyContent: 'center',
     paddingHorizontal: spacing.md,
     borderRadius: radius.control,

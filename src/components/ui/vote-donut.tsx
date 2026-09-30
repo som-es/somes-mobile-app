@@ -1,59 +1,53 @@
-import { StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle } from "react-native-svg";
 
-import { colors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
+type Segment = {
+  count: number;
+  color: string;
+};
 
 type Props = {
-  /** share in favour, 0 to 100 */
-  percent: number;
+  segments: Segment[];
   size?: number;
 };
 
 const STROKE = 4;
 
-/** share of a roll call vote cast in favour, green on a red track */
-export function VoteDonut({ percent, size = 36 }: Props) {
+/** one ring split into coloured arcs, starting at twelve o'clock */
+export function VoteDonut({ segments, size = 20 }: Props) {
   const radius = (size - STROKE) / 2;
   const circumference = 2 * Math.PI * radius;
   const center = size / 2;
+  const total = segments.reduce((sum, segment) => sum + segment.count, 0);
+
+  let offset = 0;
+  const arcs =
+    total === 0
+      ? []
+      : segments
+          .filter((segment) => segment.count > 0)
+          .map((segment) => {
+            const length = (segment.count / total) * circumference;
+            const arc = { ...segment, length, offset };
+            offset += length;
+            return arc;
+          });
 
   return (
-    <View style={{ width: size, height: size }} accessibilityLabel={`${percent}%`}>
-      <Svg width={size} height={size}>
+    <Svg width={size} height={size}>
+      {arcs.map((arc) => (
         <Circle
+          key={arc.color}
           cx={center}
           cy={center}
           r={radius}
-          stroke={colors.voteNo}
+          stroke={arc.color}
           strokeWidth={STROKE}
           fill="none"
-        />
-        <Circle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke={colors.voteYes}
-          strokeWidth={STROKE}
-          fill="none"
-          strokeDasharray={`${(percent / 100) * circumference} ${circumference}`}
+          strokeDasharray={`${arc.length} ${circumference}`}
+          strokeDashoffset={-arc.offset}
           transform={`rotate(-90 ${center} ${center})`}
         />
-      </Svg>
-      <View style={styles.label} pointerEvents="none">
-        <Text style={[typography.partyLabel, styles.text]}>{percent}</Text>
-      </View>
-    </View>
+      ))}
+    </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 10,
-  },
-});

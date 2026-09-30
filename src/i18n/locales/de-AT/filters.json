@@ -11,7 +11,7 @@
   "mandateType": "Mandatsart",
   "activeMandate": "Aktives Mandat",
   "considerFormerParty": "Ehemalige Parteizugehörigkeit beachten",
-  "any": "egal",
+  "any": "Alle",
   "acceptedValue": "angenommen",
   "rejected": "abgelehnt",
   "rejectedEarly": "frühzeitig abgelehnt",
@@ -24,7 +24,7 @@
   "noResults": "Nichts gefunden.",
   "stance": {
     "pro": "Pro",
-    "any": "Egal",
+    "any": "Alle",
     "contra": "Contra"
   }
 }

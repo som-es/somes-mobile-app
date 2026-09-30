@@ -2,16 +2,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { partySegments } from '@/lib/votes';
 import { colors } from '@/theme/colors';
 import { radius, spacing } from '@/theme/layout';
 import { typography } from '@/theme/typography';
 import type { Vote } from '@/types';
-
-type Segment = {
-  key: 'infavor' | 'against' | 'abstained' | 'absent';
-  count: number;
-  color: string;
-};
 
 type Props = {
   vote: Vote;
@@ -23,12 +18,7 @@ export function VoteResultBar({ vote }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const segments: Segment[] = [
-    { key: 'infavor', count: vote.infavor_count, color: colors.voteYes },
-    { key: 'against', count: vote.against_count, color: colors.voteNo },
-    { key: 'abstained', count: vote.abstention_count, color: colors.voteAbstain },
-    { key: 'absent', count: vote.absence_count, color: colors.voteAbsent },
-  ];
+  const segments = partySegments(vote);
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
   const present = segments.filter((segment) => segment.count > 0);
 
