@@ -43,7 +43,7 @@ export function SummaryCard({
           {topics.length > 0 ? (
             <View style={styles.topics}>
               {topics.map((topic) => (
-                <Badge key={topic} label={topic} color={colors.chipSelected} textColor="#FFFFFF" />
+                <Badge key={topic} label={topic} color={colors.topic} textColor="#FFFFFF" />
               ))}
             </View>
           ) : null}

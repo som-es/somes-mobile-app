@@ -134,6 +134,8 @@ export const colors = {
   dangerSurface: '#FECBCE',
   dangerSubtle: '#A65A5A',
 
+  topic: '#5E7491',
+
   transparent: 'transparent',
 } as const;
 
