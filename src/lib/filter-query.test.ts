@@ -79,11 +79,11 @@ describe('voteResultsQuery', () => {
     expect(query['party_votes[1][party]']).toBe('B');
   });
 
-  it('expands topics into indexed eq-operator bracket keys', () => {
+  it('expands topics into indexed filter_topics keys', () => {
     const query = voteResultsQuery({ ...emptyVoteFilters('at'), topics: ['ENV', 'TAX'] }, '', 1);
 
-    expect(query['eurovoc_topics[0][topic][eq]']).toBe('ENV');
-    expect(query['eurovoc_topics[1][topic][eq]']).toBe('TAX');
+    expect(query['filter_topics[0]']).toBe('ENV');
+    expect(query['filter_topics[1]']).toBe('TAX');
   });
 });
 
@@ -117,7 +117,7 @@ describe('govProposalsQuery', () => {
       1
     );
 
-    expect(query['gov_proposal[eurovoc_topics][0][topic][eq]']).toBe('ENV');
+    expect(query['filter_topics[0]']).toBe('ENV');
     expect(query['gov_proposal[ministrial_proposal][ressort][in][0]']).toBe('BMF');
     expect(query['gov_proposal[ministrial_proposal][ressort][in][1]']).toBe('BMI');
   });

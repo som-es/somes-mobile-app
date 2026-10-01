@@ -10,10 +10,6 @@ import type { PartyVote } from '@/types';
     ("10"), not AT's roman-numeral scheme ("XXVIII") */
 export const DEFAULT_GP: Record<Country, string> = { at: 'XXVIII', eu: '10' };
 
-/** eq, not the cn the web uses, cn makes both search endpoints fail so topic
-    filtering is broken on somes.at itself */
-const TOPIC_OP = 'eq';
-
 export type VoteFilters = {
   /** null means alle, the parameter is left out */
   gp: string | null;
@@ -95,7 +91,7 @@ export function voteResultsQuery(
   });
 
   filters.topics.forEach((topic, i) => {
-    query[`eurovoc_topics[${i}][topic][${TOPIC_OP}]`] = topic;
+    query[`filter_topics[${i}]`] = topic;
   });
 
   return query;
@@ -117,7 +113,7 @@ export function govProposalsQuery(
   }
 
   filters.topics.forEach((topic, i) => {
-    query[`gov_proposal[eurovoc_topics][${i}][topic][${TOPIC_OP}]`] = topic;
+    query[`filter_topics[${i}]`] = topic;
   });
 
   filters.departments.forEach((department, i) => {
