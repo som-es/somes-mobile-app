@@ -6,7 +6,7 @@
   "requiredMajority": "Required majority",
   "votingMode": "Voting mode",
   "namedVote": "Named",
-  "anonymousVote": "Anonymous",
+  "anonymousVote": "Clubresult",
   "voteStatus": "Vote status",
   "mandateType": "Mandate type",
   "activeMandate": "Active mandate",

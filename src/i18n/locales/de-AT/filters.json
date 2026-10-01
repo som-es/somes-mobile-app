@@ -6,7 +6,7 @@
   "requiredMajority": "notwendige Mehrheit",
   "votingMode": "Abstimmungsart",
   "namedVote": "Namentlich",
-  "anonymousVote": "Anonym",
+  "anonymousVote": "Klubergebnis",
   "voteStatus": "Abstimmungsstatus",
   "mandateType": "Mandatsart",
   "activeMandate": "Aktives Mandat",
