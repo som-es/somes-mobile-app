@@ -70,9 +70,8 @@ function ProposalDetail({ proposal }: { proposal: GovProposalDelegate }) {
         summary={ai_summary?.short_summary ?? draft.description}
         aiGenerated={ai_summary?.short_summary != null}
         badges={badges}
+        topics={topics}
       />
-
-      {topics.length > 0 ? <TopicList topics={topics} /> : null}
 
       {delegates.length > 0 ? (
         <SectionCard title={t('detail.broughtBy')}>
